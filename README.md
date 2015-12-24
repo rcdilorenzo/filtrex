@@ -1,6 +1,6 @@
 # Filtrex
 
-Filtrex is an elixir library for parsing and querying with filter objects. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well. It uses the following query expression and can be validated using `Filtrex.parse/2`.
+Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well. It uses the following query expression and can be validated using `Filtrex.parse/2`.
 
 
 ## Usage
@@ -8,7 +8,7 @@ Filtrex is an elixir library for parsing and querying with filter objects. Altho
 ```elixir
 config = %{text: %{keys: ~(title comments)}}
 
-Filtrex.parse(config, %{
+{:ok, filter} = Filtrex.parse(config, %{
   filter: %{
     type: "all"                # all | any | none
     conditions: [%{
@@ -22,6 +22,12 @@ Filtrex.parse(config, %{
 ```
 
 The configuration passed into `Filtrex.parse/2` gives the individual condition types more information to validate the filter against and is a required argument. See [this section](http://rcdilorenzo.github.io/filtrex/Filtrex.html) of the documentation for details.
+
+To create an [Ecto](https://github.com/elixir-lang/ecto) query, simple construct a query like the following and then pipe it into oblivion!
+
+```elixir
+Filtrex.query(filter, YourApp.YourModel, __ENV__)
+```
 
 The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuable information on how to both use and extend the library to your liking so please take a look!
 
