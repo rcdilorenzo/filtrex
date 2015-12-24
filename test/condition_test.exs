@@ -7,6 +7,7 @@ defmodule FiltrexConditionTest do
 
   test "finding the right type of condition" do
     {:ok, condition} = Filtrex.Condition.parse(@config, %{
+      inverse: false,
       type: "text",
       column: "title",
       value: "Buy Milk",

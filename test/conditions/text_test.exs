@@ -6,16 +6,19 @@ defmodule FiltrexConditionTextTest do
 
   test "parsing errors" do
     assert {:error, "Invalid text column 'due'"} == Text.parse(@config, %{
+      inverse: false,
       column: "due",
       value: "Buy Milk",
       comparator: "equals"
     })
     assert {:error, "Invalid text value for title"} == Text.parse(@config, %{
+      inverse: false,
       column: "title",
       value: %{},
       comparator: "equals"
     })
     assert {:error, "Invalid text comparator 'between'"} == Text.parse(@config, %{
+      inverse: false,
       column: "title",
       value: "Buy Milk",
       comparator: "between"
@@ -23,21 +26,22 @@ defmodule FiltrexConditionTextTest do
   end
 
   test "encoding as SQL fragments for ecto" do
-    {:ok, condition} = Text.parse(@config, %{column: "title", value: "Buy Milk", comparator: "equals"})
+    {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "equals"})
     encoded = Filtrex.Encoder.encode(condition)
     assert encoded.values == ["Buy Milk"]
     assert encoded.expression == "title = ?"
 
-    {:ok, condition} = Text.parse(@config, %{column: "title", value: "Buy Milk", comparator: "is not"})
+    {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "is not"})
     encoded = Filtrex.Encoder.encode(condition)
-    assert encoded.expression == "title IS NOT ?"
+    assert encoded.expression == "title != ?"
 
-    {:ok, condition} = Text.parse(@config, %{column: "title", value: "Buy Milk", comparator: "contains"})
+    {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "contains"})
     encoded = Filtrex.Encoder.encode(condition)
-    assert encoded.expression == "title LIKE %?%"
+    assert encoded.expression == "title LIKE ?"
 
-    {:ok, condition} = Text.parse(@config, %{column: "title", value: "Buy Milk", comparator: "does not contain"})
+    {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "does not contain"})
     encoded = Filtrex.Encoder.encode(condition)
-    assert encoded.expression == "title NOT LIKE %?%"
+    assert encoded.expression == "title NOT LIKE ?"
+    assert encoded.values == ["%Buy Milk%"]
   end
 end

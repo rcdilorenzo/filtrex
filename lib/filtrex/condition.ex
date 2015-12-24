@@ -1,9 +1,9 @@
 defmodule Filtrex.Condition do
-  @callback parse(Map.t, %{column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
+  @callback parse(Map.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
 
   defstruct column: nil, comparator: nil, value: nil
 
-  def parse(config, options = %{type: type}) do
+  def parse(config, options = %{type: type, inverse: inverse}) do
     try do
       module_type = type |> Mix.Utils.camelize
       module = Module.safe_concat(Filtrex.Condition, module_type)
