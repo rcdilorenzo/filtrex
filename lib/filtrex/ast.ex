@@ -1,4 +1,8 @@
 defmodule Filtrex.AST do
+  @moduledoc """
+  `Filtrex.AST` is a helper for building out the ecto macro query expression
+  from a set of conditions. Typically, it shouldn't need to be called direcly.
+  """
 
   @doc "Builds a 'from' ecto query from conditions and a join operator (e.g. 'AND')"
   def build_query(conditions, model, join) do
