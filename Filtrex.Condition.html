@@ -1,0 +1,379 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.11.2">
+    <title>Filtrex.Condition – Filtrex v0.0.1</title>
+    <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+  <button class="sidebar-toggle">
+    <i class="icon-menu"></i>
+  </button>
+
+  
+  <a href="Filtrex.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        Filtrex
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.0.1
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+      <li><a id="protocols-list" href="#full-list">Protocols</a></li>
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">Filtrex v0.0.1</small>
+        Filtrex.Condition
+        
+          <small>behaviour</small>
+        
+        
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L1" title="View Source" class="view-source" rel="help">
+            <i class="icon-code"></i>
+          </a>
+        
+      </h1>
+
+      
+        <section id="moduledoc" class="docstring">
+          <p><a href="Filtrex.Condition.html#content"><code class="inline">Filtrex.Condition</code></a> is an abstract module for parsing conditions.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#parse/2">parse(config, map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Parses a condition by dynamically delegating to modules</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#parse_error/3">parse_error(value, type, filter_type)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Generates an error description for a generic parse error</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#parse_value_type_error/2">parse_value_type_error(column, filter_type)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Generates an error description for a parse error resulting from an invalid value type</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#validate_in/2">validate_in(value, list)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Helper method to validate whether a value is in a list</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#validate_is_binary/1">validate_is_binary(value)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Helper method to validate whether a value is a binary</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+  <div class="summary-callbacks summary">
+    <h2>
+      <a href="#callbacks">Callbacks</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:parse/2">parse(arg0, %{})</a>
+  </div>
+  
+</div>
+
+  </div>
+
+
+        </section>
+      
+
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="parse/2">
+  <div class="detail-header">
+    <a href="#parse/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse(config, map)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L28" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Parses a condition by dynamically delegating to modules</p>
+<p>It delegates based on the type field of the options map (e.g. <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a> for the type <code class="inline">&quot;text&quot;</code>).
+Example Input:
+config:</p>
+<pre><code class="elixir">Filtrex.Condition.parse(%{
+  text: %{keys: ~w(title comments)}  # passed to the specific condition
+}, %{
+  type: string,                      # converted to Filtrex.Condition.&quot;__&quot; dynamically
+  column: string,
+  comparator: string,
+  value: string,
+  inverse: boolean                   # inverts the comparator logic
+})</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="parse_error/3">
+  <div class="detail-header">
+    <a href="#parse_error/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse_error(value, type, filter_type)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L59" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">parse_error(any, <a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Generates an error description for a generic parse error</p>
+
+  </section>
+</div>
+<div class="detail" id="parse_value_type_error/2">
+  <div class="detail-header">
+    <a href="#parse_value_type_error/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse_value_type_error(column, filter_type)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L65" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">parse_value_type_error(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Generates an error description for a parse error resulting from an invalid value type</p>
+
+  </section>
+</div>
+<div class="detail" id="validate_in/2">
+  <div class="detail-header">
+    <a href="#validate_in/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validate_in(value, list)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L43" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">validate_in(any, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) :: nil | any</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Helper method to validate whether a value is in a list</p>
+
+  </section>
+</div>
+<div class="detail" id="validate_is_binary/1">
+  <div class="detail-header">
+    <a href="#validate_is_binary/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validate_is_binary(value)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L54" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">validate_is_binary(any) :: nil | <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Helper method to validate whether a value is a binary</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+        <section id="callbacks" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#callbacks">
+              <i class="icon-link"></i>
+            </a>
+            Callbacks
+          </h1>
+          <div class="detail" id="c:parse/2">
+  <div class="detail-header">
+    <a href="#c:parse/2" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse(arg0, %{})</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L6" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">parse(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, %{inverse: boolean, column: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, value: any, comparator: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}) ::
+  {:ok, any} |
+  {:error, any}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+
+        </section>
+      
+        <footer class="footer">
+      <p>
+        <span class="line">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.2),
+        </span>
+        <span class="line">
+          designed by
+          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+      </p>
+      <button class="night-mode-toggle" />
+    </footer>
+  </div>
+</section>
+</div>
+  <script src="dist/app-1d1b741c5e.js"></script>
+  </body>
+</html>
+

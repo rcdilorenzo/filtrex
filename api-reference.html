@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.11.2">
+    <title>API Reference – Filtrex v0.0.1</title>
+    <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="extras">
+
+<div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+  <button class="sidebar-toggle">
+    <i class="icon-menu"></i>
+  </button>
+
+  
+  <a href="Filtrex.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        Filtrex
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.0.1
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+      <li><a id="protocols-list" href="#full-list">Protocols</a></li>
+    
+  </ul>
+
+  <ul id="full-list" class="sidebar-fullList"></ul>
+  <div class="sidebar-noResults"></div>
+</section>
+
+<section class="content">
+  <div id="content" class="content-inner">
+
+  <h1>
+    <small class="visible-xs">Filtrex v0.0.1</small>
+    API Reference
+  </h1>
+
+  <ul class="summary-links">
+    
+      <li><a href="#modules">Modules</a></li>
+    
+    
+    
+      <li><a href="#protocols">Protocols</a></li>
+    
+  </ul>
+
+  
+    <section id="modules" class="details-list">
+      <h1 class="section-heading">Modules</h1>
+      <div class="summary">
+        <div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.html">Filtrex</a></div>
+  
+    <div class="summary-synopsis"><p>Filtrex consists of three primary components</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.AST.html">Filtrex.AST</a></div>
+  
+    <div class="summary-synopsis"><p><a href="Filtrex.AST.html#content"><code class="inline">Filtrex.AST</code></a> is a helper for building out the ecto macro query expression
+from a set of conditions. Typically, it shouldn’t need to be called direcly</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Condition.html">Filtrex.Condition</a></div>
+  
+    <div class="summary-synopsis"><p><a href="Filtrex.Condition.html#content"><code class="inline">Filtrex.Condition</code></a> is an abstract module for parsing conditions</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Condition.Text.html">Filtrex.Condition.Text</a></div>
+  
+    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Text.html#content"><code class="inline">Filtrex.Condition.Text</code></a> is a specific condition type for handling text filters with various comparisons</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Fragment.html">Filtrex.Fragment</a></div>
+  
+    <div class="summary-synopsis"><p><a href="Filtrex.Fragment.html#content"><code class="inline">Filtrex.Fragment</code></a> is a simple struct used to hold an <code class="inline">expression</code> and <code class="inline">values</code>.
+It is used by <code class="inline">Filter.Encoder.encode/1</code> to turn conditions into ecto queries.
+Example:</p>
+<pre><code class="elixir">%Filtrex.Fragment{expression: &quot;(text = ?)&quot;, values: [&quot;Buy Milk&quot;]}</code></pre>
+</div>
+  
+</div>
+
+      </div>
+    </section>
+  
+
+  
+
+  
+    <section id="protocols" class="details-list">
+      <h1 class="section-heading">Protocols</h1>
+      <div class="summary">
+        <div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Encoder.html">Filtrex.Encoder</a></div>
+  
+    <div class="summary-synopsis"><p>Encodes a condition into <a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> as an expression with values</p>
+</div>
+  
+</div>
+
+      </div>
+    </section>
+  
+    <footer class="footer">
+      <p>
+        <span class="line">
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.2),
+        </span>
+        <span class="line">
+          designed by
+          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+      </p>
+      <button class="night-mode-toggle" />
+    </footer>
+  </div>
+</section>
+</div>
+  <script src="dist/app-1d1b741c5e.js"></script>
+  </body>
+</html>
+
