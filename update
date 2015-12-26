@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rm *.html
+rm -rf dist/
+rm -rf fonts/
+cp -rf doc/* ./

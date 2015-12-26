@@ -5,11 +5,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Encoder – Filtrex v0.0.1</title>
+    <title>Filtrex.Condition.Date – Filtrex v0.0.1</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="protocols">
+  <body data-type="modules">
 
     <div class="main">
 <button class="sidebar-toggle">
@@ -62,12 +62,10 @@
 
       <h1>
         <small class="visible-xs">Filtrex v0.0.1</small>
-        Filtrex.Encoder
-        
-          <small>protocol</small>
+        Filtrex.Condition.Date
         
         
-          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L100" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -75,13 +73,36 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Encodes a condition into <a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> as an expression with values</p>
-<p>Example:</p>
-<pre><code class="elixir">defimpl Filtrex.Encoder, for: Filtrex.Condition.Text do
-  def encode(%Filtrex.Condition.Text{column: column, comparator: &quot;is&quot;, value: value}) do
-    %Filtrex.Fragment{expression: &quot;#{column} = ?&quot;, values: [value]}
-  end
-end</code></pre>
+          <p><a href="Filtrex.Condition.Date.html#content"><code class="inline">Filtrex.Condition.Date</code></a> is a specific condition type for handling date filters with various comparisons.</p>
+<p>There are three different value formats allowed listed in each of the three tables below</p>
+<table>
+<colgroup>
+<col align="left">
+<col align="left">
+<col align="left">
+</colgroup>
+<thead>
+<tr>
+<th>Key</th><th>Type</th><th>Format / Allowed Values</th>
+</tr>
+</thead>
+<tr>
+<td>inverse</td><td>boolean</td><td>See <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a></td>
+</tr>
+<tr>
+<td>column</td><td>string</td><td>any</td>
+</tr>
+<tr>
+<td>comparator</td><td>string</td><td>after, on or after, before, on or before</td>
+</tr>
+<tr>
+<td>value</td><td>string</td><td>“YYYY-MM-DD”</td>
+</tr>
+<tr>
+<td>type</td><td>string</td><td>“date”</td>
+</tr>
+</table>
+<p>TODO: Then next two types of value formats are in progress… check back later!</p>
 
         </section>
       
@@ -116,7 +137,16 @@ end</code></pre>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#encode/1">encode(condition)</a>
+    <a href="#parse/2">parse(config, map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#validate_value/2">validate_value(comparator, value)</a>
   </div>
   
 </div>
@@ -141,7 +171,7 @@ end</code></pre>
           </h1>
           <div class="types-list">
             <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: <a href="Filtrex.Condition.Date.html#t:t/0">Filtrex.Condition.Date.t</a></code></pre>
   
 </div>
 
@@ -157,27 +187,36 @@ end</code></pre>
             </a>
             Functions
           </h1>
-          <div class="detail" id="encode/1">
+          <div class="detail" id="parse/2">
   <div class="detail-header">
-    <a href="#encode/1" class="detail-link" title="Link to this function">
+    <a href="#parse/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">encode(condition)</span>
+    <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L115" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L29" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">encode(Filter.Condition.t) :: [<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a> | [any]]</code></pre>
-        
-      </div>
-    </div>
+  <section class="docstring">
+    <p>See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a></p>
+
+  </section>
+</div>
+<div class="detail" id="validate_value/2">
+  <div class="detail-header">
+    <a href="#validate_value/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validate_value(comparator, value)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L52" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
   
   <section class="docstring">
     
