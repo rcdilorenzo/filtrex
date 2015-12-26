@@ -3,7 +3,7 @@ defmodule FiltrexTest do
   import Ecto.Query
   require Filtrex
 
-  @config %{text: %{keys: ["title"]}}
+  @config %{text: %{keys: ["title"]}, date: %{keys: ["date_column"]}}
 
   test "only allows certain types" do
     assert Filtrex.parse(@config, %{
@@ -41,13 +41,13 @@ defmodule FiltrexTest do
   test "creating an 'any' ecto filter query" do
     {:ok, filter} =  Filtrex.parse(@config, %{
       filter: %{type: "any", conditions: [
-        %{type: "text", column: "title", comparator: "contains", value: "earth"},
-        %{type: "text", column: "title", comparator: "is", value: "Chris McCord"}
+        %{type: "date", column: "date_column", comparator: "on or before", value: "2016-03-20"},
+        %{type: "date", column: "date_column", comparator: "on or after", value: "2016-05-04"}
       ]}
     })
     assert Filtrex.query(filter, Filtrex.SampleModel, __ENV__)
       |> select([m], count(m.id))
-      |> Filtrex.Repo.one! == 3
+      |> Filtrex.Repo.one! == 6
   end
 
   test "creating a 'none' ecto filter query" do

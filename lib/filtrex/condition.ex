@@ -9,7 +9,7 @@ defmodule Filtrex.Condition do
 
   @doc """
   Parses a condition by dynamically delegating to modules
-  
+
   It delegates based on the type field of the options map (e.g. `Filtrex.Condition.Text` for the type `"text"`).
   Example Input:
   config:
@@ -38,6 +38,21 @@ defmodule Filtrex.Condition do
     end
   end
 
+  defmacro encoder(type, comparator, reverse_comparator, expression, values_function \\ ["value"]) do
+    quote do
+      def encode(condition = %{comparator: unquote(comparator), inverse: true}) do
+        condition |> struct(inverse: false, comparator: unquote(reverse_comparator)) |> encode
+      end
+
+      def encode(%{column: column, comparator: unquote(comparator), value: value}) do
+        %Filtrex.Fragment{
+          expression: String.replace(unquote(expression), "column", column),
+          values: Enum.map(unquote(values_function), &(String.replace(&1, "value", value)))
+        }
+      end
+    end
+  end
+
   @doc "Helper method to validate whether a value is in a list"
   @spec validate_in(any, List.t) :: nil | any
   def validate_in(nil, _), do: nil
@@ -61,9 +76,24 @@ defmodule Filtrex.Condition do
   end
 
   @doc "Generates an error description for a parse error resulting from an invalid value type"
-  @spec parse_value_type_error(String.t, Atom.t) :: String.t
-  def parse_value_type_error(column, filter_type) do
+  @spec parse_value_type_error(any, Atom.t) :: String.t
+  def parse_value_type_error(column, filter_type) when is_binary(column) do
     "Invalid #{to_string(filter_type)} value for #{column}"
+  end
+
+  def parse_value_type_error(column, filter_type) do
+    opts   = struct(Inspect.Opts, [])
+    iodata = Inspect.Algebra.to_doc(column, opts)
+      |> Inspect.Algebra.format(opts.width)
+      |> Enum.join
+
+    cond do
+      String.length(iodata) <= 15 ->
+        parse_value_type_error("'#{iodata}'", filter_type)
+      true ->
+        "'#{String.slice(iodata, 0..12)}...#{String.slice(iodata, -3..-1)}'"
+          |> parse_value_type_error(filter_type)
+    end
   end
 end
 

@@ -1,6 +1,6 @@
 defmodule Filtrex.Condition.Text do
   @behaviour Filtrex.Condition
-  @comparators ["equals", "is", "is not", "contains", "does not contain"]
+  @comparators ["equals", "does not equal", "is", "is not", "contains", "does not contain"]
 
   @type t :: Filtrex.Condition.Text.t
   @moduledoc """
@@ -49,37 +49,15 @@ defmodule Filtrex.Condition.Text do
   end
 
   defimpl Filtrex.Encoder do
-    def encode(condition = %Condition.Text{comparator: comparator, inverse: true}) when comparator in ~w(is equals) do
-      condition |> struct(inverse: false, comparator: "is not") |> encode
-    end
+    import Filtrex.Condition
 
-    def encode(%Condition.Text{column: column, comparator: comparator, value: value}) when comparator in ~w(is equals) do
-      %Filtrex.Fragment{expression: "#{column} = ?", values: [value]}
-    end
+    encoder Condition.Text, "is", "is not", "column = ?"
+    encoder Condition.Text, "is not", "is", "column != ?"
 
-    def encode(condition = %Condition.Text{comparator: "is not", inverse: true}) do
-      condition |> struct(inverse: false, comparator: "is") |> encode
-    end
+    encoder Condition.Text, "equals", "does not equal", "column = ?"
+    encoder Condition.Text, "does not equal", "equals", "column != ?"
 
-    def encode(%Condition.Text{column: column, comparator: "is not", value: value}) do
-      %Filtrex.Fragment{expression: "#{column} != ?", values: [value]}
-    end
-
-    def encode(condition = %Condition.Text{comparator: "contains", inverse: true}) do
-      condition |> struct(inverse: false, comparator: "does not contain") |> encode
-    end
-
-    def encode(%Condition.Text{column: column, comparator: "contains", value: value}) do
-      %Filtrex.Fragment{expression: "#{column} LIKE ?", values: ["%#{value}%"]}
-    end
-
-    def encode(condition = %Condition.Text{comparator: "does not contain", inverse: true}) do
-      condition |> struct(inverse: false, comparator: "contains") |> encode
-    end
-
-    def encode(%Condition.Text{column: column, comparator: "does not contain", value: value}) do
-      %Filtrex.Fragment{expression: "#{column} NOT LIKE ?", values: ["%#{value}%"]}
-    end
+    encoder Condition.Text, "contains", "does not contain", "column LIKE ?", ["%value%"]
+    encoder Condition.Text, "does not contain", "contains", "column NOT LIKE ?", ["%value%"]
   end
-
 end
