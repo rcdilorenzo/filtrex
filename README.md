@@ -1,25 +1,34 @@
 # Filtrex
 
-Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well. It uses the following query expression and can be validated using `Filtrex.parse/2`.
+Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well.
 
+# Filter Types
+
+The following condition types and comparators are supported. See [Usage](#usage) for the basic usage of these conditions:
+
+* [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
+    * is, is not, equals, does not equal, contains, does not contain
+* [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
+    * after, on or after, before, on or before, between, not between
 
 ## Usage
 
 ```elixir
-config = %{text: %{keys: ~(title comments)}}
+config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(date_due)}
 
 {:ok, filter} = Filtrex.parse(config, %{
   filter: %{
     type: "all"                # all | any | none
     conditions: [%{
       column: "title",
-      comparator: "contains",  # is, is not, equals, contains, does not contain
+      comparator: "contains",
       value: "Buy",
       type: "text"
     }]
   }
 }
 ```
+
 
 The configuration passed into `Filtrex.parse/2` gives the individual condition types more information to validate the filter against and is a required argument. See [this section](http://rcdilorenzo.github.io/filtrex/Filtrex.html) of the documentation for details.
 

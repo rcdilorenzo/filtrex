@@ -38,7 +38,7 @@ defmodule Filtrex.Condition do
     end
   end
 
-  defmacro encoder(type, comparator, reverse_comparator, expression, values_function \\ ["value"]) do
+  defmacro encoder(type, comparator, reverse_comparator, expression, values_function \\ {:&, [], [[{:&, [], [1]}]]}) do
     quote do
       def encode(condition = %{comparator: unquote(comparator), inverse: true}) do
         condition |> struct(inverse: false, comparator: unquote(reverse_comparator)) |> encode
@@ -47,7 +47,7 @@ defmodule Filtrex.Condition do
       def encode(%{column: column, comparator: unquote(comparator), value: value}) do
         %Filtrex.Fragment{
           expression: String.replace(unquote(expression), "column", column),
-          values: Enum.map(unquote(values_function), &(String.replace(&1, "value", value)))
+          values: unquote(values_function).(value)
         }
       end
     end
