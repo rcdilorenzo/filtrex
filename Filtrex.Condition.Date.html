@@ -90,7 +90,7 @@
 <td>inverse</td><td>boolean</td><td>See <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a></td>
 </tr>
 <tr>
-<td>column</td><td>string</td><td>any</td>
+<td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
 </tr>
 <tr>
 <td>comparator</td><td>string</td><td>after, on or after, before, on or before</td>
@@ -102,7 +102,34 @@
 <td>type</td><td>string</td><td>“date”</td>
 </tr>
 </table>
-<p>TODO: Then next two types of value formats are in progress… check back later!</p>
+<table>
+<colgroup>
+<col align="left">
+<col align="left">
+<col align="left">
+</colgroup>
+<thead>
+<tr>
+<th>Key</th><th>Type</th><th>Format / Allowed Values</th>
+</tr>
+</thead>
+<tr>
+<td>inverse</td><td>boolean</td><td>See <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a></td>
+</tr>
+<tr>
+<td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
+</tr>
+<tr>
+<td>comparator</td><td>string</td><td>between, not between</td>
+</tr>
+<tr>
+<td>value</td><td>string</td><td>%{start: “YYYY-MM-DD”, end: “YYYY-MM-DD”}</td>
+</tr>
+<tr>
+<td>type</td><td>string</td><td>“date”</td>
+</tr>
+</table>
+<p>TODO: Then last type of value format is in progress… check back later!</p>
 
         </section>
       
@@ -142,12 +169,6 @@
   
     <div class="summary-synopsis"><p>See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a></p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#validate_value/2">validate_value(comparator, value)</a>
-  </div>
   
 </div>
 
@@ -194,7 +215,7 @@
     </a>
     <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L29" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L40" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -203,23 +224,6 @@
   <section class="docstring">
     <p>See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a></p>
 
-  </section>
-</div>
-<div class="detail" id="validate_value/2">
-  <div class="detail-header">
-    <a href="#validate_value/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">validate_value(comparator, value)</span>
-      
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L52" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    
   </section>
 </div>
 
