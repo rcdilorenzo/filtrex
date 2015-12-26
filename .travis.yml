@@ -1,0 +1,21 @@
+language: elixir
+elixir:
+  - 1.1.0
+otp_release:
+  - 18.1
+addons:
+  postgresql: "9.4"
+sudo: false
+env:
+  - ELIXIR_ERL_OPTIONS=""
+  - ELIXIR_ERL_OPTIONS="+T 9"
+before_script:
+  - MIX_ENV=test mix do ecto.create, ecto.migrate
+script:
+  - mix test
+after_script:
+  - mix deps.get --only docs
+  - MIX_ENV=docs mix inch.report
+notifications:
+  recipients:
+    - rcddeveloper@icloud.com
