@@ -123,13 +123,45 @@
 <td>comparator</td><td>string</td><td>between, not between</td>
 </tr>
 <tr>
-<td>value</td><td>string</td><td>%{start: “YYYY-MM-DD”, end: “YYYY-MM-DD”}</td>
+<td>value</td><td>map</td><td>%{start: “YYYY-MM-DD”, end: “YYYY-MM-DD”}</td>
 </tr>
 <tr>
 <td>type</td><td>string</td><td>“date”</td>
 </tr>
 </table>
-<p>TODO: Then last type of value format is in progress… check back later!</p>
+<table>
+<colgroup>
+<col align="left">
+<col align="left">
+<col align="left">
+</colgroup>
+<thead>
+<tr>
+<th>Key</th><th>Type</th><th>Format / Allowed Values</th>
+</tr>
+</thead>
+<tr>
+<td>inverse</td><td>boolean</td><td>See <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a></td>
+</tr>
+<tr>
+<td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
+</tr>
+<tr>
+<td>comparator</td><td>string</td><td>is, is not, equals, does not equal,</td>
+</tr>
+<tr>
+<td></td><td></td><td>in the last, not in the last,</td>
+</tr>
+<tr>
+<td></td><td></td><td>in the next, not in the next</td>
+</tr>
+<tr>
+<td>value</td><td>string</td><td>%{interval: (days, weeks, months, or years), amount: integer}</td>
+</tr>
+<tr>
+<td>type</td><td>string</td><td>“date”</td>
+</tr>
+</table>
 
         </section>
       
@@ -215,7 +247,7 @@
     </a>
     <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L40" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L53" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
