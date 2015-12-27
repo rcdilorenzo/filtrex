@@ -1,10 +1,15 @@
 defmodule Filtrex.Condition.Date do
-  alias Timex.DateFormat, as: Format
   @behaviour Filtrex.Condition
   @string_date_comparators ["after", "on or after", "before", "on or before"]
   @start_end_comparators ["between", "not between"]
-  @comparators @start_end_comparators ++ @string_date_comparators
-  @format "{YYYY}-{0M}-{0D}"
+  @relative_date_comparators [
+    "is", "is not",
+    "equals", "does not equal",
+    "in the last", "not in the last",
+    "in the next", "not in the next"
+  ]
+  @comparators @relative_date_comparators ++ @start_end_comparators ++ @string_date_comparators
+  @shifts [:days, :weeks, :months, :years]
 
   @type t :: Filtrex.Condition.Date.t
   @moduledoc """
@@ -25,10 +30,18 @@ defmodule Filtrex.Condition.Date do
   | inverse    | boolean | See `Filtrex.Condition.Text`              |
   | column     | string  | any allowed keys from passed `config`     |
   | comparator | string  | between, not between                      |
-  | value      | string  | %{start: "YYYY-MM-DD", end: "YYYY-MM-DD"} |
+  | value      | map     | %{start: "YYYY-MM-DD", end: "YYYY-MM-DD"} |
   | type       | string  | "date"                                    |
 
-  TODO: Then last type of value format is in progress... check back later!
+  | Key        | Type    | Format / Allowed Values                                       |
+  |------------|---------|---------------------------------------------------------------|
+  | inverse    | boolean | See `Filtrex.Condition.Text`                                  |
+  | column     | string  | any allowed keys from passed `config`                         |
+  | comparator | string  | is, is not, equals, does not equal,\                          |
+  |            |         | in the last, not in the last,\                                |
+  |            |         | in the next, not in the next                                  |
+  | value      | string  | %{interval: (days, weeks, months, or years), amount: integer} |
+  | type       | string  | "date"                                                        |
   """
 
   import Filtrex.Condition, except: [parse: 1]
@@ -63,31 +76,17 @@ defmodule Filtrex.Condition.Date do
   @doc false
   def validate_value(nil, _), do: nil
 
-  def validate_value(comparator, value) when comparator in @string_date_comparators and is_binary(value) do
-    case parse_format(value) do
-      {:ok, _} -> value
-      {:error, error} -> error
+  def validate_value(comparator, value) do
+    cond do
+      comparator in @string_date_comparators ->
+        Filtrex.Validator.Date.parse_string_date(value)
+      comparator in @start_end_comparators ->
+        Filtrex.Validator.Date.parse_start_end(value)
+      comparator in @relative_date_comparators ->
+        Filtrex.Validator.Date.parse_relative(value)
     end
   end
 
-  def validate_value(comparator, value = %{start: start, end: end_value}) when comparator in @start_end_comparators do
-    case {parse_format(start), parse_format(end_value)} do
-      {{:ok, _}, {:ok, _}} -> value
-      {{:error, error}, _} -> error
-      {_, {:error, error}} -> error
-    end
-  end
-
-  def validate_value(comparator, _) when comparator in @start_end_comparators do
-    "Both a start and end key are required."
-  end
-
-  def validate_value(comparator, _), do: nil
-
-
-  defp parse_format(value) do
-    Timex.DateFormat.parse(value, @format)
-  end
 
   defimpl Filtrex.Encoder do
     import Filtrex.Condition
@@ -105,6 +104,38 @@ defmodule Filtrex.Condition.Date do
     encoder Condition.Date, "not between", "between", "(column > ?) AND (column < ?)", fn
       (%{start: start, end: end_value}) ->
         [end_value, start]
+    end
+
+    encoder Condition.Date, "equals", "does not equal", "column = ?", &value_from_relative/1
+    encoder Condition.Date, "does not equal", "equals", "column != ?", &value_from_relative/1
+
+    encoder Condition.Date, "is", "is not", "column = ?", &value_from_relative/1
+    encoder Condition.Date, "is not", "is", "column != ?", &value_from_relative/1
+
+    encoder Condition.Date, "in the last", "not in the last", "(column >= ?) AND (column <= ?)", &in_the_last_values/1
+    encoder Condition.Date, "not in the last", "in the last", "(column < ?) AND (column > ?)", &in_the_last_values/1
+
+    encoder Condition.Date, "in the next", "not in the next", "(column >= ?) AND (column <= ?)", &in_the_next_values/1
+    encoder Condition.Date, "not in the next", "in the next", "(column < ?) AND (column > ?)", &in_the_next_values/1
+
+    def in_the_next_values(value), do: [today, date_from_relative(value)]
+    def in_the_last_values(value), do: [date_from_relative(value, :past), today]
+    def value_from_relative(value), do: [date_from_relative(value)]
+
+    def today do
+      {:ok, date} = Timex.Date.now
+        |> Timex.DateFormat.format(Filtrex.Validator.Date.format)
+      date
+    end
+
+    def date_from_relative(value), do: date_from_relative(value, 1)
+    def date_from_relative(value, :past), do: date_from_relative(value, -1)
+    def date_from_relative(%{interval: interval, amount: amount}, multiplier) do
+      interval = String.to_existing_atom(interval)
+      {:ok, date} = Timex.Date.now
+        |> Timex.Date.shift([{interval, amount * multiplier}])
+        |> Timex.DateFormat.format(Filtrex.Validator.Date.format)
+      date
     end
   end
 end
