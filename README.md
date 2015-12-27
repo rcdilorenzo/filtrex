@@ -1,7 +1,6 @@
 # Filtrex
 
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
-[![Inline docs](http://inch-ci.org/github/rcdilorenzo/filtrex.svg)](http://inch-ci.org/github/rcdilorenzo/filtrex)
 
 Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well.
 
@@ -12,7 +11,7 @@ The following condition types and comparators are supported. See [Usage](#usage)
 * [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
-    * after, on or after, before, on or before, between, not between
+    * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
 
 ## Usage
 
