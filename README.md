@@ -16,16 +16,22 @@ The following condition types and comparators are supported. See [Usage](#usage)
 ## Usage
 
 ```elixir
-config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(date_due)}
+config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}
 
 {:ok, filter} = Filtrex.parse(config, %{
   filter: %{
-    type: "all"                # all | any | none
-    conditions: [%{
-      column: "title",
-      comparator: "contains",
-      value: "Buy",
-      type: "text"
+    type: "all",               # all | any | none
+    conditions: [
+      %{column: "title", comparator: "contains", value: "Buy", type: "text"},
+      %{column: "title", comparator: "does not contain", value: "Milk", type: "text"}
+    ],
+    sub_filters: [%{
+      filter: %{
+        type: "any",
+        conditions: [
+          %{column: "due_date", comparator: "in the last", value: %{interval: "days", amount: 4}, type: "date"}
+        ]
+      }
     }]
   }
 }
@@ -59,34 +65,6 @@ The package is not yet available yet on [Hex](https://hex.pm), but you can still
           [applications: [:filtrex]]
         end
 
-
-## Roadmap (eventual usage sample - subject to change)
-
-```elixir
-%{
-  filter: %{
-  type: "all"    # all | any | none
-  conditions: [%{
-    column: "title",
-    comparator: "contains",
-    value: "Buy",
-    type: "text"
-  }],
-  sub_filters: [%{
-    filter: %{
-      type: "any"
-      conditions: [%{
-        column: "due",
-        comparator: "between",
-        value: %{
-          start: "2015-12-22T10:00:00Z",
-          end: "2015-12-29T10:00:00Z"
-        }
-        type: "datetime"
-      }]
-    }
-  }]
-```
 
 ## License
 

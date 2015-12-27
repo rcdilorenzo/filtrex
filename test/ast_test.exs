@@ -1,14 +1,23 @@
 defmodule FiltrexASTTest do
   use ExUnit.Case
 
-  @conditions [
+  @filter %Filtrex{type: "any", conditions: [
     %Filtrex.Condition.Text{column: "title", comparator: "contains", value: "created"},
     %Filtrex.Condition.Text{column: "title", comparator: "is not", value: "Chris McCord"}
-  ]
+  ], sub_filters: [
+    %Filtrex{type: "all", conditions: [
+      %Filtrex.Condition.Date{column: "date_column", comparator: "after", value: "2016-05-01"},
+      %Filtrex.Condition.Date{column: "date_column", comparator: "before", value: "2017-01-01"}
+    ]}
+  ]}
 
   test "building an ecto query expression" do
-    ast = Filtrex.AST.build_query(@conditions, Filtrex.SampleModel, "AND")
+    ast = Filtrex.AST.build_query(@filter, Filtrex.SampleModel)
     expression = Macro.to_string(quote do: unquote(ast))
-    assert expression == "from(s in Filtrex.SampleModel, where: fragment(\"(title LIKE ?) AND (title != ?)\", \"%created%\", \"Chris McCord\"))"
+    assert with_newline(expression) == """
+    from(s in Filtrex.SampleModel, where: fragment("((title LIKE ?) OR (title != ?)) OR ((date_column > ?) AND (date_column < ?))", "%created%", "Chris McCord", "2016-05-01", "2017-01-01"))
+    """
   end
+
+  defp with_newline(string), do: "#{string}\n"
 end

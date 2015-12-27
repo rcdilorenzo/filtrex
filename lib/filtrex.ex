@@ -10,7 +10,7 @@ defmodule Filtrex do
     * `Filtrex.Fragment` - simple struct to hold generated expressions and values to be used when generating queries for ecto
   """
 
-  defstruct type: nil, conditions: []
+  defstruct type: nil, conditions: [], sub_filters: []
 
   @type t :: Filtrex.t
 
@@ -36,8 +36,28 @@ defmodule Filtrex do
     {:errors, ["One or more conditions required to filter"]}
   end
 
+  def parse(config, %{filter: %{type: type, conditions: conditions, sub_filters: sub_filters}}) when is_list(conditions) do
+    parsed_filters = Enum.reduce_while sub_filters, [], fn (to_parse, acc) ->
+      case parse(config, to_parse) do
+        {:ok, filter} -> {:cont, acc ++ [filter]}
+        {:errors, errors} -> {:halt, {:errors, errors}}
+      end
+    end
+    case parsed_filters do
+      {:errors, _} -> parsed_filters
+      _ -> parse_conditions(config, type, conditions)
+             |> parse_condition_results(type, parsed_filters)
+    end
+  end
+
   def parse(config, %{filter: %{type: type, conditions: conditions}}) when is_list(conditions) do
-    results = Enum.reduce(conditions, %{errors: [], conditions: []}, fn (map, acc) ->
+    parse(config, %{filter: %{type: type, conditions: conditions, sub_filters: []}})
+  end
+
+  def parse(_, _), do: {:error, "Invalid filter structure"}
+
+  defp parse_conditions(config, type, conditions) do
+    Enum.reduce(conditions, %{errors: [], conditions: []}, fn (map, acc) ->
       case Filtrex.Condition.parse(config, Map.put(map, :inverse, inverse_for(type))) do
         {:error, error} ->
           update_list_in_map(acc, :errors, error)
@@ -45,15 +65,14 @@ defmodule Filtrex do
           update_list_in_map(acc, :conditions, condition)
       end
     end)
-    case results do
-      %{errors: [], conditions: conditions} ->
-        {:ok, %Filtrex{type: type, conditions: conditions}}
-      %{errors: errors, conditions: []} ->
-        {:errors, errors}
-    end
   end
 
-  def parse(_, _), do: {:error, "Invalid filter structure"}
+  defp parse_condition_results(%{errors: [], conditions: conditions}, type, parsed_filters) do
+    {:ok, %Filtrex{type: type, conditions: conditions, sub_filters: parsed_filters}}
+  end
+  defp parse_condition_results(%{errors: errors, conditions: []}, _, _) do
+    {:errors, errors}
+  end
 
 
   @doc """
@@ -62,13 +81,10 @@ defmodule Filtrex do
   """
   @spec query(Filter.t, module, Macro.Env.t) :: Ecto.Query.t
   def query(filter, model, env) do
-    Filtrex.AST.build_query(filter.conditions, model, logical_join(filter.type))
+    Filtrex.AST.build_query(filter, model)
       |> Code.eval_quoted([], env)
       |> elem(0)
   end
-
-  defp logical_join("any"), do: "OR"
-  defp logical_join(_),     do: "AND"
 
   defp inverse_for("none"), do: true
   defp inverse_for(_),      do: false
