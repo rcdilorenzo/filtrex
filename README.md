@@ -1,5 +1,6 @@
 # Filtrex
 
+[![Hex.pm](https://img.shields.io/hexpm/v/filtrex.svg)](https://hex.pm/packages/filtrex)
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
 
 Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well.
@@ -51,12 +52,12 @@ The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuabl
 
 ## Installation
 
-The package is not yet available yet on [Hex](https://hex.pm), but you can still install and use it:
+The package is available on [Hex](https://hex.pm) and can be installed with the following instructions:
 
   1. Add filtrex to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:filtrex, github: "rcdilorenzo/filtrex"}]
+          [{:filtrex, "~> 0.1.0"}]
         end
 
   2. Ensure filtrex is started before your application:
