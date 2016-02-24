@@ -4,18 +4,13 @@
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
 [![Docs Status](http://inch-ci.org/github/rcdilorenzo/filtrex.svg?branch=master)](http://inch-ci.org/github/rcdilorenzo/filtrex)
 
-Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. Additionally, it has only been tested using the Postrgres adapter but may work with other Ecto adapters as well.
+Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. It has been tested using the Postrgres adapter but may work with other Ecto adapters as well.
 
-# Filter Types
+## Upcoming Features
 
-The following condition types and comparators are supported. See [Usage](#usage) for the basic usage of these conditions:
+See the planned features/issues associated with the [next release (v0.2.0)](https://github.com/rcdilorenzo/filtrex/milestones/v0.2.0).
 
-* [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
-    * is, is not, equals, does not equal, contains, does not contain
-* [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
-    * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
-
-## Usage
+## General Usage
 
 ```elixir
 config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}
@@ -50,22 +45,24 @@ Filtrex.query(filter, YourApp.YourModel, __ENV__)
 
 The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuable information on how to both use and extend the library to your liking so please take a look!
 
+## Filter Types
+
+The following condition types and comparators are supported.
+
+* [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
+    * is, is not, equals, does not equal, contains, does not contain
+* [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
+    * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
 
 ## Installation
 
-The package is available on [Hex](https://hex.pm) and can be installed with the following instructions:
+The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
 
-  1. Add filtrex to your list of dependencies in `mix.exs`:
-
-        def deps do
-          [{:filtrex, "~> 0.1.0"}]
-        end
-
-  2. Ensure filtrex is started before your application:
-
-        def application do
-          [applications: [:filtrex]]
-        end
+```elixir
+def deps do
+  [{:filtrex, "~> 0.1.0"}]
+end
+```
 
 
 ## License
