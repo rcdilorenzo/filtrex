@@ -74,7 +74,7 @@ defmodule FiltrexTest do
   end
 
   defp assert_count(filter, count) do
-    assert Filtrex.query(filter, Filtrex.SampleModel, __ENV__)
+    assert Filtrex.query(filter, Filtrex.SampleModel)
       |> select([m], count(m.id))
       |> Filtrex.Repo.one! == count
   end

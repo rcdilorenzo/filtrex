@@ -74,16 +74,17 @@ defmodule Filtrex do
     {:errors, errors}
   end
 
-
   @doc """
   Converts a filter with the specified ecto module name into a valid ecto query
   expression that is compiled when called.
   """
-  @spec query(Filter.t, module, Macro.Env.t) :: Ecto.Query.t
-  def query(filter, model, env) do
-    Filtrex.AST.build_query(filter, model)
-      |> Code.eval_quoted([], env)
-      |> elem(0)
+  @spec query(Filter.t, module) :: Ecto.Query.t
+  defmacro query(filter, model) do
+    quote do
+      Filtrex.AST.build_query(unquote(filter), unquote(model))
+        |> Code.eval_quoted([], __ENV__)
+        |> elem(0)
+    end
   end
 
   defp inverse_for("none"), do: true
