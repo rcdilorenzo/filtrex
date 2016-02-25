@@ -6,9 +6,8 @@
 
 Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. It has been tested using the Postrgres adapter but may work with other Ecto adapters as well.
 
-## Upcoming Features
+\*\*Note: **See the [v0.1.0 README](https://github.com/rcdilorenzo/filtrex/blob/b4a6830aafc6907a82b296392bb91432ed8e9024/README.md) for the latest Hex.pm release. This README is the documentation for the upcoming 0.2.0 version.**
 
-See the planned features/issues associated with the [next release (v0.2.0)](https://github.com/rcdilorenzo/filtrex/milestones/v0.2.0).
 
 ## General Usage
 
@@ -40,7 +39,7 @@ The configuration passed into `Filtrex.parse/2` gives the individual condition t
 To create an [Ecto](https://github.com/elixir-lang/ecto) query, simple construct a query like the following and then pipe it into oblivion!
 
 ```elixir
-Filtrex.query(filter, YourApp.YourModel, __ENV__)
+Filtrex.query(filter, YourApp.YourModel)
 ```
 
 The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuable information on how to both use and extend the library to your liking so please take a look!
@@ -54,13 +53,13 @@ The following condition types and comparators are supported.
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
     * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
 
-## Installation
+## Installation (once v0.2.0 is available)
 
 The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
 
 ```elixir
 def deps do
-  [{:filtrex, "~> 0.1.0"}]
+  [{:filtrex, "~> 0.2.0"}]
 end
 ```
 
