@@ -1,9 +1,16 @@
 defmodule Filtrex.Condition do
   @moduledoc """
   `Filtrex.Condition` is an abstract module for parsing conditions.
+  To implement your own condition, add `@behaviour Filtrex.Condition` in your module and implement the three callbacks:
+
+    * `parse/2` - produce a condition struct from a configuration and attributes
+    * `type/0` - the description of the condition that must match the underscore version of the module's last namespace
+    * `comparators/0` - the list of used query comparators for parsing params
   """
 
   @callback parse(Map.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
+  @callback type :: Atom.t
+  @callback comparators :: [String.t]
 
   defstruct column: nil, comparator: nil, value: nil
 
@@ -25,17 +32,27 @@ defmodule Filtrex.Condition do
   })
   ```
   """
-  def parse(config, options = %{type: type, inverse: inverse}) do
-    try do
-      module_type = type |> Mix.Utils.camelize
-      module = Module.safe_concat(Filtrex.Condition, module_type)
-      module.parse(
-        config[String.to_existing_atom(type)],
-        Map.delete(options, :type)
-      )
-    rescue ArgumentError ->
-      {:error, ["Unknown filter condition '#{type}'"]}
+  def parse(config, options = %{type: type}) do
+    case condition_module(type) do
+      nil ->
+        {:error, ["Unknown filter condition '#{type}'"]}
+      module ->
+        type_atom = String.to_existing_atom(type)
+        module.parse(config[type_atom], Map.delete(options, :type))
     end
+  end
+
+  @doc "Parses a params key into the condition type, column, and comparator"
+  def param_key_type(config, key_with_comparator) do
+    result = Enum.find_value(condition_modules, fn (module) ->
+      Enum.find_value(module.comparators, fn (comparator) ->
+        normalized = "_" <> String.replace(comparator, " ", "_")
+        key = String.replace_trailing(key_with_comparator, normalized, "")
+        %{keys: allowed_keys} = config[module.type]
+        if key in allowed_keys, do: {:ok, module, key, comparator}
+      end)
+    end)
+    if result, do: result, else: {:error, "Unknown filter key"}
   end
 
   defmacro encoder(type, comparator, reverse_comparator, expression, values_function \\ {:&, [], [[{:&, [], [1]}]]}) do
@@ -94,6 +111,24 @@ defmodule Filtrex.Condition do
         "'#{String.slice(iodata, 0..12)}...#{String.slice(iodata, -3..-1)}'"
           |> parse_value_type_error(filter_type)
     end
+  end
+
+  defp condition_modules do
+    modules = [
+      Filtrex.Condition.Text,
+      Filtrex.Condition.Date
+    ]
+    Application.get_env(:filtrex, :conditions, modules)
+  end
+
+  defp condition_module(type) do
+    Enum.find(condition_modules, fn (module) ->
+      condition_type = to_string(module)
+        |> String.split(".")
+        |> List.last
+        |> Mix.Utils.underscore
+      type == condition_type
+    end)
   end
 end
 

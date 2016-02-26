@@ -23,6 +23,10 @@ defmodule Filtrex.Condition.Text do
 
   defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
 
+  def type, do: :text
+
+  def comparators, do: @comparators
+
   @doc """
   Tries to create a valid text condition struct, calling helper methods
   from `Filtrex.Condition` to validate each type. If any of the types are not valid,

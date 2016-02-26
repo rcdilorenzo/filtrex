@@ -1,14 +1,12 @@
 defmodule Filtrex.Condition.Date do
   @behaviour Filtrex.Condition
-  @string_date_comparators ["after", "on or after", "before", "on or before"]
+  @string_date_comparators ["equals", "does not equal", "is", "is not", "after", "on or after", "before", "on or before"]
   @start_end_comparators ["between", "not between"]
   @relative_date_comparators [
-    "is", "is not",
-    "equals", "does not equal",
     "in the last", "not in the last",
     "in the next", "not in the next"
   ]
-  @comparators @relative_date_comparators ++ @start_end_comparators ++ @string_date_comparators
+  @comparators @string_date_comparators ++ @relative_date_comparators ++ @start_end_comparators
   @shifts [:days, :weeks, :months, :years]
 
   @type t :: Filtrex.Condition.Date.t
@@ -49,7 +47,10 @@ defmodule Filtrex.Condition.Date do
 
   defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
 
-  @doc "See `Filtrex.Condition.Text.parse/2`"
+  def type, do: :date
+
+  def comparators, do: @comparators
+
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     parsed_comparator = validate_in(comparator, @comparators)
     condition = %Condition.Date{
@@ -87,7 +88,6 @@ defmodule Filtrex.Condition.Date do
     end
   end
 
-
   defimpl Filtrex.Encoder do
     import Filtrex.Condition
 
@@ -106,11 +106,11 @@ defmodule Filtrex.Condition.Date do
         [end_value, start]
     end
 
-    encoder Condition.Date, "equals", "does not equal", "column = ?", &value_from_relative/1
-    encoder Condition.Date, "does not equal", "equals", "column != ?", &value_from_relative/1
+    encoder Condition.Date, "equals", "does not equal", "column = ?"
+    encoder Condition.Date, "does not equal", "equals", "column != ?"
 
-    encoder Condition.Date, "is", "is not", "column = ?", &value_from_relative/1
-    encoder Condition.Date, "is not", "is", "column != ?", &value_from_relative/1
+    encoder Condition.Date, "is", "is not", "column = ?"
+    encoder Condition.Date, "is not", "is", "column != ?"
 
     encoder Condition.Date, "in the last", "not in the last", "(column >= ?) AND (column <= ?)", &in_the_last_values/1
     encoder Condition.Date, "not in the last", "in the last", "(column < ?) AND (column > ?)", &in_the_last_values/1

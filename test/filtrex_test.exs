@@ -73,6 +73,20 @@ defmodule FiltrexTest do
     assert_count filter, 5
   end
 
+  test "parsing parameters" do
+    {:ok, filter} = Filtrex.parse_params(@config, %{
+      "title_contains" => "earth",
+      "date_column" => "2016-01-10"
+    })
+    assert filter == %Filtrex{
+      type: "all",
+      conditions: [
+        %Filtrex.Condition.Date{type: :date, column: "date_column", comparator: "equals", value: "2016-01-10", inverse: false},
+        %Filtrex.Condition.Text{type: :text, column: "title", comparator: "contains", value: "earth", inverse: false}
+      ]
+    }
+  end
+
   defp assert_count(filter, count) do
     assert Filtrex.query(filter, Filtrex.SampleModel)
       |> select([m], count(m.id))

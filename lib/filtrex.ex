@@ -74,6 +74,15 @@ defmodule Filtrex do
     {:errors, errors}
   end
 
+  def parse_params(config, params) do
+    case Filtrex.Params.parse_conditions(config, params) do
+      {:ok, conditions} ->
+        {:ok,  %Filtrex{type: "all", conditions: conditions}}
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   @doc """
   Converts a filter with the specified ecto module name into a valid ecto query
   expression that is compiled when called.

@@ -42,16 +42,18 @@ defmodule FiltrexConditionDateTest do
     assert Date.parse(@config, %{
       inverse: false,
       column: @column,
-      value: %{interval: "blue moon", amount: 2},
-      comparator: "equals"
-    }) == {:error, "Invalid date value format: 'blue moon' is not a valid interval."}
-
-    assert Date.parse(@config, %{
-      inverse: false,
-      column: @column,
       value: %{interval: "weeks"},
       comparator: "in the last"
     }) == {:error, "Invalid date value format: Both an interval and amount key are required."}
+  end
+
+  test "'is' comparator" do
+    assert Date.parse(@config, %{
+      inverse: false,
+      column: @column,
+      value: "2016-05-18",
+      comparator: "is"
+    }) |> elem(0) == :ok
   end
 
   test "encoding as SQL fragments for ecto" do
@@ -66,14 +68,14 @@ defmodule FiltrexConditionDateTest do
     assert encode(Date, @column, %{start: @default, end: "2015-12-31"}, "not between") ==
       {"(date_column > ?) AND (date_column < ?)", ["2015-12-31", @default]}
 
-    assert encode(Date, @column, %{interval: "weeks", amount: -1}, "equals") ==
-      {"date_column = ?", [shift(:weeks, -1)]}
+    assert encode(Date, @column, "2016-03-01", "equals") ==
+      {"date_column = ?", ["2016-03-01"]}
 
-    assert encode(Date, @column, %{interval: "days", amount: -3}, "does not equal") ==
-      {"date_column != ?", [shift(:days, -3)]}
+    assert encode(Date, @column, "2016-03-01", "does not equal") ==
+      {"date_column != ?", ["2016-03-01"]}
 
-    assert encode(Date, @column, %{interval: "months", amount: -2}, "is") ==
-      {"date_column = ?", [shift(:months, -2)]}
+    assert encode(Date, @column, "2016-02-10", "is") ==
+      {"date_column = ?", ["2016-02-10"]}
 
     assert encode(Date, @column, %{interval: "days", amount: 3}, "in the last") ==
       {"(date_column >= ?) AND (date_column <= ?)", [shift(:days, -3), today]}
