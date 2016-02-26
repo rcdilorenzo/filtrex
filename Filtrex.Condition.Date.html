@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Condition.Date – Filtrex v0.0.1</title>
+    <title>Filtrex.Condition.Date – Filtrex v0.2.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Filtrex
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.1
+        v0.2.0-dev
       </h2>
     </div>
     
@@ -61,7 +61,7 @@
 
 
       <h1>
-        <small class="visible-xs">Filtrex v0.0.1</small>
+        <small class="visible-xs">Filtrex v0.2.0-dev</small>
         Filtrex.Condition.Date
         
         
@@ -93,7 +93,10 @@
 <td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
 </tr>
 <tr>
-<td>comparator</td><td>string</td><td>after, on or after, before, on or before</td>
+<td>comparator</td><td>string</td><td>after, on or after, before, on or before,</td>
+</tr>
+<tr>
+<td></td><td></td><td>is, is not, equals, does not equal</td>
 </tr>
 <tr>
 <td>value</td><td>string</td><td>“YYYY-MM-DD”</td>
@@ -147,10 +150,7 @@
 <td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
 </tr>
 <tr>
-<td>comparator</td><td>string</td><td>is, is not, equals, does not equal,</td>
-</tr>
-<tr>
-<td></td><td></td><td>in the last, not in the last,</td>
+<td>comparator</td><td>string</td><td>in the last, not in the last,</td>
 </tr>
 <tr>
 <td></td><td></td><td>in the next, not in the next</td>
@@ -196,10 +196,28 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#comparators/0">comparators()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:comparators/0"><code class="inline">Filtrex.Condition.comparators/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#parse/2">parse(config, map)</a>
   </div>
   
-    <div class="summary-synopsis"><p>See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a></p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:parse/2"><code class="inline">Filtrex.Condition.parse/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#type/0">type()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:type/0"><code class="inline">Filtrex.Condition.type/0</code></a></p>
 </div>
   
 </div>
@@ -240,21 +258,57 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="parse/2">
+          <div class="detail" id="comparators/0">
   <div class="detail-header">
-    <a href="#parse/2" class="detail-link" title="Link to this function">
+    <a href="#comparators/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">parse(config, map)</span>
+    <span class="signature">comparators()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L53" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L52" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a></p>
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:comparators/0"><code class="inline">Filtrex.Condition.comparators/0</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="parse/2">
+  <div class="detail-header">
+    <a href="#parse/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse(config, map)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L54" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:parse/2"><code class="inline">Filtrex.Condition.parse/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="type/0">
+  <div class="detail-header">
+    <a href="#type/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">type()</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L50" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:type/0"><code class="inline">Filtrex.Condition.type/0</code></a>.</p>
 
   </section>
 </div>

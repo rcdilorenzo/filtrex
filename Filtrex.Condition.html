@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Condition – Filtrex v0.0.1</title>
+    <title>Filtrex.Condition – Filtrex v0.2.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Filtrex
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.0.1
+        v0.2.0-dev
       </h2>
     </div>
     
@@ -61,7 +61,7 @@
 
 
       <h1>
-        <small class="visible-xs">Filtrex v0.0.1</small>
+        <small class="visible-xs">Filtrex v0.2.0-dev</small>
         Filtrex.Condition
         
           <small>behaviour</small>
@@ -75,7 +75,16 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p><a href="Filtrex.Condition.html#content"><code class="inline">Filtrex.Condition</code></a> is an abstract module for parsing conditions.</p>
+          <p><a href="Filtrex.Condition.html#content"><code class="inline">Filtrex.Condition</code></a> is an abstract module for parsing conditions.
+To implement your own condition, add <code class="inline">@behaviour Filtrex.Condition</code> in your module and implement the three callbacks:</p>
+<ul>
+<li><a href="#parse/2"><code class="inline">parse/2</code></a> - produce a condition struct from a configuration and attributes
+</li>
+<li><code class="inline">type/0</code> - the description of the condition that must match the underscore version of the module’s last namespace
+</li>
+<li><code class="inline">comparators/0</code> - the list of used query comparators for parsing params
+</li>
+</ul>
 
         </section>
       
@@ -96,6 +105,15 @@
       <a href="#functions">Functions</a>
     </h2>
     <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#param_key_type/2">param_key_type(config, key_with_comparator)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Parses a params key into the condition type, column, and comparator</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature">
     <a href="#parse/2">parse(config, map)</a>
   </div>
@@ -166,7 +184,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#c:comparators/0">comparators()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#c:parse/2">parse(arg0, %{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:type/0">type()</a>
   </div>
   
 </div>
@@ -187,14 +217,32 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="parse/2">
+          <div class="detail" id="param_key_type/2">
+  <div class="detail-header">
+    <a href="#param_key_type/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">param_key_type(config, key_with_comparator)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L46" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Parses a params key into the condition type, column, and comparator</p>
+
+  </section>
+</div>
+<div class="detail" id="parse/2">
   <div class="detail-header">
     <a href="#parse/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
     <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L28" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L35" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -224,7 +272,7 @@ config:</p>
     </a>
     <span class="signature">parse_error(value, type, filter_type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L74" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L91" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -251,7 +299,7 @@ config:</p>
     </a>
     <span class="signature">parse_value_type_error(column, filter_type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L80" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L97" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -278,7 +326,7 @@ config:</p>
     </a>
     <span class="signature">validate_in(value, list)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L58" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L75" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -305,7 +353,7 @@ config:</p>
     </a>
     <span class="signature">validate_is_binary(value)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L69" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L86" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -344,7 +392,7 @@ config:</p>
     </a>
     <span class="signature">encoder(type, comparator, reverse_comparator, expression, values_function \\ {:&amp;, [], [[{:&amp;, [], [1]}]]})</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L41" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L58" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -366,14 +414,40 @@ config:</p>
             </a>
             Callbacks
           </h1>
-          <div class="detail" id="c:parse/2">
+          <div class="detail" id="c:comparators/0">
+  <div class="detail-header">
+    <a href="#c:comparators/0" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">comparators()</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L13" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">comparators :: [<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>]</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:parse/2">
   <div class="detail-header">
     <a href="#c:parse/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
     <span class="signature">parse(arg0, %{})</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L6" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L11" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -386,6 +460,32 @@ config:</p>
           <pre><code class="elixir">parse(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, %{inverse: boolean, column: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, value: any, comparator: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}) ::
   {:ok, any} |
   {:error, any}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:type/0">
+  <div class="detail-header">
+    <a href="#c:type/0" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">type()</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L12" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">type :: <a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a></code></pre>
         
       </div>
     </div>
