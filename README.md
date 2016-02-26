@@ -4,12 +4,29 @@
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
 [![Docs Status](http://inch-ci.org/github/rcdilorenzo/filtrex.svg?branch=master)](http://inch-ci.org/github/rcdilorenzo/filtrex)
 
-Filtrex is an elixir library for parsing and querying with filter data structures. Although it does not direcly require [Ecto](https://github.com/elixir-lang/ecto), it is definitely geared towards using that library. It has been tested using the Postrgres adapter but may work with other Ecto adapters as well.
+Filtrex is an elixir library for parsing and querying with filter data structures and parameters. It allows construction of Ecto queries from Phoenix-like query parameters or map data structures for saving smart filters. It has been tested using the Postrgres adapter but will likely work with other adapters as well.
 
 \*\*Note: **See the [v0.1.0 README](https://github.com/rcdilorenzo/filtrex/blob/b4a6830aafc6907a82b296392bb91432ed8e9024/README.md) for the latest Hex.pm release. This README is the documentation for the upcoming 0.2.0 version.**
 
+## Parsing Filters from URL Params
 
-## General Usage
+```elixir
+config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(posted_at)}
+params = %{
+    "comments_contains" => "José",
+    "title" => "Upcoming Elixir Features",
+    "posted_at_between" => %{"start" => "2013-01-01", "end" => "2017-12-31"}
+}
+
+{:ok, filter} = Filtrex.parse_params(config, params)
+query = Filtrex.query(filter, YourApp.YourModel)
+
+```
+
+Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators. 
+
+
+## Parsing Filter Structures
 
 ```elixir
 config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}

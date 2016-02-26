@@ -15,13 +15,14 @@ defmodule Filtrex.Condition.Date do
 
   There are three different value formats allowed listed in each of the three tables below
 
-  | Key        | Type    | Format / Allowed Values                  |
-  |------------|---------|------------------------------------------|
-  | inverse    | boolean | See `Filtrex.Condition.Text`             |
-  | column     | string  | any allowed keys from passed `config`    |
-  | comparator | string  | after, on or after, before, on or before |
-  | value      | string  | "YYYY-MM-DD"                             |
-  | type       | string  | "date"                                   |
+  | Key        | Type    | Format / Allowed Values                   |
+  |------------|---------|-------------------------------------------|
+  | inverse    | boolean | See `Filtrex.Condition.Text`              |
+  | column     | string  | any allowed keys from passed `config`     |
+  | comparator | string  | after, on or after, before, on or before,\|
+  |            |         | is, is not, equals, does not equal        |
+  | value      | string  | "YYYY-MM-DD"                              |
+  | type       | string  | "date"                                    |
 
   | Key        | Type    | Format / Allowed Values                   |
   |------------|---------|-------------------------------------------|
@@ -35,8 +36,7 @@ defmodule Filtrex.Condition.Date do
   |------------|---------|---------------------------------------------------------------|
   | inverse    | boolean | See `Filtrex.Condition.Text`                                  |
   | column     | string  | any allowed keys from passed `config`                         |
-  | comparator | string  | is, is not, equals, does not equal,\                          |
-  |            |         | in the last, not in the last,\                                |
+  | comparator | string  | in the last, not in the last,\                                |
   |            |         | in the next, not in the next                                  |
   | value      | string  | %{interval: (days, weeks, months, or years), amount: integer} |
   | type       | string  | "date"                                                        |
