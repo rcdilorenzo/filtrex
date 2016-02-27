@@ -74,15 +74,26 @@ defmodule FiltrexTest do
   end
 
   test "parsing parameters" do
-    {:ok, filter} = Filtrex.parse_params(@config, %{
-      "title_contains" => "earth",
-      "date_column" => "2016-01-10"
-    })
+    query_string = "title_contains=earth&date_column_between[start]=2016-01-10&date_column_between[end]=2016-12-10"
+    params = Plug.Conn.Query.decode(query_string)
+    {:ok, filter} = Filtrex.parse_params(@config, params)
     assert filter == %Filtrex{
       type: "all",
       conditions: [
-        %Filtrex.Condition.Date{type: :date, column: "date_column", comparator: "equals", value: "2016-01-10", inverse: false},
-        %Filtrex.Condition.Text{type: :text, column: "title", comparator: "contains", value: "earth", inverse: false}
+        %Filtrex.Condition.Date{
+          type: :date,
+          column: "date_column",
+          comparator: "between",
+          value: %{start: "2016-01-10", end: "2016-12-10"},
+          inverse: false
+        },
+        %Filtrex.Condition.Text{
+          type: :text,
+          column: "title",
+          comparator: "contains",
+          value: "earth",
+          inverse: false
+        }
       ]
     }
   end

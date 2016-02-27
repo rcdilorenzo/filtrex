@@ -11,19 +11,27 @@ Filtrex is an elixir library for parsing and querying with filter data structure
 ## Parsing Filters from URL Params
 
 ```elixir
-config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(posted_at)}
+config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(posted_at)}}
 params = %{
-    "comments_contains" => "José",
-    "title" => "Upcoming Elixir Features",
+    "comments_contains" => "Chris McCord",
+    "title" => "Upcoming Phoenix Features",
     "posted_at_between" => %{"start" => "2013-01-01", "end" => "2017-12-31"}
 }
+# params generated from plug (phoenix) with query string:
+# /endpoint?comments_contains=Chris%20McCord&title=Upcoming%20Phoenix%20Features&posted_at_between%5Bstart%5D=2013-01-01&posted_at_between%5Bend%5D=%202017-12-31
 
 {:ok, filter} = Filtrex.parse_params(config, params)
-query = Filtrex.query(filter, YourApp.YourModel)
-
+# => %Filtrex{conditions: [%Filtrex.Condition.Text{column: "comments",
+#   comparator: "contains", inverse: false, type: :text, value: "Chris McCord"},
+#  %Filtrex.Condition.Date{column: "posted_at", comparator: "between",
+#   inverse: false, type: :date,
+#   value: %{end: "2017-12-31", start: "2013-01-01"}},
+#  %Filtrex.Condition.Text{column: "title", comparator: "equals", inverse: false,
+#   type: :text, value: "Upcoming Phoenix Features"}], sub_filters: [],
+# type: "all"}
 ```
 
-Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators. 
+Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators.
 
 
 ## Parsing Filter Structures
@@ -53,9 +61,13 @@ config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}
 
 The configuration passed into `Filtrex.parse/2` gives the individual condition types more information to validate the filter against and is a required argument. See [this section](http://rcdilorenzo.github.io/filtrex/Filtrex.html) of the documentation for details.
 
-To create an [Ecto](https://github.com/elixir-lang/ecto) query, simple construct a query like the following and then pipe it into oblivion!
+## Creating Ecto Queries from a Filtrex Filter
+
+To create an [Ecto](https://github.com/elixir-lang/ecto) query, simply require `Filtrex` and pass in the filter and a module that uses `Ecto.Schema` to the `Filtrex.query/2` macro; then, pipe it into oblivion!
 
 ```elixir
+require Filtrex
+
 Filtrex.query(filter, YourApp.YourModel)
 ```
 

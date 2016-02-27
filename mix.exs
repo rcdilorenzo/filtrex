@@ -34,12 +34,13 @@ defmodule Filtrex.Mixfile do
 
   defp deps do
     [
-      {:postgrex, ">= 0.0.0", optional: true},
-      {:ecto, "~> 1.1", optional: true},
+      {:postgrex, ">= 0.0.0", only: :test},
+      {:ecto, ">= 1.1.0"},
       {:timex, "~> 0.19.5"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
-      {:inch_ex, only: [:dev, :docs]}
+      {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
+      {:plug, "~> 1.1.2", only: :test}
     ]
   end
 
