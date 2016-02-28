@@ -42,7 +42,7 @@ defmodule Filtrex.Condition.Date do
   | type       | string  | "date"                                                        |
   """
 
-  import Filtrex.Condition, except: [parse: 1]
+  import Filtrex.Condition, except: [parse: 2]
   alias Filtrex.Condition
 
   defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false

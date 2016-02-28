@@ -37,14 +37,15 @@ Using parsed parameters from your phoenix application, a filter can be easily co
 ## Parsing Filter Structures
 
 ```elixir
-config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}
+config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}, boolean: %{keys: ~w(flag)}}
 
 {:ok, filter} = Filtrex.parse(config, %{
   filter: %{
     type: "all",               # all | any | none
     conditions: [
       %{column: "title", comparator: "contains", value: "Buy", type: "text"},
-      %{column: "title", comparator: "does not contain", value: "Milk", type: "text"}
+      %{column: "title", comparator: "does not contain", value: "Milk", type: "text"},
+      %{column: "flag", comparator: "is", value: "false", type: "boolean"}
     ],
     sub_filters: [%{
       filter: %{
@@ -55,7 +56,7 @@ config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}
       }
     }]
   }
-}
+})
 ```
 
 
@@ -77,6 +78,8 @@ The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuabl
 
 The following condition types and comparators are supported.
 
+* [Filtrex.Condition.Boolean](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Boolean.html)
+    * is, is not
 * [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
