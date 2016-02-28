@@ -3,7 +3,7 @@ defmodule FiltrexTest do
   import Ecto.Query
   require Filtrex
 
-  @config %{text: %{keys: ["title"]}, date: %{keys: ["date_column"]}}
+  @config %{text: %{keys: ~w(title)}, date: %{keys: ~w(date_column)}, boolean: %{keys: ~w(flag)}}
 
   test "only allows certain types" do
     assert Filtrex.parse(@config, %{
@@ -74,7 +74,7 @@ defmodule FiltrexTest do
   end
 
   test "parsing parameters" do
-    query_string = "title_contains=earth&date_column_between[start]=2016-01-10&date_column_between[end]=2016-12-10"
+    query_string = "title_contains=earth&date_column_between[start]=2016-01-10&date_column_between[end]=2016-12-10&flag=false"
     params = Plug.Conn.Query.decode(query_string)
     {:ok, filter} = Filtrex.parse_params(@config, params)
     assert filter == %Filtrex{
@@ -85,6 +85,13 @@ defmodule FiltrexTest do
           column: "date_column",
           comparator: "between",
           value: %{start: "2016-01-10", end: "2016-12-10"},
+          inverse: false
+        },
+        %Filtrex.Condition.Boolean{
+          type: :boolean,
+          column: "flag",
+          comparator: "is",
+          value: false,
           inverse: false
         },
         %Filtrex.Condition.Text{

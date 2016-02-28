@@ -42,7 +42,7 @@ defmodule Filtrex.Condition.Date do
   | type       | string  | "date"                                                        |
   """
 
-  import Filtrex.Condition, except: [parse: 1]
+  import Filtrex.Condition, except: [parse: 2]
   alias Filtrex.Condition
 
   defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
@@ -74,10 +74,9 @@ defmodule Filtrex.Condition.Date do
     end
   end
 
-  @doc false
-  def validate_value(nil, _), do: nil
+  defp validate_value(nil, _), do: nil
 
-  def validate_value(comparator, value) do
+  defp validate_value(comparator, value) do
     cond do
       comparator in @string_date_comparators ->
         Filtrex.Validator.Date.parse_string_date(value)
@@ -118,19 +117,19 @@ defmodule Filtrex.Condition.Date do
     encoder Condition.Date, "in the next", "not in the next", "(column >= ?) AND (column <= ?)", &in_the_next_values/1
     encoder Condition.Date, "not in the next", "in the next", "(column < ?) AND (column > ?)", &in_the_next_values/1
 
-    def in_the_next_values(value), do: [today, date_from_relative(value)]
-    def in_the_last_values(value), do: [date_from_relative(value, :past), today]
-    def value_from_relative(value), do: [date_from_relative(value)]
+    defp in_the_next_values(value), do: [today, date_from_relative(value)]
+    defp in_the_last_values(value), do: [date_from_relative(value, :past), today]
+    defp value_from_relative(value), do: [date_from_relative(value)]
 
-    def today do
+    defp today do
       {:ok, date} = Timex.Date.now
         |> Timex.DateFormat.format(Filtrex.Validator.Date.format)
       date
     end
 
-    def date_from_relative(value), do: date_from_relative(value, 1)
-    def date_from_relative(value, :past), do: date_from_relative(value, -1)
-    def date_from_relative(%{interval: interval, amount: amount}, multiplier) do
+    defp date_from_relative(value), do: date_from_relative(value, 1)
+    defp date_from_relative(value, :past), do: date_from_relative(value, -1)
+    defp date_from_relative(%{interval: interval, amount: amount}, multiplier) do
       interval = String.to_existing_atom(interval)
       {:ok, date} = Timex.Date.now
         |> Timex.Date.shift([{interval, amount * multiplier}])

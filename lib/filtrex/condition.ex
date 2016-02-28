@@ -48,7 +48,7 @@ defmodule Filtrex.Condition do
       Enum.find_value(module.comparators, fn (comparator) ->
         normalized = "_" <> String.replace(comparator, " ", "_")
         key = String.replace_trailing(key_with_comparator, normalized, "")
-        %{keys: allowed_keys} = config[module.type]
+        %{keys: allowed_keys} = Map.get(config, module.type, %{keys: []})
         if key in allowed_keys, do: {:ok, module, key, comparator}
       end)
     end)
@@ -116,7 +116,8 @@ defmodule Filtrex.Condition do
   defp condition_modules do
     modules = [
       Filtrex.Condition.Text,
-      Filtrex.Condition.Date
+      Filtrex.Condition.Date,
+      Filtrex.Condition.Boolean
     ]
     Application.get_env(:filtrex, :conditions, modules)
   end
@@ -130,22 +131,4 @@ defmodule Filtrex.Condition do
       type == condition_type
     end)
   end
-end
-
-defprotocol Filtrex.Encoder do
-  @moduledoc """
-  Encodes a condition into `Filtrex.Fragment` as an expression with values
-
-  Example:
-  ```
-  defimpl Filtrex.Encoder, for: Filtrex.Condition.Text do
-    def encode(%Filtrex.Condition.Text{column: column, comparator: "is", value: value}) do
-      %Filtrex.Fragment{expression: "\#\{column\} = ?", values: [value]}
-    end
-  end
-  ```
-  """
-
-  @spec encode(Filter.Condition.t) :: [String.t | [any]]
-  def encode(condition)
 end

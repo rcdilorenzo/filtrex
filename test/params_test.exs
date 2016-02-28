@@ -1,7 +1,7 @@
 defmodule ParamsTest do
   use ExUnit.Case
 
-  @config %{text: %{keys: ["title"]}, date: %{keys: ["date_column"]}}
+  @config %{text: %{keys: ~w(title)}, date: %{keys: ~w(date_column)}}
 
   test "parsing valid text parameters" do
     params = %{"title_contains" => "blah"}
