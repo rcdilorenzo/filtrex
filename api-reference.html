@@ -102,6 +102,13 @@ To implement your own condition, add <code class="inline">@behaviour Filtrex.Con
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Condition.Boolean.html">Filtrex.Condition.Boolean</a></div>
+  
+    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Boolean.html#content"><code class="inline">Filtrex.Condition.Boolean</code></a> is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations “true” and “false”. Its comparators only consist of “is” or “is not”</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Filtrex.Condition.Date.html">Filtrex.Condition.Date</a></div>
   
     <div class="summary-synopsis"><p><a href="Filtrex.Condition.Date.html#content"><code class="inline">Filtrex.Condition.Date</code></a> is a specific condition type for handling date filters with various comparisons</p>
@@ -119,7 +126,7 @@ To implement your own condition, add <code class="inline">@behaviour Filtrex.Con
   <div class="summary-signature"><a href="Filtrex.Fragment.html">Filtrex.Fragment</a></div>
   
     <div class="summary-synopsis"><p><a href="Filtrex.Fragment.html#content"><code class="inline">Filtrex.Fragment</code></a> is a simple struct used to hold an <code class="inline">expression</code> and <code class="inline">values</code>.
-It is used by <code class="inline">Filter.Encoder.encode/1</code> to turn conditions into ecto queries.
+It is used by <a href="Filtrex.Encoder.html#encode/1"><code class="inline">Filtrex.Encoder.encode/1</code></a> to turn conditions into ecto queries.
 Example:</p>
 <pre><code class="elixir">%Filtrex.Fragment{expression: &quot;(text = ?)&quot;, values: [&quot;Buy Milk&quot;]}</code></pre>
 </div>

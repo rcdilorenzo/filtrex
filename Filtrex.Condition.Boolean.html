@@ -5,11 +5,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Encoder – Filtrex v0.2.0-dev</title>
+    <title>Filtrex.Condition.Boolean – Filtrex v0.2.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="protocols">
+  <body data-type="modules">
 
     <div class="main">
 <button class="sidebar-toggle">
@@ -62,12 +62,10 @@
 
       <h1>
         <small class="visible-xs">Filtrex v0.2.0-dev</small>
-        Filtrex.Encoder
-        
-          <small>protocol</small>
+        Filtrex.Condition.Boolean
         
         
-          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/encoder.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/boolean.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -75,13 +73,7 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Encodes a condition into <a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> as an expression with values</p>
-<p>Example:</p>
-<pre><code class="elixir">defimpl Filtrex.Encoder, for: Filtrex.Condition.Text do
-  def encode(%Filtrex.Condition.Text{column: column, comparator: &quot;is&quot;, value: value}) do
-    %Filtrex.Fragment{expression: &quot;#{column} = ?&quot;, values: [value]}
-  end
-end</code></pre>
+          <p><a href="Filtrex.Condition.Boolean.html#content"><code class="inline">Filtrex.Condition.Boolean</code></a> is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations “true” and “false”. Its comparators only consist of “is” or “is not”.</p>
 
         </section>
       
@@ -116,8 +108,29 @@ end</code></pre>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#encode/1">encode(condition)</a>
+    <a href="#comparators/0">comparators()</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:comparators/0"><code class="inline">Filtrex.Condition.comparators/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#parse/2">parse(config, map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:parse/2"><code class="inline">Filtrex.Condition.parse/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#type/0">type()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:type/0"><code class="inline">Filtrex.Condition.type/0</code></a></p>
+</div>
   
 </div>
 
@@ -141,7 +154,7 @@ end</code></pre>
           </h1>
           <div class="types-list">
             <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: Filtrex.Condition.Boolean</code></pre>
   
 </div>
 
@@ -157,30 +170,58 @@ end</code></pre>
             </a>
             Functions
           </h1>
-          <div class="detail" id="encode/1">
+          <div class="detail" id="comparators/0">
   <div class="detail-header">
-    <a href="#encode/1" class="detail-link" title="Link to this function">
+    <a href="#comparators/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">encode(condition)</span>
+    <span class="signature">comparators()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/encoder.ex#L16" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/boolean.ex#L16" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">encode(Filter.Condition.t) :: [<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a> | [any]]</code></pre>
-        
-      </div>
-    </div>
+  <section class="docstring">
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:comparators/0"><code class="inline">Filtrex.Condition.comparators/0</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="parse/2">
+  <div class="detail-header">
+    <a href="#parse/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse(config, map)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/boolean.ex#L18" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
   
   <section class="docstring">
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:parse/2"><code class="inline">Filtrex.Condition.parse/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="type/0">
+  <div class="detail-header">
+    <a href="#type/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">type()</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/boolean.ex#L14" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
     
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:type/0"><code class="inline">Filtrex.Condition.type/0</code></a>.</p>
+
   </section>
 </div>
 
