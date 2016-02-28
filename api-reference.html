@@ -97,7 +97,7 @@ from a set of conditions. Typically, it shouldn’t need to be called direcly</p
   <div class="summary-signature"><a href="Filtrex.Condition.html">Filtrex.Condition</a></div>
   
     <div class="summary-synopsis"><p><a href="Filtrex.Condition.html#content"><code class="inline">Filtrex.Condition</code></a> is an abstract module for parsing conditions.
-To implement your own condition, add <code class="inline">@behaviour Filtrex.Condition</code> in your module and implement the three callbacks</p>
+To implement your own condition, add <code class="inline">use Filtrex.Condition</code> in your module and implement the three callbacks</p>
 </div>
   
 </div>
@@ -139,6 +139,13 @@ Example:</p>
 </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Utils.Encoder.html">Filtrex.Utils.Encoder</a></div>
+  
+    <div class="summary-synopsis"><p>Helper methods for implementing the <a href="Filtrex.Encoder.html"><code class="inline">Filtrex.Encoder</code></a> protocol</p>
+</div>
+  
+</div>
 
       </div>
     </section>
@@ -153,7 +160,9 @@ Example:</p>
         <div class="summary-row">
   <div class="summary-signature"><a href="Filtrex.Encoder.html">Filtrex.Encoder</a></div>
   
-    <div class="summary-synopsis"><p>Encodes a condition into <a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> as an expression with values</p>
+    <div class="summary-synopsis"><p>Encodes a condition into <a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> as an expression with values.
+Implementing this protocol is required for any new conditions.
+See <a href="Filtrex.Utils.Encoder.html"><code class="inline">Filtrex.Utils.Encoder</code></a> for helper methods with this implementation</p>
 </div>
   
 </div>

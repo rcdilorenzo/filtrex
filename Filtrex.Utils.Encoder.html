@@ -5,11 +5,11 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Encoder – Filtrex v0.2.0-dev</title>
+    <title>Filtrex.Utils.Encoder – Filtrex v0.2.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="protocols">
+  <body data-type="modules">
 
     <div class="main">
 <button class="sidebar-toggle">
@@ -62,12 +62,10 @@
 
       <h1>
         <small class="visible-xs">Filtrex v0.2.0-dev</small>
-        Filtrex.Encoder
-        
-          <small>protocol</small>
+        Filtrex.Utils.Encoder
         
         
-          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/encoder.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/utils/encoder.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -75,15 +73,7 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Encodes a condition into <a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> as an expression with values.
-Implementing this protocol is required for any new conditions.
-See <a href="Filtrex.Utils.Encoder.html"><code class="inline">Filtrex.Utils.Encoder</code></a> for helper methods with this implementation.</p>
-<p>Example:</p>
-<pre><code class="elixir">defimpl Filtrex.Encoder, for: Filtrex.Condition.Text do
-  def encode(%Filtrex.Condition.Text{column: column, comparator: &quot;is&quot;, value: value}) do
-    %Filtrex.Fragment{expression: &quot;#{column} = ?&quot;, values: [value]}
-  end
-end</code></pre>
+          <p>Helper methods for implementing the <a href="Filtrex.Encoder.html"><code class="inline">Filtrex.Encoder</code></a> protocol.</p>
 
         </section>
       
@@ -97,39 +87,26 @@ end</code></pre>
             Summary
           </h1>
           
-  <div class="summary-types summary">
+
+          
+
+          
+  <div class="summary-macros summary">
     <h2>
-      <a href="#types">Types</a>
+      <a href="#macros">Macros</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:t/0">t()</a>
+    <a href="#encoder/4">encoder(comparator, reverse_comparator, expression, values_function \\ {:&amp;, [], [[{:&amp;, [], [1]}]]})</a>
   </div>
   
-</div>
-
-  </div>
-
-
-          
-  <div class="summary-functions summary">
-    <h2>
-      <a href="#functions">Functions</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#encode/1">encode(condition)</a>
-  </div>
-  
-    <div class="summary-synopsis"><p>The function that performs the encoding</p>
+    <div class="summary-synopsis"><p>This macro allows a simple creation of encoders using a simple DSL</p>
 </div>
   
 </div>
 
   </div>
 
-
-          
 
           
 
@@ -137,62 +114,45 @@ end</code></pre>
       
 
       
-        <section id="types" class="types details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: term</code></pre>
-  
-</div>
 
-          </div>
-        </section>
       
 
       
-        <section id="functions" class="details-list">
+        <section id="macros" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#macros">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Macros
           </h1>
-          <div class="detail" id="encode/1">
+          <div class="detail" id="encoder/4">
   <div class="detail-header">
-    <a href="#encode/1" class="detail-link" title="Link to this function">
+    <a href="#encoder/4" class="detail-link" title="Link to this macro">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">encode(condition)</span>
+    <span class="signature">encoder(comparator, reverse_comparator, expression, values_function \\ {:&amp;, [], [[{:&amp;, [], [1]}]]})</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/encoder.ex#L19" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/utils/encoder.ex#L21" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">encode(Filter.Condition.t) :: [<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a> | [any]]</code></pre>
-        
-      </div>
-    </div>
-  
   <section class="docstring">
-    <p>The function that performs the encoding</p>
+    <p>This macro allows a simple creation of encoders using a simple DSL.</p>
+<p>Example:</p>
+<pre><code class="elixir">encoder &quot;is&quot;, &quot;is not&quot;, &quot;column = ?&quot;, &amp;(&amp;1)</code></pre>
+<p>In this example, a comparator and its reverse are passed in followed
+by an expression where “column” is substituted for the actual column
+name from the struct. The final argument is a function (which is not
+necessary in this case since it is the default value) that takes the
+raw value being passed in and returns the transformed value to be
+injected as a value into the fragment expression.</p>
 
   </section>
 </div>
 
         </section>
-      
-
       
 
       

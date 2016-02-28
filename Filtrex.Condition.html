@@ -76,7 +76,7 @@
       
         <section id="moduledoc" class="docstring">
           <p><a href="Filtrex.Condition.html#content"><code class="inline">Filtrex.Condition</code></a> is an abstract module for parsing conditions.
-To implement your own condition, add <code class="inline">@behaviour Filtrex.Condition</code> in your module and implement the three callbacks:</p>
+To implement your own condition, add <code class="inline">use Filtrex.Condition</code> in your module and implement the three callbacks:</p>
 <ul>
 <li><a href="#parse/2"><code class="inline">parse/2</code></a> - produce a condition struct from a configuration and attributes
 </li>
@@ -163,19 +163,6 @@ To implement your own condition, add <code class="inline">@behaviour Filtrex.Con
 
 
           
-  <div class="summary-macros summary">
-    <h2>
-      <a href="#macros">Macros</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#encoder/5">encoder(type, comparator, reverse_comparator, expression, values_function \\ {:&amp;, [], [[{:&amp;, [], [1]}]]})</a>
-  </div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-callbacks summary">
@@ -224,7 +211,7 @@ To implement your own condition, add <code class="inline">@behaviour Filtrex.Con
     </a>
     <span class="signature">param_key_type(config, key_with_comparator)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L46" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L57" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -242,7 +229,7 @@ To implement your own condition, add <code class="inline">@behaviour Filtrex.Con
     </a>
     <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L35" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L46" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -272,7 +259,7 @@ config:</p>
     </a>
     <span class="signature">parse_error(value, type, filter_type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L91" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L87" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -299,7 +286,7 @@ config:</p>
     </a>
     <span class="signature">parse_value_type_error(column, filter_type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L97" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L93" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -326,7 +313,7 @@ config:</p>
     </a>
     <span class="signature">validate_in(value, list)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L75" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L71" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -353,7 +340,7 @@ config:</p>
     </a>
     <span class="signature">validate_is_binary(value)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L86" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L82" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -377,33 +364,6 @@ config:</p>
         </section>
       
 
-      
-        <section id="macros" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#macros">
-              <i class="icon-link"></i>
-            </a>
-            Macros
-          </h1>
-          <div class="detail" id="encoder/5">
-  <div class="detail-header">
-    <a href="#encoder/5" class="detail-link" title="Link to this macro">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">encoder(type, comparator, reverse_comparator, expression, values_function \\ {:&amp;, [], [[{:&amp;, [], [1]}]]})</span>
-      
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L58" class="view-source" rel="help" title="View Source">
-       <i class="icon-code"></i>
-     </a>
-    
-  </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-
-        </section>
       
 
       

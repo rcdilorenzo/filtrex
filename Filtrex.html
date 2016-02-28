@@ -130,6 +130,12 @@ the appropriate parsed sub-structures</p>
     <a href="#parse_params/2">parse_params(config, params)</a>
   </div>
   
+    <div class="summary-synopsis"><p>This function converts Plug-decoded params like the example below into a filtrex struct based on options in the config. This config is the same as passed into <a href="#parse/2"><code class="inline">parse/2</code></a> for a map structure.</p>
+<pre><code class="elixir">%{&quot;comments_contains&quot; =&gt; &quot;love&quot;,
+  &quot;title&quot; =&gt; &quot;My Blog Post&quot;,
+  &quot;created_at_between&quot; =&gt; %{&quot;start&quot; =&gt; &quot;2014-01-01&quot;, &quot;end&quot; =&gt; &quot;2016-01-01&quot;}}</code></pre>
+</div>
+  
 </div>
 
   </div>
@@ -228,14 +234,18 @@ Example:</p>
     </a>
     <span class="signature">parse_params(config, params)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L77" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L85" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    
+    <p>This function converts Plug-decoded params like the example below into a filtrex struct based on options in the config. This config is the same as passed into <a href="#parse/2"><code class="inline">parse/2</code></a> for a map structure.</p>
+<pre><code class="elixir">%{&quot;comments_contains&quot; =&gt; &quot;love&quot;,
+  &quot;title&quot; =&gt; &quot;My Blog Post&quot;,
+  &quot;created_at_between&quot; =&gt; %{&quot;start&quot; =&gt; &quot;2014-01-01&quot;, &quot;end&quot; =&gt; &quot;2016-01-01&quot;}}</code></pre>
+
   </section>
 </div>
 
@@ -257,7 +267,7 @@ Example:</p>
     </a>
     <span class="signature">query(filter, model)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L91" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L99" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
