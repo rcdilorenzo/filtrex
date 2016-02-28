@@ -1,5 +1,5 @@
 defmodule Filtrex.Condition.Text do
-  @behaviour Filtrex.Condition
+  use Filtrex.Condition
   @comparators ["equals", "does not equal", "is", "is not", "contains", "does not contain"]
 
   @type t :: Filtrex.Condition.Text.t
@@ -17,11 +17,6 @@ defmodule Filtrex.Condition.Text do
   }
   ```
   """
-
-  import Filtrex.Condition, except: [parse: 1]
-  alias Filtrex.Condition
-
-  defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
 
   def type, do: :text
 
@@ -53,15 +48,13 @@ defmodule Filtrex.Condition.Text do
   end
 
   defimpl Filtrex.Encoder do
-    import Filtrex.Condition
+    encoder "is", "is not", "column = ?"
+    encoder "is not", "is", "column != ?"
 
-    encoder Condition.Text, "is", "is not", "column = ?"
-    encoder Condition.Text, "is not", "is", "column != ?"
+    encoder "equals", "does not equal", "column = ?"
+    encoder "does not equal", "equals", "column != ?"
 
-    encoder Condition.Text, "equals", "does not equal", "column = ?"
-    encoder Condition.Text, "does not equal", "equals", "column != ?"
-
-    encoder Condition.Text, "contains", "does not contain", "column LIKE ?", &(["%#{&1}%"])
-    encoder Condition.Text, "does not contain", "contains", "column NOT LIKE ?", &(["%#{&1}%"])
+    encoder "contains", "does not contain", "column LIKE ?", &(["%#{&1}%"])
+    encoder "does not contain", "contains", "column NOT LIKE ?", &(["%#{&1}%"])
   end
 end

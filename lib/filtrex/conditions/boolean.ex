@@ -1,15 +1,10 @@
 defmodule Filtrex.Condition.Boolean do
-  @behaviour Filtrex.Condition
+  use Filtrex.Condition
 
   @type t :: Filtrex.Condition.Boolean
   @moduledoc """
   `Filtrex.Condition.Boolean` is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations "true" and "false". Its comparators only consist of "is" or "is not".
   """
-
-  import Filtrex.Condition, except: [parse: 2]
-  alias Filtrex.Condition
-
-  defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
 
   def type, do: :boolean
 
@@ -45,9 +40,7 @@ defmodule Filtrex.Condition.Boolean do
   defp validate_value(_), do: nil
 
   defimpl Filtrex.Encoder do
-    import Filtrex.Condition
-
-    encoder Condition.Boolean, "is", "is not", "column = ?"
-    encoder Condition.Boolean, "is not", "is", "column != ?"
+    encoder "is", "is not", "column = ?"
+    encoder "is not", "is", "column != ?"
   end
 end

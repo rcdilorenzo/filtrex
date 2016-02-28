@@ -1,5 +1,5 @@
 defmodule Filtrex.Condition.Date do
-  @behaviour Filtrex.Condition
+  use Filtrex.Condition
   @string_date_comparators ["equals", "does not equal", "is", "is not", "after", "on or after", "before", "on or before"]
   @start_end_comparators ["between", "not between"]
   @relative_date_comparators [
@@ -42,11 +42,6 @@ defmodule Filtrex.Condition.Date do
   | type       | string  | "date"                                                        |
   """
 
-  import Filtrex.Condition, except: [parse: 2]
-  alias Filtrex.Condition
-
-  defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
-
   def type, do: :date
 
   def comparators, do: @comparators
@@ -75,7 +70,6 @@ defmodule Filtrex.Condition.Date do
   end
 
   defp validate_value(nil, _), do: nil
-
   defp validate_value(comparator, value) do
     cond do
       comparator in @string_date_comparators ->
@@ -88,34 +82,32 @@ defmodule Filtrex.Condition.Date do
   end
 
   defimpl Filtrex.Encoder do
-    import Filtrex.Condition
+    encoder "after", "before", "column > ?"
+    encoder "before", "after", "column < ?"
 
-    encoder Condition.Date, "after", "before", "column > ?"
-    encoder Condition.Date, "before", "after", "column < ?"
+    encoder "on or after", "on or before", "column >= ?"
+    encoder "on or before", "on or after", "column <= ?"
 
-    encoder Condition.Date, "on or after", "on or before", "column >= ?"
-    encoder Condition.Date, "on or before", "on or after", "column <= ?"
-
-    encoder Condition.Date, "between", "not between", "(column >= ?) AND (column <= ?)", fn
+    encoder "between", "not between", "(column >= ?) AND (column <= ?)", fn
       (%{start: start, end: end_value}) ->
         [start, end_value]
     end
-    encoder Condition.Date, "not between", "between", "(column > ?) AND (column < ?)", fn
+    encoder "not between", "between", "(column > ?) AND (column < ?)", fn
       (%{start: start, end: end_value}) ->
         [end_value, start]
     end
 
-    encoder Condition.Date, "equals", "does not equal", "column = ?"
-    encoder Condition.Date, "does not equal", "equals", "column != ?"
+    encoder "equals", "does not equal", "column = ?"
+    encoder "does not equal", "equals", "column != ?"
 
-    encoder Condition.Date, "is", "is not", "column = ?"
-    encoder Condition.Date, "is not", "is", "column != ?"
+    encoder "is", "is not", "column = ?"
+    encoder "is not", "is", "column != ?"
 
-    encoder Condition.Date, "in the last", "not in the last", "(column >= ?) AND (column <= ?)", &in_the_last_values/1
-    encoder Condition.Date, "not in the last", "in the last", "(column < ?) AND (column > ?)", &in_the_last_values/1
+    encoder "in the last", "not in the last", "(column >= ?) AND (column <= ?)", &in_the_last_values/1
+    encoder "not in the last", "in the last", "(column < ?) AND (column > ?)", &in_the_last_values/1
 
-    encoder Condition.Date, "in the next", "not in the next", "(column >= ?) AND (column <= ?)", &in_the_next_values/1
-    encoder Condition.Date, "not in the next", "in the next", "(column < ?) AND (column > ?)", &in_the_next_values/1
+    encoder "in the next", "not in the next", "(column >= ?) AND (column <= ?)", &in_the_next_values/1
+    encoder "not in the next", "in the next", "(column < ?) AND (column > ?)", &in_the_next_values/1
 
     defp in_the_next_values(value), do: [today, date_from_relative(value)]
     defp in_the_last_values(value), do: [date_from_relative(value, :past), today]

@@ -1,6 +1,8 @@
 defprotocol Filtrex.Encoder do
   @moduledoc """
-  Encodes a condition into `Filtrex.Fragment` as an expression with values
+  Encodes a condition into `Filtrex.Fragment` as an expression with values.
+  Implementing this protocol is required for any new conditions.
+  See `Filtrex.Utils.Encoder` for helper methods with this implementation.
 
   Example:
   ```
@@ -12,6 +14,7 @@ defprotocol Filtrex.Encoder do
   ```
   """
 
+  @doc "The function that performs the encoding"
   @spec encode(Filter.Condition.t) :: [String.t | [any]]
   def encode(condition)
 end

@@ -1,7 +1,7 @@
 defmodule Filtrex.Condition do
   @moduledoc """
   `Filtrex.Condition` is an abstract module for parsing conditions.
-  To implement your own condition, add `@behaviour Filtrex.Condition` in your module and implement the three callbacks:
+  To implement your own condition, add `use Filtrex.Condition` in your module and implement the three callbacks:
 
     * `parse/2` - produce a condition struct from a configuration and attributes
     * `type/0` - the description of the condition that must match the underscore version of the module's last namespace
@@ -13,6 +13,17 @@ defmodule Filtrex.Condition do
   @callback comparators :: [String.t]
 
   defstruct column: nil, comparator: nil, value: nil
+
+  defmacro __using__(_) do
+    quote do
+      import Filtrex.Utils.Encoder
+      alias Filtrex.Condition
+      import unquote(__MODULE__), except: [parse: 2]
+      @behaviour Filtrex.Condition
+
+      defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
+    end
+  end
 
   @doc """
   Parses a condition by dynamically delegating to modules
@@ -55,21 +66,6 @@ defmodule Filtrex.Condition do
     if result, do: result, else: {:error, "Unknown filter key"}
   end
 
-  defmacro encoder(type, comparator, reverse_comparator, expression, values_function \\ {:&, [], [[{:&, [], [1]}]]}) do
-    quote do
-      def encode(condition = %{comparator: unquote(comparator), inverse: true}) do
-        condition |> struct(inverse: false, comparator: unquote(reverse_comparator)) |> encode
-      end
-
-      def encode(%{column: column, comparator: unquote(comparator), value: value}) do
-        %Filtrex.Fragment{
-          expression: String.replace(unquote(expression), "column", column),
-          values: unquote(values_function).(value)
-        }
-      end
-    end
-  end
-
   @doc "Helper method to validate whether a value is in a list"
   @spec validate_in(any, List.t) :: nil | any
   def validate_in(nil, _), do: nil
@@ -97,19 +93,17 @@ defmodule Filtrex.Condition do
   def parse_value_type_error(column, filter_type) when is_binary(column) do
     "Invalid #{to_string(filter_type)} value for #{column}"
   end
-
   def parse_value_type_error(column, filter_type) do
     opts   = struct(Inspect.Opts, [])
     iodata = Inspect.Algebra.to_doc(column, opts)
       |> Inspect.Algebra.format(opts.width)
       |> Enum.join
 
-    cond do
-      String.length(iodata) <= 15 ->
-        parse_value_type_error("'#{iodata}'", filter_type)
-      true ->
-        "'#{String.slice(iodata, 0..12)}...#{String.slice(iodata, -3..-1)}'"
-          |> parse_value_type_error(filter_type)
+    if String.length(iodata) <= 15 do
+      parse_value_type_error("'#{iodata}'", filter_type)
+    else
+      "'#{String.slice(iodata, 0..12)}...#{String.slice(iodata, -3..-1)}'"
+        |> parse_value_type_error(filter_type)
     end
   end
 

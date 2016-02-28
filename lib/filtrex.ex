@@ -74,6 +74,14 @@ defmodule Filtrex do
     {:errors, errors}
   end
 
+  @doc """
+  This function converts Plug-decoded params like the example below into a filtrex struct based on options in the config. This config is the same as passed into `parse/2` for a map structure.
+  ```
+  %{"comments_contains" => "love",
+    "title" => "My Blog Post",
+    "created_at_between" => %{"start" => "2014-01-01", "end" => "2016-01-01"}}
+  ```
+  """
   def parse_params(config, params) do
     case Filtrex.Params.parse_conditions(config, params) do
       {:ok, conditions} ->
