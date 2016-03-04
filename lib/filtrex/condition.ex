@@ -111,7 +111,8 @@ defmodule Filtrex.Condition do
     modules = [
       Filtrex.Condition.Text,
       Filtrex.Condition.Date,
-      Filtrex.Condition.Boolean
+      Filtrex.Condition.Boolean,
+      Filtrex.Condition.Number
     ]
     Application.get_env(:filtrex, :conditions, modules)
   end
