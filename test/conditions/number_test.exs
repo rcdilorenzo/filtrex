@@ -3,7 +3,8 @@ defmodule FiltrexConditionNumberTest do
   alias Filtrex.Condition.Number
 
   @column "age"
-  @config %{keys: [@column], allowed_values: 1..100, allow_decimal: true}
+  @config %Filtrex.Type.Config{type: :number, keys: [@column],
+            options: %{allowed_values: 1..100, allow_decimal: true}}
 
   test "parsing integer successfully" do
     assert Number.parse(@config, params("is", "10")) ==
@@ -31,7 +32,8 @@ defmodule FiltrexConditionNumberTest do
     assert Number.parse(@config, params("is", nil)) ==
       {:error, "Invalid number value for 'nil'"}
 
-    assert Number.parse(%{@config | allow_decimal: false}, params("is", "10.5")) ==
+
+    assert Number.parse(put_in(@config.options[:allow_decimal], false), params("is", "10.5")) ==
       {:error, "Invalid number value for 10.5"}
   end
 

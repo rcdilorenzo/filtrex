@@ -2,15 +2,9 @@ defmodule FiltrexConditionTextTest do
   use ExUnit.Case
   alias Filtrex.Condition.Text
 
-  @config %{keys: ["title"]}
+  @config Filtrex.SampleModel.filtrex_config
 
   test "parsing errors" do
-    assert {:error, "Invalid text column 'due'"} == Text.parse(@config, %{
-      inverse: false,
-      column: "due",
-      value: "Buy Milk",
-      comparator: "equals"
-    })
     assert {:error, "Invalid text value for title"} == Text.parse(@config, %{
       inverse: false,
       column: "title",

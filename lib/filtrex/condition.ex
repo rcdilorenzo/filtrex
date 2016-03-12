@@ -8,7 +8,7 @@ defmodule Filtrex.Condition do
     * `comparators/0` - the list of used query comparators for parsing params
   """
 
-  @callback parse(Map.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
+  @callback parse(Filtrex.Type.Config.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
   @callback type :: Atom.t
   @callback comparators :: [String.t]
 
@@ -32,10 +32,10 @@ defmodule Filtrex.Condition do
   Example Input:
   config:
   ```
-  Filtrex.Condition.parse(%{
-    text: %{keys: ~w(title comments)}  # passed to the specific condition
-  }, %{
-    type: string,                      # converted to Filtrex.Condition."__" dynamically
+  Filtrex.Condition.parse([
+    %Filtrex.Type.Config{type: :text, keys: ~w(title comments)}
+  ], %{
+    type: string,
     column: string,
     comparator: string,
     value: string,
@@ -43,27 +43,35 @@ defmodule Filtrex.Condition do
   })
   ```
   """
-  def parse(config, options = %{type: type}) do
+  def parse(configs, options = %{type: type}) do
     case condition_module(type) do
       nil ->
         {:error, ["Unknown filter condition '#{type}'"]}
       module ->
         type_atom = String.to_existing_atom(type)
-        module.parse(config[type_atom], Map.delete(options, :type))
+        config = Filtrex.Type.Config.configs_for_type(configs, type_atom)
+          |> Filtrex.Type.Config.config(options[:column])
+        if config do
+          module.parse(config, Map.delete(options, :type))
+        else
+          {:error, "Unknown column '#{options[:column]}'"}
+        end
     end
   end
 
   @doc "Parses a params key into the condition type, column, and comparator"
-  def param_key_type(config, key_with_comparator) do
+  def param_key_type(configs, key_with_comparator) do
     result = Enum.find_value(condition_modules, fn (module) ->
       Enum.find_value(module.comparators, fn (comparator) ->
         normalized = "_" <> String.replace(comparator, " ", "_")
         key = String.replace_trailing(key_with_comparator, normalized, "")
-        %{keys: allowed_keys} = Map.get(config, module.type, %{keys: []})
-        if key in allowed_keys, do: {:ok, module, key, comparator}
+        config = Filtrex.Type.Config.config(configs, key)
+        if !is_nil(config) and key in config.keys and config.type == module.type do
+          {:ok, module, config, key, comparator}
+        end
       end)
     end)
-    if result, do: result, else: {:error, "Unknown filter key"}
+    if result, do: result, else: {:error, "Unknown filter key '#{key_with_comparator}'"}
   end
 
   @doc "Helper method to validate whether a value is in a list"

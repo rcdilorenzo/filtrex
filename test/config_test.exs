@@ -10,7 +10,7 @@ defmodule FiltrexTypeConfigTest do
   end
 
   test "finding the options for a specific key" do
-    assert Config.options(@configs, "rating") == %{allowed_decimal: true}
+    assert Config.options(@configs, "rating") == %{allow_decimal: true}
     assert Config.options(@configs, "upvotes") == %{}
     assert Config.options(@configs, "blah") == %{}
   end

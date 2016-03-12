@@ -1,7 +1,7 @@
 defmodule ParamsTest do
   use ExUnit.Case
 
-  @config %{text: %{keys: ~w(title)}, date: %{keys: ~w(date_column)}}
+  @config Filtrex.SampleModel.filtrex_config
 
   test "parsing valid text parameters" do
     params = %{"title_contains" => "blah"}
@@ -36,6 +36,6 @@ defmodule ParamsTest do
   test "returning error if unknown keys" do
     params = %{"title_contains" => "blah", "extra_key" => "true"}
     assert Filtrex.Params.parse_conditions(@config, params) ==
-      {:error, "Unknown filter key"}
+      {:error, "Unknown filter key 'extra_key'"}
   end
 end

@@ -17,6 +17,7 @@ defmodule Filtrex.SampleModel do
      %Filtrex.Type.Config{type: :text, keys: ~w(title)},
      %Filtrex.Type.Config{type: :date, keys: ~w(date_column)},
      %Filtrex.Type.Config{type: :number, keys: ~w(upvotes)},
-     %Filtrex.Type.Config{type: :number, keys: ~w(rating), options: %{allowed_decimal: true}}]
+     %Filtrex.Type.Config{type: :boolean, keys: ~w(flag)},
+     %Filtrex.Type.Config{type: :number, keys: ~w(rating), options: %{allow_decimal: true}}]
   end
 end

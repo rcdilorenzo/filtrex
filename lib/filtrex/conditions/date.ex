@@ -11,7 +11,7 @@ defmodule Filtrex.Condition.Date do
 
   @type t :: Filtrex.Condition.Date.t
   @moduledoc """
-  `Filtrex.Condition.Date` is a specific condition type for handling date filters with various comparisons.
+  `Filtrex.Condition.Date` is a specific condition type for handling date filters with various comparisons. There are no configuration options for the date condition.
 
   There are three different value formats allowed listed in each of the three tables below
 
@@ -46,18 +46,16 @@ defmodule Filtrex.Condition.Date do
 
   def comparators, do: @comparators
 
-  def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
+  def parse(_config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     parsed_comparator = validate_in(comparator, @comparators)
     condition = %Condition.Date{
       type: :date,
       inverse: inverse,
-      column: validate_in(column, config[:keys]),
+      column: column,
       comparator: parsed_comparator,
       value: validate_value(parsed_comparator, value)
     }
     case condition do
-      %Condition.Date{column: nil} ->
-        {:error, parse_error(column, :column, :date)}
       %Condition.Date{comparator: nil} ->
         {:error, parse_error(comparator, :comparator, :date)}
       %Condition.Date{value: nil} ->

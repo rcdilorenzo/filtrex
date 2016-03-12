@@ -9,6 +9,7 @@ defmodule FiltrexTest do
     boolean: %{keys: ~w(flag)},
     number: %{keys: ~w(upvotes rating), allow_decimal: true}, # TODO: Refactor config to be based on the key
   }
+  @config Filtrex.SampleModel.filtrex_config
 
   test "only allows certain types" do
     assert Filtrex.parse(@config, %{
@@ -28,7 +29,7 @@ defmodule FiltrexTest do
         %{type: "text", column: "wrong_column", comparator: "contains", value: "Milk"},
         %{type: "text", column: "title", comparator: "invalid", value: "Blah"}
       ]}
-    }) == {:errors, ["Invalid text column 'wrong_column'", "Invalid text comparator 'invalid'"]}
+    }) == {:errors, ["Unknown column 'wrong_column'", "Invalid text comparator 'invalid'"]}
   end
 
   test "creating an 'all' ecto filter query" do
