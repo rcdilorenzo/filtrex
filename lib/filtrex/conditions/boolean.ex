@@ -3,27 +3,25 @@ defmodule Filtrex.Condition.Boolean do
 
   @type t :: Filtrex.Condition.Boolean
   @moduledoc """
-  `Filtrex.Condition.Boolean` is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations "true" and "false". Its comparators only consist of "is" or "is not".
+  `Filtrex.Condition.Boolean` is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations "true" and "false". Its comparators only consist of "is" or "is not". There are no configuration options for the boolean condition.
   """
 
   def type, do: :boolean
 
   def comparators, do: ["is", "is not"]
 
-  def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
+  def parse(_config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     parsed_comparator = validate_in(comparator, comparators)
 
     condition = %Condition.Boolean{
       type: type,
       inverse: inverse,
-      column: validate_in(column, config[:keys]),
+      column: column,
       comparator: parsed_comparator,
       value: validate_value(value)
     }
 
     case condition do
-      %Condition.Boolean{column: nil} ->
-        {:error, parse_error(column, :column, :date)}
       %Condition.Boolean{comparator: nil} ->
         {:error, parse_error(comparator, :comparator, :date)}
       %Condition.Boolean{value: nil} ->

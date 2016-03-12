@@ -1,13 +1,17 @@
 defmodule Filtrex do
   @moduledoc """
-  Filtrex consists of three primary components:
+  Filtrex consists of the following primary components:
 
     * `Filtrex` - handles the overall parsing of filters and delegates to
       `Filtrex.AST` to build an ecto query expression
 
     * `Filtrex.Condition` - an abstract module built to delegate to specific condition modules in the format of `Filtrex.Condition.Type` where the type is converted to CamelCase (See `Filtrex.Condition.Text.parse/2`)
 
+    * `Filtrex.Params` - an abstract module for parsing plug-like params from a query string into a filter
+
     * `Filtrex.Fragment` - simple struct to hold generated expressions and values to be used when generating queries for ecto
+
+    * `Filtrex.Type.Config` - struct to hold various configuration and validation options for creating a filter
   """
 
   defstruct type: nil, conditions: [], sub_filters: []
@@ -18,16 +22,13 @@ defmodule Filtrex do
   Parses a filter expression and returns errors or the parsed filter with
   the appropriate parsed sub-structures.
 
-  The `config` option is a map of the acceptable types and the configuration
-  options to pass to each condition type.
+  The `configs` option is a list of type configs (See `Filtrex.Type.Config`)
   Example:
   ```
-  %{
-    text: %{keys: ~w(title comments)}
-  }
+  [%Filtrex.Type.Config{type: :text, keys: ~w(title comments)}]
   ```
   """
-  @spec parse(Map.t, Map.t) :: {:errors, List.t} | {:ok, Filtrex.t}
+  @spec parse([Filtrex.Type.Config.t], Map.t) :: {:errors, List.t} | {:ok, Filtrex.t}
   def parse(_, %{filter: %{type: type}}) when not type in ~w(all any none) do
     {:errors, ["Invalid filter type #{type}"]}
   end
@@ -36,29 +37,29 @@ defmodule Filtrex do
     {:errors, ["One or more conditions required to filter"]}
   end
 
-  def parse(config, %{filter: %{type: type, conditions: conditions, sub_filters: sub_filters}}) when is_list(conditions) do
+  def parse(configs, %{filter: %{type: type, conditions: conditions, sub_filters: sub_filters}}) when is_list(conditions) do
     parsed_filters = Enum.reduce_while sub_filters, [], fn (to_parse, acc) ->
-      case parse(config, to_parse) do
+      case parse(configs, to_parse) do
         {:ok, filter} -> {:cont, acc ++ [filter]}
         {:errors, errors} -> {:halt, {:errors, errors}}
       end
     end
     case parsed_filters do
       {:errors, _} -> parsed_filters
-      _ -> parse_conditions(config, type, conditions)
+      _ -> parse_conditions(configs, type, conditions)
              |> parse_condition_results(type, parsed_filters)
     end
   end
 
-  def parse(config, %{filter: %{type: type, conditions: conditions}}) when is_list(conditions) do
-    parse(config, %{filter: %{type: type, conditions: conditions, sub_filters: []}})
+  def parse(configs, %{filter: %{type: type, conditions: conditions}}) when is_list(conditions) do
+    parse(configs, %{filter: %{type: type, conditions: conditions, sub_filters: []}})
   end
 
   def parse(_, _), do: {:error, "Invalid filter structure"}
 
-  defp parse_conditions(config, type, conditions) do
+  defp parse_conditions(configs, type, conditions) do
     Enum.reduce(conditions, %{errors: [], conditions: []}, fn (map, acc) ->
-      case Filtrex.Condition.parse(config, Map.put(map, :inverse, inverse_for(type))) do
+      case Filtrex.Condition.parse(configs, Map.put(map, :inverse, inverse_for(type))) do
         {:error, error} ->
           update_list_in_map(acc, :errors, error)
         {:ok, condition} ->
@@ -70,20 +71,20 @@ defmodule Filtrex do
   defp parse_condition_results(%{errors: [], conditions: conditions}, type, parsed_filters) do
     {:ok, %Filtrex{type: type, conditions: conditions, sub_filters: parsed_filters}}
   end
-  defp parse_condition_results(%{errors: errors, conditions: []}, _, _) do
+  defp parse_condition_results(%{errors: errors}, _, _) do
     {:errors, errors}
   end
 
   @doc """
-  This function converts Plug-decoded params like the example below into a filtrex struct based on options in the config. This config is the same as passed into `parse/2` for a map structure.
+  This function converts Plug-decoded params like the example below into a filtrex struct based on options in the configs.
   ```
   %{"comments_contains" => "love",
     "title" => "My Blog Post",
     "created_at_between" => %{"start" => "2014-01-01", "end" => "2016-01-01"}}
   ```
   """
-  def parse_params(config, params) do
-    case Filtrex.Params.parse_conditions(config, params) do
+  def parse_params(configs, params) do
+    case Filtrex.Params.parse_conditions(configs, params) do
       {:ok, conditions} ->
         {:ok,  %Filtrex{type: "all", conditions: conditions}}
       {:error, reason} ->

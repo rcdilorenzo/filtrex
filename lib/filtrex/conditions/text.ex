@@ -4,7 +4,7 @@ defmodule Filtrex.Condition.Text do
 
   @type t :: Filtrex.Condition.Text.t
   @moduledoc """
-  `Filtrex.Condition.Text` is a specific condition type for handling text filters with various comparisons.
+  `Filtrex.Condition.Text` is a specific condition type for handling text filters with various comparisons. There are no configuration options for the date condition.
 
   It accepts the following format (where `inverse` is passed directly from `Filtrex.Condition`):
   ```
@@ -27,17 +27,15 @@ defmodule Filtrex.Condition.Text do
   from `Filtrex.Condition` to validate each type. If any of the types are not valid,
   it accumulates the errors and returns them.
   """
-  def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
+  def parse(_config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     condition = %Condition.Text{
       type: :text,
       inverse: inverse,
-      column: validate_in(column, config[:keys]),
+      column: column,
       comparator: validate_in(comparator, @comparators),
       value: validate_is_binary(value)
     }
     case condition do
-      %Condition.Text{column: nil} ->
-        {:error, parse_error(column, :column, :text)}
       %Condition.Text{comparator: nil} ->
         {:error, parse_error(comparator, :comparator, :text)}
       %Condition.Text{value: nil} ->

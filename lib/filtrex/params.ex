@@ -8,26 +8,20 @@ defmodule Filtrex.Params do
   """
 
   @doc "Converts parameters to a list of conditions"
-  def parse_conditions(config, params) when is_map(params) do
+  def parse_conditions(configs, params) when is_map(params) do
     Enum.reduce(params, {:ok, []}, fn
       {key, value}, {:ok, conditions} ->
-        convert_and_add_condition(config, key, value, conditions)
+        convert_and_add_condition(configs, key, value, conditions)
       _, {:error, reason} ->
         {:error, reason}
     end)
   end
 
-  defp convert_and_add_condition(config, key, value, conditions) do
-    case Filtrex.Condition.param_key_type(config, key) do
-      {:ok, module, column, comparator} ->
-        attrs = %{inverse: false, column: column,
-          comparator: comparator, value: value}
-        parse_and_add_condition(
-          config[module.type],
-          module,
-          convert_value_in_attrs(attrs),
-          conditions
-        )
+  defp convert_and_add_condition(configs, key, value, conditions) do
+    case Filtrex.Condition.param_key_type(configs, key) do
+      {:ok, module, config, column, comparator} ->
+        attrs = %{inverse: false, column: column, comparator: comparator, value: value}
+        parse_and_add_condition(config, module, convert_value_in_attrs(attrs), conditions)
       {:error, reason} -> {:error, reason}
     end
   end

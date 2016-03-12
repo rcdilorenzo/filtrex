@@ -11,14 +11,17 @@ Filtrex is an elixir library for parsing and querying with filter data structure
 ## Parsing Filters from URL Params
 
 ```elixir
-config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(posted_at)}}
+config = [
+  %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
+  %Filtrex.Type.Config{type: :date, keys: ~w(posted_at)}
+]
 params = %{
     "comments_contains" => "Chris McCord",
     "title" => "Upcoming Phoenix Features",
     "posted_at_between" => %{"start" => "2013-01-01", "end" => "2017-12-31"}
 }
 # params generated from plug (phoenix) with query string:
-# /endpoint?comments_contains=Chris%20McCord&title=Upcoming%20Phoenix%20Features&posted_at_between%5Bstart%5D=2013-01-01&posted_at_between%5Bend%5D=%202017-12-31
+# "comments_contains=Chris McCord&title=Upcoming Phoenix Features&posted_at_between[start]=2013-01-01&posted_at_between[end]=2017-12-31"
 
 {:ok, filter} = Filtrex.parse_params(config, params)
 # => %Filtrex{conditions: [%Filtrex.Condition.Text{column: "comments",
@@ -37,7 +40,11 @@ Using parsed parameters from your phoenix application, a filter can be easily co
 ## Parsing Filter Structures
 
 ```elixir
-config = %{text: %{keys: ~w(title comments)}, date: %{keys: ~w(due_date)}, boolean: %{keys: ~w(flag)}}
+config = [
+  %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
+  %Filtrex.Type.Config{type: :date, keys: ~w(due_date)},
+  %Filtrex.Type.Config{type: :boolean, keys: ~w(flag)}
+]
 
 {:ok, filter} = Filtrex.parse(config, %{
   filter: %{
@@ -84,6 +91,9 @@ The following condition types and comparators are supported.
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
     * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
+* [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
+    * is, is not, greater than, less than or, greater than or, less than
+    * options: allow_decimal, allowed_values
 
 ## Installation (once v0.2.0 is available)
 

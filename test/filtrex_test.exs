@@ -3,7 +3,13 @@ defmodule FiltrexTest do
   import Ecto.Query
   require Filtrex
 
-  @config %{text: %{keys: ~w(title)}, date: %{keys: ~w(date_column)}, boolean: %{keys: ~w(flag)}}
+  @config %{
+    text: %{keys: ~w(title)},
+    date: %{keys: ~w(date_column)},
+    boolean: %{keys: ~w(flag)},
+    number: %{keys: ~w(upvotes rating), allow_decimal: true}, # TODO: Refactor config to be based on the key
+  }
+  @config Filtrex.SampleModel.filtrex_config
 
   test "only allows certain types" do
     assert Filtrex.parse(@config, %{
@@ -23,7 +29,7 @@ defmodule FiltrexTest do
         %{type: "text", column: "wrong_column", comparator: "contains", value: "Milk"},
         %{type: "text", column: "title", comparator: "invalid", value: "Blah"}
       ]}
-    }) == {:errors, ["Invalid text column 'wrong_column'", "Invalid text comparator 'invalid'"]}
+    }) == {:errors, ["Unknown column 'wrong_column'", "Invalid text comparator 'invalid'"]}
   end
 
   test "creating an 'all' ecto filter query" do
@@ -71,6 +77,20 @@ defmodule FiltrexTest do
       }
     })
     assert_count filter, 5
+  end
+
+  test "creating filter with numbers in the conditions" do
+    {:ok, filter} =  Filtrex.parse(@config, %{
+      filter: %{
+        type: "all",
+        conditions: [
+          %{type: "number", column: "rating", comparator: "greater than or", value: "50"},
+          %{type: "number", column: "rating", comparator: "less than", value: "99.9"},
+          %{type: "number", column: "upvotes", comparator: "greater than", value: "100"},
+        ]
+      }
+    })
+    assert_count filter, 1
   end
 
   test "parsing parameters" do
