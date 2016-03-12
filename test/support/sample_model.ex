@@ -11,4 +11,12 @@ defmodule Filtrex.SampleModel do
 
     timestamps
   end
+
+  def filtrex_config do
+    [%Filtrex.Type.Config{type: :number, keys: ~w(id), options: %{allowed_values: [1]}},
+     %Filtrex.Type.Config{type: :text, keys: ~w(title)},
+     %Filtrex.Type.Config{type: :date, keys: ~w(date_column)},
+     %Filtrex.Type.Config{type: :number, keys: ~w(upvotes)},
+     %Filtrex.Type.Config{type: :number, keys: ~w(rating), options: %{allowed_decimal: true}}]
+  end
 end
