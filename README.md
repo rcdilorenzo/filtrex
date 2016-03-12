@@ -91,6 +91,9 @@ The following condition types and comparators are supported.
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
     * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
+* [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
+    * is, is not, greater than, less than or, greater than or, less than
+    * options: allow_decimal, allowed_values
 
 ## Installation (once v0.2.0 is available)
 

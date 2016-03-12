@@ -3,6 +3,20 @@ defmodule Filtrex.Condition.Number do
 
   @type t :: Filtrex.Condition.Number
   @moduledoc """
+  `Filtrex.Condition.Number` is a specific condition type for handling
+  integer and decimal filters with various configuration options.
+
+  Comparators:
+    is, is not,
+    greater than, less than or,
+    greater than or, less than
+
+  Configuation Options:
+
+  | Key            | Type        | Description                      |
+  |----------------|-------------|----------------------------------|
+  | allow_decimal  | true/false  | required to allow decimal values |
+  | allowed_values | list/range  | value must be in these values    |
   """
 
   def type, do: :number
