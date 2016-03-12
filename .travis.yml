@@ -6,9 +6,6 @@ otp_release:
 addons:
   postgresql: "9.4"
 sudo: false
-env:
-  - ELIXIR_ERL_OPTIONS=""
-  - ELIXIR_ERL_OPTIONS="+T 9"
 before_script:
   - MIX_ENV=test mix do ecto.create, ecto.migrate
 script:
