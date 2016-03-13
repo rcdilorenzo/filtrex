@@ -81,7 +81,7 @@
         <div class="summary-row">
   <div class="summary-signature"><a href="Filtrex.html">Filtrex</a></div>
   
-    <div class="summary-synopsis"><p>Filtrex consists of three primary components</p>
+    <div class="summary-synopsis"><p>Filtrex consists of the following primary components</p>
 </div>
   
 </div>
@@ -104,7 +104,7 @@ To implement your own condition, add <code class="inline">use Filtrex.Condition<
 <div class="summary-row">
   <div class="summary-signature"><a href="Filtrex.Condition.Boolean.html">Filtrex.Condition.Boolean</a></div>
   
-    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Boolean.html#content"><code class="inline">Filtrex.Condition.Boolean</code></a> is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations “true” and “false”. Its comparators only consist of “is” or “is not”</p>
+    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Boolean.html#content"><code class="inline">Filtrex.Condition.Boolean</code></a> is a specific ondition type for handling boolean flags. It allows an empty string for false value as well as string representations “true” and “false”. Its comparators only consist of “is” or “is not”. There are no configuration options for the boolean condition</p>
 </div>
   
 </div>
@@ -116,9 +116,17 @@ To implement your own condition, add <code class="inline">use Filtrex.Condition<
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Condition.Number.html">Filtrex.Condition.Number</a></div>
+  
+    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Number.html#content"><code class="inline">Filtrex.Condition.Number</code></a> is a specific condition type for handling
+integer and decimal filters with various configuration options</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="Filtrex.Condition.Text.html">Filtrex.Condition.Text</a></div>
   
-    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Text.html#content"><code class="inline">Filtrex.Condition.Text</code></a> is a specific condition type for handling text filters with various comparisons</p>
+    <div class="summary-synopsis"><p><a href="Filtrex.Condition.Text.html#content"><code class="inline">Filtrex.Condition.Text</code></a> is a specific condition type for handling text filters with various comparisons. There are no configuration options for the date condition</p>
 </div>
   
 </div>
@@ -136,6 +144,13 @@ Example:</p>
   <div class="summary-signature"><a href="Filtrex.Params.html">Filtrex.Params</a></div>
   
     <div class="summary-synopsis"><p><a href="Filtrex.Params.html#content"><code class="inline">Filtrex.Params</code></a> is a module that parses parameters similar to Phoenix, such as</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="Filtrex.Type.Config.html">Filtrex.Type.Config</a></div>
+  
+    <div class="summary-synopsis"><p>This configuration struct is for passing options at the top-level (e.g. <a href="Filtrex.html#parse/2"><code class="inline">Filtrex.parse/2</code></a>) in a list</p>
 </div>
   
 </div>

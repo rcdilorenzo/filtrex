@@ -73,14 +73,18 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Filtrex consists of three primary components:</p>
+          <p>Filtrex consists of the following primary components:</p>
 <ul>
 <li><p><a href="Filtrex.html#content"><code class="inline">Filtrex</code></a> - handles the overall parsing of filters and delegates to
 <a href="Filtrex.AST.html"><code class="inline">Filtrex.AST</code></a> to build an ecto query expression</p>
 </li>
 <li><p><a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a> - an abstract module built to delegate to specific condition modules in the format of <code class="inline">Filtrex.Condition.Type</code> where the type is converted to CamelCase (See <a href="Filtrex.Condition.Text.html#parse/2"><code class="inline">Filtrex.Condition.Text.parse/2</code></a>)</p>
 </li>
-<li><a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> - simple struct to hold generated expressions and values to be used when generating queries for ecto
+<li><p><a href="Filtrex.Params.html"><code class="inline">Filtrex.Params</code></a> - an abstract module for parsing plug-like params from a query string into a filter</p>
+</li>
+<li><p><a href="Filtrex.Fragment.html"><code class="inline">Filtrex.Fragment</code></a> - simple struct to hold generated expressions and values to be used when generating queries for ecto</p>
+</li>
+<li><a href="Filtrex.Type.Config.html"><code class="inline">Filtrex.Type.Config</code></a> - struct to hold various configuration and validation options for creating a filter
 </li>
 </ul>
 
@@ -117,7 +121,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#parse/2">parse(config, arg2)</a>
+    <a href="#parse/2">parse(configs, arg2)</a>
   </div>
   
     <div class="summary-synopsis"><p>Parses a filter expression and returns errors or the parsed filter with
@@ -127,10 +131,10 @@ the appropriate parsed sub-structures</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#parse_params/2">parse_params(config, params)</a>
+    <a href="#parse_params/2">parse_params(configs, params)</a>
   </div>
   
-    <div class="summary-synopsis"><p>This function converts Plug-decoded params like the example below into a filtrex struct based on options in the config. This config is the same as passed into <a href="#parse/2"><code class="inline">parse/2</code></a> for a map structure.</p>
+    <div class="summary-synopsis"><p>This function converts Plug-decoded params like the example below into a filtrex struct based on options in the configs.</p>
 <pre><code class="elixir">%{&quot;comments_contains&quot; =&gt; &quot;love&quot;,
   &quot;title&quot; =&gt; &quot;My Blog Post&quot;,
   &quot;created_at_between&quot; =&gt; %{&quot;start&quot; =&gt; &quot;2014-01-01&quot;, &quot;end&quot; =&gt; &quot;2016-01-01&quot;}}</code></pre>
@@ -196,9 +200,9 @@ expression that is compiled when called</p>
     <a href="#parse/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">parse(config, arg2)</span>
+    <span class="signature">parse(configs, arg2)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L31" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L32" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -208,7 +212,7 @@ expression that is compiled when called</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">parse(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
+          <pre><code class="elixir">parse([<a href="Filtrex.Type.Config.html#t:t/0">Filtrex.Type.Config.t</a>], <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
   {:errors, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>} |
   {:ok, <a href="Filtrex.html#t:t/0">Filtrex.t</a>}</code></pre>
         
@@ -218,12 +222,9 @@ expression that is compiled when called</p>
   <section class="docstring">
     <p>Parses a filter expression and returns errors or the parsed filter with
 the appropriate parsed sub-structures.</p>
-<p>The <code class="inline">config</code> option is a map of the acceptable types and the configuration
-options to pass to each condition type.
+<p>The <code class="inline">configs</code> option is a list of type configs (See <a href="Filtrex.Type.Config.html"><code class="inline">Filtrex.Type.Config</code></a>)
 Example:</p>
-<pre><code class="elixir">%{
-  text: %{keys: ~w(title comments)}
-}</code></pre>
+<pre><code class="elixir">[%Filtrex.Type.Config{type: :text, keys: ~w(title comments)}]</code></pre>
 
   </section>
 </div>
@@ -232,16 +233,16 @@ Example:</p>
     <a href="#parse_params/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">parse_params(config, params)</span>
+    <span class="signature">parse_params(configs, params)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L85" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L86" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>This function converts Plug-decoded params like the example below into a filtrex struct based on options in the config. This config is the same as passed into <a href="#parse/2"><code class="inline">parse/2</code></a> for a map structure.</p>
+    <p>This function converts Plug-decoded params like the example below into a filtrex struct based on options in the configs.</p>
 <pre><code class="elixir">%{&quot;comments_contains&quot; =&gt; &quot;love&quot;,
   &quot;title&quot; =&gt; &quot;My Blog Post&quot;,
   &quot;created_at_between&quot; =&gt; %{&quot;start&quot; =&gt; &quot;2014-01-01&quot;, &quot;end&quot; =&gt; &quot;2016-01-01&quot;}}</code></pre>
@@ -267,7 +268,7 @@ Example:</p>
     </a>
     <span class="signature">query(filter, model)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L99" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L100" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

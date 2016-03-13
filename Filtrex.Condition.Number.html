@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Condition.Text – Filtrex v0.2.0-dev</title>
+    <title>Filtrex.Condition.Number – Filtrex v0.2.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -62,10 +62,10 @@
 
       <h1>
         <small class="visible-xs">Filtrex v0.2.0-dev</small>
-        Filtrex.Condition.Text
+        Filtrex.Condition.Number
         
         
-          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/number.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -73,15 +73,31 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p><a href="Filtrex.Condition.Text.html#content"><code class="inline">Filtrex.Condition.Text</code></a> is a specific condition type for handling text filters with various comparisons. There are no configuration options for the date condition.</p>
-<p>It accepts the following format (where <code class="inline">inverse</code> is passed directly from <a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a>):</p>
-<pre><code class="elixir">%{
-  inverse: boolean,
-  column: string,
-  comparator: string,  # equals, is, is not, contains, does not contain
-  value: string,
-  type: &quot;text&quot;
-}</code></pre>
+          <p><a href="Filtrex.Condition.Number.html#content"><code class="inline">Filtrex.Condition.Number</code></a> is a specific condition type for handling
+integer and decimal filters with various configuration options.</p>
+<p>Comparators:
+  is, is not,
+  greater than, less than or,
+  greater than or, less than</p>
+<p>Configuation Options:</p>
+<table>
+<colgroup>
+<col align="left">
+<col align="left">
+<col align="left">
+</colgroup>
+<thead>
+<tr>
+<th>Key</th><th>Type</th><th>Description</th>
+</tr>
+</thead>
+<tr>
+<td>allow_decimal</td><td>true/false</td><td>required to allow decimal values</td>
+</tr>
+<tr>
+<td>allowed_values</td><td>list/range</td><td>value must be in these values</td>
+</tr>
+</table>
 
         </section>
       
@@ -128,9 +144,7 @@
     <a href="#parse/2">parse(config, map)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Tries to create a valid text condition struct, calling helper methods
-from <a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a> to validate each type. If any of the types are not valid,
-it accumulates the errors and returns them</p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:parse/2"><code class="inline">Filtrex.Condition.parse/2</code></a></p>
 </div>
   
 </div>
@@ -164,7 +178,7 @@ it accumulates the errors and returns them</p>
           </h1>
           <div class="types-list">
             <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: <a href="Filtrex.Condition.Text.html#t:t/0">Filtrex.Condition.Text.t</a></code></pre>
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: Filtrex.Condition.Number</code></pre>
   
 </div>
 
@@ -187,7 +201,7 @@ it accumulates the errors and returns them</p>
     </a>
     <span class="signature">comparators()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L23" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/number.ex#L24" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -205,16 +219,14 @@ it accumulates the errors and returns them</p>
     </a>
     <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L30" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/number.ex#L30" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>Tries to create a valid text condition struct, calling helper methods
-from <a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a> to validate each type. If any of the types are not valid,
-it accumulates the errors and returns them.</p>
+    <p>Callback implementation for <a href="Filtrex.Condition.html#c:parse/2"><code class="inline">Filtrex.Condition.parse/2</code></a>.</p>
 
   </section>
 </div>
@@ -225,7 +237,7 @@ it accumulates the errors and returns them.</p>
     </a>
     <span class="signature">type()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L21" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/number.ex#L22" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

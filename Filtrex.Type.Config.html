@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Condition.Text – Filtrex v0.2.0-dev</title>
+    <title>Filtrex.Type.Config – Filtrex v0.2.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -62,10 +62,10 @@
 
       <h1>
         <small class="visible-xs">Filtrex v0.2.0-dev</small>
-        Filtrex.Condition.Text
+        Filtrex.Type.Config
         
         
-          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/config.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -73,15 +73,16 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p><a href="Filtrex.Condition.Text.html#content"><code class="inline">Filtrex.Condition.Text</code></a> is a specific condition type for handling text filters with various comparisons. There are no configuration options for the date condition.</p>
-<p>It accepts the following format (where <code class="inline">inverse</code> is passed directly from <a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a>):</p>
-<pre><code class="elixir">%{
-  inverse: boolean,
-  column: string,
-  comparator: string,  # equals, is, is not, contains, does not contain
-  value: string,
-  type: &quot;text&quot;
-}</code></pre>
+          <p>This configuration struct is for passing options at the top-level (e.g. <a href="Filtrex.html#parse/2"><code class="inline">Filtrex.parse/2</code></a>) in a list.</p>
+<p>Struct keys:</p>
+<ul>
+<li><code class="inline">type</code>: the corresponding condition module with this type (e.g. :text = Filtrex.Condition.Text)
+</li>
+<li><code class="inline">keys</code>: the allowed keys for this configuration
+</li>
+<li><code class="inline">options</code>: the configuration options to be passed to the condition
+</li>
+</ul>
 
         </section>
       
@@ -116,30 +117,37 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#comparators/0">comparators()</a>
+    <a href="#allowed?/2">allowed?(configs, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:comparators/0"><code class="inline">Filtrex.Condition.comparators/0</code></a></p>
+    <div class="summary-synopsis"><p>Returns whether the passed key is listed in any of the configurations</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#parse/2">parse(config, map)</a>
+    <a href="#config/2">config(configs, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Tries to create a valid text condition struct, calling helper methods
-from <a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a> to validate each type. If any of the types are not valid,
-it accumulates the errors and returns them</p>
+    <div class="summary-synopsis"><p>Returns the configuration for the specified key</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#type/0">type()</a>
+    <a href="#configs_for_type/2">configs_for_type(configs, type)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="Filtrex.Condition.html#c:type/0"><code class="inline">Filtrex.Condition.type/0</code></a></p>
+    <div class="summary-synopsis"><p>Narrows the list of configurations to only the specified type</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#options/2">options(configs, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the specific options of a configuration based on the key</p>
 </div>
   
 </div>
@@ -164,7 +172,7 @@ it accumulates the errors and returns them</p>
           </h1>
           <div class="types-list">
             <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: <a href="Filtrex.Condition.Text.html#t:t/0">Filtrex.Condition.Text.t</a></code></pre>
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: Filtrex.Type.Config</code></pre>
   
 </div>
 
@@ -180,59 +188,75 @@ it accumulates the errors and returns them</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="comparators/0">
+          <div class="detail" id="allowed?/2">
   <div class="detail-header">
-    <a href="#comparators/0" class="detail-link" title="Link to this function">
+    <a href="#allowed?/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">comparators()</span>
+    <span class="signature">allowed?(configs, key)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L23" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/config.ex#L16" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <a href="Filtrex.Condition.html#c:comparators/0"><code class="inline">Filtrex.Condition.comparators/0</code></a>.</p>
+    <p>Returns whether the passed key is listed in any of the configurations</p>
 
   </section>
 </div>
-<div class="detail" id="parse/2">
+<div class="detail" id="config/2">
   <div class="detail-header">
-    <a href="#parse/2" class="detail-link" title="Link to this function">
+    <a href="#config/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">parse(config, map)</span>
+    <span class="signature">config(configs, key)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L30" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/config.ex#L21" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>Tries to create a valid text condition struct, calling helper methods
-from <a href="Filtrex.Condition.html"><code class="inline">Filtrex.Condition</code></a> to validate each type. If any of the types are not valid,
-it accumulates the errors and returns them.</p>
+    <p>Returns the configuration for the specified key</p>
 
   </section>
 </div>
-<div class="detail" id="type/0">
+<div class="detail" id="configs_for_type/2">
   <div class="detail-header">
-    <a href="#type/0" class="detail-link" title="Link to this function">
+    <a href="#configs_for_type/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">type()</span>
+    <span class="signature">configs_for_type(configs, type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/text.ex#L21" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/config.ex#L26" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <a href="Filtrex.Condition.html#c:type/0"><code class="inline">Filtrex.Condition.type/0</code></a>.</p>
+    <p>Narrows the list of configurations to only the specified type</p>
+
+  </section>
+</div>
+<div class="detail" id="options/2">
+  <div class="detail-header">
+    <a href="#options/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">options(configs, key)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/config.ex#L31" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Returns the specific options of a configuration based on the key</p>
 
   </section>
 </div>
