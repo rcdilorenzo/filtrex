@@ -24,14 +24,18 @@ params = %{
 # "comments_contains=Chris McCord&title=Upcoming Phoenix Features&posted_at_between[start]=2013-01-01&posted_at_between[end]=2017-12-31"
 
 {:ok, filter} = Filtrex.parse_params(config, params)
-# => %Filtrex{conditions: [%Filtrex.Condition.Text{column: "comments",
-#   comparator: "contains", inverse: false, type: :text, value: "Chris McCord"},
-#  %Filtrex.Condition.Date{column: "posted_at", comparator: "between",
-#   inverse: false, type: :date,
-#   value: %{end: "2017-12-31", start: "2013-01-01"}},
-#  %Filtrex.Condition.Text{column: "title", comparator: "equals", inverse: false,
-#   type: :text, value: "Upcoming Phoenix Features"}], sub_filters: [],
-# type: "all"}
+# %Filtrex{conditions: [%Filtrex.Condition.Text{column: "comments",
+#     comparator: "contains", inverse: false, type: :text, value: "Chris McCord"},
+#    %Filtrex.Condition.Date{column: "posted_at", comparator: "between",
+#     inverse: false, type: :date,
+#     value: %{end: #<Date(2017-12-31)>, start: #<Date(2013-01-01)>}},
+#    %Filtrex.Condition.Text{column: "title", comparator: "equals",
+#     inverse: false, type: :text, value: "Upcoming Phoenix Features"}],
+#   sub_filters: [], type: "all"}
+
+require Filtrex
+Filtrex.query(filter, YourApp.YourModel)
+# => #Ecto.Query<from s in YourApp.YourModel, where: fragment("(comments LIKE ?) AND ((posted_at >= ?) AND (posted_at <= ?)) AND (title = ?)", "%Chris McCord%", "2013-01-01", "2017-12-31", "Upcoming Phoenix Features")>
 ```
 
 Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators.
@@ -64,6 +68,11 @@ config = [
     }]
   }
 })
+
+require Filtrex
+Filtrex.query(filter, YourApp.YourModel)
+# => #Ecto.Query<from s in Filtrex.SampleModel, where: fragment("((title LIKE ?) AND (title NOT LIKE ?) AND (flag = ?)) AND (((due_date >= ?) AND (due_date <= ?)))", "%Buy%", "%Milk%", false, "2016-03-09", "2016-03-13")>
+
 ```
 
 
