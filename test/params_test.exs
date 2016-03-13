@@ -22,7 +22,7 @@ defmodule ParamsTest do
         type: :date,
         inverse: false,
         column: "date_column",
-        value: %{start: "2016-03-10", end: "2016-03-20"},
+        value: %{start: Timex.date({2016, 3, 10}), end: Timex.date({2016, 3, 20})},
         comparator: "between"
       }]}
   end

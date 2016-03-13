@@ -3,38 +3,54 @@ defmodule Filtrex.Validator.Date do
   @format "{YYYY}-{0M}-{0D}"
   @moduledoc false
 
+  alias Timex.Parse.DateTime.Parser, as: TimexParser
+  import Filtrex.Condition, only: [parse_value_type_error: 2]
+
   def format, do: @format
 
-  def parse_string_date(value) when is_binary(value) do
-    case parse_format(value) do
-      {:ok, _} -> value
-      {:error, error} -> error
-    end
+  def parse_string_date(config, value) when is_binary(value) do
+    parse_format(config, value)
   end
-  def parse_string_date(_), do: nil
+  def parse_string_date(config, value) do
+    {:error, parse_value_type_error(value, config.type)}
+  end
 
 
-  def parse_start_end(value = %{start: start, end: end_value}) do
-    case {parse_format(start), parse_format(end_value)} do
-      {{:ok, _}, {:ok, _}} -> value
-      {{:error, error}, _} -> error
-      {_, {:error, error}} -> error
+  def parse_start_end(config, value = %{start: start, end: end_value}) do
+    case {parse_format(config, start), parse_format(config, end_value)} do
+      {{:ok, start}, {:ok, end_value}} ->
+        {:ok, %{start: start, end: end_value}}
+      {{:error, error}, _} -> {:error, error}
+      {_, {:error, error}} -> {:error, error}
     end
   end
-  def parse_start_end(_), do: "Both a start and end key are required."
+  def parse_start_end(_, _) do
+    {:error, wrap_specific_error("Both a start and end key are required.")}
+  end
 
   def parse_relative(value = %{interval: interval, amount: amount}) do
     cond do
       !is_integer(amount) ->
-        "Amount must be an integer value."
+        {:error, "Amount must be an integer value."}
       not interval in @intervals ->
-        "'#{interval}' is not a valid interval."
-      true -> value
+        {:error, "'#{interval}' is not a valid interval."}
+      true -> {:ok, value}
     end
   end
-  def parse_relative(_), do: "Both an interval and amount key are required."
+  def parse_relative(_) do
+    {:error, wrap_specific_error("Both an interval and amount key are required.")}
+  end
 
-  defp parse_format(value) do
-    Timex.DateFormat.parse(value, @format)
+  defp wrap_specific_error(error) do
+    "Invalid date value format: #{error}"
+  end
+
+  defp parse_format(config, value) do
+    result = with {:ok, datetime} <- TimexParser.parse(value, config.options[:format] || @format),
+                  {:ok, date}     <- Timex.Date.from(datetime), do: date
+    case result do
+      {:error, error} -> {:error, wrap_specific_error(error)}
+      date            -> {:ok, date}
+    end
   end
 end

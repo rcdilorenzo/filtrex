@@ -20,7 +20,7 @@ defmodule Filtrex.Mixfile do
   defp elixirc_paths(_), do: ~w(lib)
 
   def application do
-    [applications: [:logger] ++ applications(Mix.env)]
+    [applications: [:logger, :tzdata] ++ applications(Mix.env)]
   end
 
   defp applications(:test), do: [:postgrex, :ecto]
@@ -36,7 +36,7 @@ defmodule Filtrex.Mixfile do
     [
       {:postgrex, ">= 0.0.0", only: :test},
       {:ecto, ">= 1.1.0"},
-      {:timex, "~> 0.19.5"},
+      {:timex, "~> 2.1.1"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},

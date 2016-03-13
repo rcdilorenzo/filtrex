@@ -104,7 +104,7 @@ defmodule FiltrexTest do
           type: :date,
           column: "date_column",
           comparator: "between",
-          value: %{start: "2016-01-10", end: "2016-12-10"},
+          value: %{start: Timex.date({2016, 1, 10}), end: Timex.date({2016, 12, 10})},
           inverse: false
         },
         %Filtrex.Condition.Boolean{

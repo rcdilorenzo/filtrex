@@ -1,13 +1,14 @@
 defmodule FiltrexASTTest do
   use ExUnit.Case
+  use Timex
 
   @filter %Filtrex{type: "any", conditions: [
     %Filtrex.Condition.Text{column: "title", comparator: "contains", value: "created"},
     %Filtrex.Condition.Text{column: "title", comparator: "is not", value: "Chris McCord"}
   ], sub_filters: [
     %Filtrex{type: "all", conditions: [
-      %Filtrex.Condition.Date{column: "date_column", comparator: "after", value: "2016-05-01"},
-      %Filtrex.Condition.Date{column: "date_column", comparator: "before", value: "2017-01-01"}
+      %Filtrex.Condition.Date{column: "date_column", comparator: "after", value: Timex.date({2016, 5, 1})},
+      %Filtrex.Condition.Date{column: "date_column", comparator: "before", value: Timex.date({2017, 1, 1})}
     ]}
   ]}
 
