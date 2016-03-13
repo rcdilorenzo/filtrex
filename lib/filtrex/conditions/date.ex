@@ -1,5 +1,6 @@
 defmodule Filtrex.Condition.Date do
   use Filtrex.Condition
+  use Timex
   @string_date_comparators ["equals", "does not equal", "is", "is not", "after", "on or after", "before", "on or before"]
   @start_end_comparators ["between", "not between"]
   @relative_date_comparators [
@@ -11,9 +12,18 @@ defmodule Filtrex.Condition.Date do
 
   @type t :: Filtrex.Condition.Date.t
   @moduledoc """
-  `Filtrex.Condition.Date` is a specific condition type for handling date filters with various comparisons. There are no configuration options for the date condition.
+  `Filtrex.Condition.Date` is a specific condition type for handling date filters with various comparisons.
 
-  There are three different value formats allowed listed in each of the three tables below
+  Configuration Options:
+
+  | Key    | Type    | Description                                                    |
+  |--------|---------|----------------------------------------------------------------|
+  | format | string  | the date format\* to use for parsing the incoming date string \|
+  |        |         | (defaults to YYYY-MM-DD)                                       |
+
+  \\\* See https://hexdocs.pm/timex/Timex.Format.DateTime.Formatters.Default.html
+
+  There are three different value formats allowed based on the type of comparator:
 
   | Key        | Type    | Format / Allowed Values                   |
   |------------|---------|-------------------------------------------|
@@ -46,60 +56,55 @@ defmodule Filtrex.Condition.Date do
 
   def comparators, do: @comparators
 
-  def parse(_config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
-    parsed_comparator = validate_in(comparator, @comparators)
-    condition = %Condition.Date{
-      type: :date,
-      inverse: inverse,
-      column: column,
-      comparator: parsed_comparator,
-      value: validate_value(parsed_comparator, value)
-    }
-    case condition do
-      %Condition.Date{comparator: nil} ->
-        {:error, parse_error(comparator, :comparator, :date)}
-      %Condition.Date{value: nil} ->
-        {:error, parse_value_type_error(value, :date)}
-      %Condition.Date{value: error} when error != value ->
-        {:error, "Invalid date value format: #{error}"}
-      _ ->
-        {:ok, condition}
+  def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
+    with {:ok, parsed_comparator} <- validate_comparator(comparator),
+         {:ok, parsed_value}      <- validate_value(config, parsed_comparator, value) do
+      {:ok, %Condition.Date{type: :date, inverse: inverse,
+          column: column, comparator: parsed_comparator,
+          value: parsed_value}}
     end
   end
 
-  defp validate_value(nil, _), do: nil
-  defp validate_value(comparator, value) do
+  defp validate_comparator(comparator) when comparator in @comparators, do:
+    {:ok, comparator}
+  defp validate_comparator(comparator), do:
+    {:error, parse_error(comparator, :comparator, :date)}
+
+  defp validate_value(_, nil, _), do: nil
+  defp validate_value(config, comparator, value) do
     cond do
       comparator in @string_date_comparators ->
-        Filtrex.Validator.Date.parse_string_date(value)
+        Filtrex.Validator.Date.parse_string_date(config, value)
       comparator in @start_end_comparators ->
-        Filtrex.Validator.Date.parse_start_end(value)
+        Filtrex.Validator.Date.parse_start_end(config, value)
       comparator in @relative_date_comparators ->
         Filtrex.Validator.Date.parse_relative(value)
     end
   end
 
   defimpl Filtrex.Encoder do
-    encoder "after", "before", "column > ?"
-    encoder "before", "after", "column < ?"
+    @format Filtrex.Validator.Date.format
 
-    encoder "on or after", "on or before", "column >= ?"
-    encoder "on or before", "on or after", "column <= ?"
+    encoder "after", "before", "column > ?", &default/1
+    encoder "before", "after", "column < ?", &default/1
+
+    encoder "on or after", "on or before", "column >= ?", &default/1
+    encoder "on or before", "on or after", "column <= ?", &default/1
 
     encoder "between", "not between", "(column >= ?) AND (column <= ?)", fn
       (%{start: start, end: end_value}) ->
-        [start, end_value]
+        [default_value(start), default_value(end_value)]
     end
     encoder "not between", "between", "(column > ?) AND (column < ?)", fn
       (%{start: start, end: end_value}) ->
-        [end_value, start]
+        [default_value(end_value), default_value(start)]
     end
 
-    encoder "equals", "does not equal", "column = ?"
-    encoder "does not equal", "equals", "column != ?"
+    encoder "equals", "does not equal", "column = ?", &default/1
+    encoder "does not equal", "equals", "column != ?", &default/1
 
-    encoder "is", "is not", "column = ?"
-    encoder "is not", "is", "column != ?"
+    encoder "is", "is not", "column = ?", &default/1
+    encoder "is not", "is", "column != ?", &default/1
 
     encoder "in the last", "not in the last", "(column >= ?) AND (column <= ?)", &in_the_last_values/1
     encoder "not in the last", "in the last", "(column < ?) AND (column > ?)", &in_the_last_values/1
@@ -111,9 +116,15 @@ defmodule Filtrex.Condition.Date do
     defp in_the_last_values(value), do: [date_from_relative(value, :past), today]
     defp value_from_relative(value), do: [date_from_relative(value)]
 
+    def default(timex_date) do
+      {:ok, date} = Timex.format(timex_date, @format)
+      [date]
+    end
+
+    def default_value(timex_date), do: default(timex_date) |> List.first
+
     defp today do
-      {:ok, date} = Timex.Date.now
-        |> Timex.DateFormat.format(Filtrex.Validator.Date.format)
+      {:ok, date} = Timex.Date.now |> Timex.format(@format)
       date
     end
 
@@ -123,7 +134,7 @@ defmodule Filtrex.Condition.Date do
       interval = String.to_existing_atom(interval)
       {:ok, date} = Timex.Date.now
         |> Timex.Date.shift([{interval, amount * multiplier}])
-        |> Timex.DateFormat.format(Filtrex.Validator.Date.format)
+        |> Timex.format(@format)
       date
     end
   end

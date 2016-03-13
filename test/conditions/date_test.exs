@@ -1,10 +1,12 @@
 defmodule FiltrexConditionDateTest do
   use ExUnit.Case
+  use Timex
   alias Filtrex.Condition.Date
 
   @column "date_column"
   @default "2015-01-01"
-  @config %{keys: [@column]}
+  @config %Filtrex.Type.Config{type: :date, keys: [@column]}
+  @options_config %{@config | options: %{format: "{0M}-{0D}-{YYYY}"}}
 
   test "parsing errors with binary date format" do
     assert Date.parse(@config, %{
@@ -45,6 +47,16 @@ defmodule FiltrexConditionDateTest do
       value: %{interval: "weeks"},
       comparator: "in the last"
     }) == {:error, "Invalid date value format: Both an interval and amount key are required."}
+  end
+
+  test "specifying different date formats" do
+    assert Date.parse(@options_config, %{
+      inverse: false,
+      column: @column,
+      value: "12-29-2016",
+      comparator: "after"
+    }) == {:ok, %Filtrex.Condition.Date{column: "date_column", comparator: "after",
+                    inverse: false, type: :date, value: Timex.date({2016, 12, 29})}}
   end
 
   test "'is' comparator" do
@@ -98,14 +110,14 @@ defmodule FiltrexConditionDateTest do
 
   defp today do
     {:ok, date} = Timex.Date.now
-      |> Timex.DateFormat.format("%Y-%m-%d", :strftime)
+      |> Timex.format("%Y-%m-%d", :strftime)
     date
   end
 
   defp shift(type, amount) do
     {:ok, date} = Timex.Date.now
       |> Timex.Date.shift([{type, amount}])
-      |> Timex.DateFormat.format("%Y-%m-%d", :strftime)
+      |> Timex.format("%Y-%m-%d", :strftime)
     date
   end
 end
