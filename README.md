@@ -13,12 +13,12 @@ Filtrex is an elixir library for parsing and querying with filter data structure
 ```elixir
 config = [
   %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
-  %Filtrex.Type.Config{type: :date, keys: ~w(posted_at)}
+  %Filtrex.Type.Config{type: :date, keys: ~w(posted_at), options: %{format: "{0M}-{0D}-{YYYY}"}}
 ]
 params = %{
     "comments_contains" => "Chris McCord",
     "title" => "Upcoming Phoenix Features",
-    "posted_at_between" => %{"start" => "2013-01-01", "end" => "2017-12-31"}
+    "posted_at_between" => %{"start" => "01-01-2013", "end" => "12-31-2017"}
 }
 # params generated from plug (phoenix) with query string:
 # "comments_contains=Chris McCord&title=Upcoming Phoenix Features&posted_at_between[start]=2013-01-01&posted_at_between[end]=2017-12-31"
@@ -100,10 +100,10 @@ The following condition types and comparators are supported.
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
     * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
-    * options: format
+    * options: format (default: `{YYYY}-{0M}-{0D}`)
 * [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
     * is, is not, greater than, less than or, greater than or, less than
-    * options: allow_decimal, allowed_values
+    * options: allow_decimal (default: false), allowed_values (default: nil)
 
 ## Installation (once v0.2.0 is available)
 
