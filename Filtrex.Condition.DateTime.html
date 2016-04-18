@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Condition.Date – Filtrex v0.2.0</title>
+    <title>Filtrex.Condition.DateTime – Filtrex v0.2.0</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -62,10 +62,10 @@
 
       <h1>
         <small class="visible-xs">Filtrex v0.2.0</small>
-        Filtrex.Condition.Date
+        Filtrex.Condition.DateTime
         
         
-          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L1" title="View Source" class="view-source" rel="help">
+          <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/datetime.ex#L1" title="View Source" class="view-source" rel="help">
             <i class="icon-code"></i>
           </a>
         
@@ -73,7 +73,7 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p><a href="Filtrex.Condition.Date.html#content"><code class="inline">Filtrex.Condition.Date</code></a> is a specific condition type for handling date filters with various comparisons.</p>
+          <p><a href="Filtrex.Condition.DateTime.html#content"><code class="inline">Filtrex.Condition.DateTime</code></a> is a specific condition type for handling datetime filters with various comparisons.</p>
 <p>Configuration Options:</p>
 <table>
 <colgroup>
@@ -87,10 +87,10 @@
 </tr>
 </thead>
 <tr>
-<td>format</td><td>string</td><td>the date format* to use for parsing the incoming date string</td>
+<td>format</td><td>string</td><td>the format* to use for parsing the incoming date string</td>
 </tr>
 <tr>
-<td></td><td></td><td>(defaults to YYYY-MM-DD)</td>
+<td></td><td></td><td>(defaults to {ISOz} and can use any valid Timex format)</td>
 </tr>
 </table>
 <p>* See <a href="https://hexdocs.pm/timex/Timex.Format.DateTime.Formatters.Default.html">https://hexdocs.pm/timex/Timex.Format.DateTime.Formatters.Default.html</a></p>
@@ -119,67 +119,10 @@
 <td></td><td></td><td>is, is not, equals, does not equal</td>
 </tr>
 <tr>
-<td>value</td><td>string</td><td>“YYYY-MM-DD”</td>
+<td>value</td><td>string</td><td>“YYYY-MM-DD’T’HH:MM:ss.SSS’Z’” ({ISOz})</td>
 </tr>
 <tr>
-<td>type</td><td>string</td><td>“date”</td>
-</tr>
-</table>
-<table>
-<colgroup>
-<col align="left">
-<col align="left">
-<col align="left">
-</colgroup>
-<thead>
-<tr>
-<th>Key</th><th>Type</th><th>Format / Allowed Values</th>
-</tr>
-</thead>
-<tr>
-<td>inverse</td><td>boolean</td><td>See <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a></td>
-</tr>
-<tr>
-<td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
-</tr>
-<tr>
-<td>comparator</td><td>string</td><td>between, not between</td>
-</tr>
-<tr>
-<td>value</td><td>map</td><td>%{start: “YYYY-MM-DD”, end: “YYYY-MM-DD”}</td>
-</tr>
-<tr>
-<td>type</td><td>string</td><td>“date”</td>
-</tr>
-</table>
-<table>
-<colgroup>
-<col align="left">
-<col align="left">
-<col align="left">
-</colgroup>
-<thead>
-<tr>
-<th>Key</th><th>Type</th><th>Format / Allowed Values</th>
-</tr>
-</thead>
-<tr>
-<td>inverse</td><td>boolean</td><td>See <a href="Filtrex.Condition.Text.html"><code class="inline">Filtrex.Condition.Text</code></a></td>
-</tr>
-<tr>
-<td>column</td><td>string</td><td>any allowed keys from passed <code class="inline">config</code></td>
-</tr>
-<tr>
-<td>comparator</td><td>string</td><td>in the last, not in the last,</td>
-</tr>
-<tr>
-<td></td><td></td><td>in the next, not in the next</td>
-</tr>
-<tr>
-<td>value</td><td>string</td><td>%{interval: (days, weeks, months, or years), amount: integer}</td>
-</tr>
-<tr>
-<td>type</td><td>string</td><td>“date”</td>
+<td>type</td><td>string</td><td>“datetime”</td>
 </tr>
 </table>
 
@@ -195,19 +138,6 @@
             Summary
           </h1>
           
-  <div class="summary-types summary">
-    <h2>
-      <a href="#types">Types</a>
-    </h2>
-    <div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:t/0">t()</a>
-  </div>
-  
-</div>
-
-  </div>
-
 
           
   <div class="summary-functions summary">
@@ -253,22 +183,6 @@
       
 
       
-        <section id="types" class="types details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#types">
-              <i class="icon-link"></i>
-            </a>
-            Types
-          </h1>
-          <div class="types-list">
-            <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: <a href="Filtrex.Condition.Date.html#t:t/0">Filtrex.Condition.Date.t</a></code></pre>
-  
-</div>
-
-          </div>
-        </section>
-      
 
       
         <section id="functions" class="details-list">
@@ -285,7 +199,7 @@
     </a>
     <span class="signature">comparators()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L57" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/datetime.ex#L34" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -303,7 +217,7 @@
     </a>
     <span class="signature">parse(config, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L59" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/datetime.ex#L36" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -321,7 +235,7 @@
     </a>
     <span class="signature">type()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/date.ex#L55" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/conditions/datetime.ex#L32" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     

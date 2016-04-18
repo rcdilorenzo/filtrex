@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Condition – Filtrex v0.2.0-dev</title>
+    <title>Filtrex.Condition – Filtrex v0.2.0</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Filtrex
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.0-dev
+        v0.2.0
       </h2>
     </div>
     
@@ -61,7 +61,7 @@
 
 
       <h1>
-        <small class="visible-xs">Filtrex v0.2.0-dev</small>
+        <small class="visible-xs">Filtrex v0.2.0</small>
         Filtrex.Condition
         
           <small>behaviour</small>
@@ -142,6 +142,15 @@ To implement your own condition, add <code class="inline">use Filtrex.Condition<
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#validate_comparator/3">validate_comparator(type, comparator, comparators)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Helper method to validate that a comparator is in list</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#validate_in/2">validate_in(value, list)</a>
   </div>
   
@@ -211,7 +220,7 @@ To implement your own condition, add <code class="inline">use Filtrex.Condition<
     </a>
     <span class="signature">param_key_type(configs, key_with_comparator)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L63" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L70" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -229,7 +238,7 @@ To implement your own condition, add <code class="inline">use Filtrex.Condition<
     </a>
     <span class="signature">parse(configs, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L46" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L53" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -259,7 +268,7 @@ config:</p>
     </a>
     <span class="signature">parse_error(value, type, filter_type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L95" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L112" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -286,7 +295,7 @@ config:</p>
     </a>
     <span class="signature">parse_value_type_error(column, filter_type)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L101" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L118" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -306,6 +315,35 @@ config:</p>
 
   </section>
 </div>
+<div class="detail" id="validate_comparator/3">
+  <div class="detail-header">
+    <a href="#validate_comparator/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validate_comparator(type, comparator, comparators)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L86" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">validate_comparator(atom, binary, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) ::
+  {:ok, binary} |
+  {:error, binary}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Helper method to validate that a comparator is in list</p>
+
+  </section>
+</div>
 <div class="detail" id="validate_in/2">
   <div class="detail-header">
     <a href="#validate_in/2" class="detail-link" title="Link to this function">
@@ -313,7 +351,7 @@ config:</p>
     </a>
     <span class="signature">validate_in(value, list)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L79" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L96" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -340,7 +378,7 @@ config:</p>
     </a>
     <span class="signature">validate_is_binary(value)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L90" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L107" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -381,7 +419,7 @@ config:</p>
     </a>
     <span class="signature">comparators()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L13" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L20" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -407,7 +445,7 @@ config:</p>
     </a>
     <span class="signature">parse(arg0, %{})</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L11" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L18" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -435,7 +473,7 @@ config:</p>
     </a>
     <span class="signature">type()</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L12" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex/condition.ex#L19" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
