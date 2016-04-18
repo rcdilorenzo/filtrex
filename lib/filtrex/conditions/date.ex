@@ -70,7 +70,6 @@ defmodule Filtrex.Condition.Date do
   defp validate_comparator(comparator), do:
     {:error, parse_error(comparator, :comparator, :date)}
 
-  defp validate_value(_, nil, _), do: nil
   defp validate_value(config, comparator, value) do
     cond do
       comparator in @string_date_comparators ->
@@ -116,12 +115,12 @@ defmodule Filtrex.Condition.Date do
     defp in_the_last_values(value), do: [date_from_relative(value, :past), today]
     defp value_from_relative(value), do: [date_from_relative(value)]
 
-    def default(timex_date) do
+    defp default(timex_date) do
       {:ok, date} = Timex.format(timex_date, @format)
       [date]
     end
 
-    def default_value(timex_date), do: default(timex_date) |> List.first
+    defp default_value(timex_date), do: default(timex_date) |> List.first
 
     defp today do
       {:ok, date} = Timex.Date.now |> Timex.format(@format)

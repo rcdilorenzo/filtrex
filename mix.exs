@@ -36,7 +36,7 @@ defmodule Filtrex.Mixfile do
     [
       {:postgrex, ">= 0.0.0", only: :test},
       {:ecto, ">= 1.1.0"},
-      {:timex, "~> 2.1.1"},
+      {:timex, "~> 2.1.4"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},

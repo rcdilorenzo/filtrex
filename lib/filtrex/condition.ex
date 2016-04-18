@@ -7,6 +7,13 @@ defmodule Filtrex.Condition do
     * `type/0` - the description of the condition that must match the underscore version of the module's last namespace
     * `comparators/0` - the list of used query comparators for parsing params
   """
+  @modules [
+    Filtrex.Condition.Text,
+    Filtrex.Condition.Date,
+    Filtrex.Condition.DateTime,
+    Filtrex.Condition.Boolean,
+    Filtrex.Condition.Number
+  ]
 
   @callback parse(Filtrex.Type.Config.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
   @callback type :: Atom.t
@@ -46,7 +53,7 @@ defmodule Filtrex.Condition do
   def parse(configs, options = %{type: type}) do
     case condition_module(type) do
       nil ->
-        {:error, ["Unknown filter condition '#{type}'"]}
+        {:error, "Unknown filter condition '#{type}'"}
       module ->
         type_atom = String.to_existing_atom(type)
         config = Filtrex.Type.Config.configs_for_type(configs, type_atom)
@@ -72,6 +79,16 @@ defmodule Filtrex.Condition do
       end)
     end)
     if result, do: result, else: {:error, "Unknown filter key '#{key_with_comparator}'"}
+  end
+
+  @doc "Helper method to validate that a comparator is in list"
+  @spec validate_comparator(atom, binary, List.t) :: {:ok, binary} | {:error, binary}
+  def validate_comparator(type, comparator, comparators) do
+    if comparator in comparators do
+      {:ok, comparator}
+    else
+      {:error, parse_error(comparator, :comparator, type)}
+    end
   end
 
   @doc "Helper method to validate whether a value is in a list"
@@ -116,22 +133,12 @@ defmodule Filtrex.Condition do
   end
 
   defp condition_modules do
-    modules = [
-      Filtrex.Condition.Text,
-      Filtrex.Condition.Date,
-      Filtrex.Condition.Boolean,
-      Filtrex.Condition.Number
-    ]
-    Application.get_env(:filtrex, :conditions, modules)
+    Application.get_env(:filtrex, :conditions, @modules)
   end
 
   defp condition_module(type) do
     Enum.find(condition_modules, fn (module) ->
-      condition_type = to_string(module)
-        |> String.split(".")
-        |> List.last
-        |> Mix.Utils.underscore
-      type == condition_type
+      type == to_string(module.type)
     end)
   end
 end
