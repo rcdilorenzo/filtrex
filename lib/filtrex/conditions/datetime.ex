@@ -6,13 +6,13 @@ defmodule Filtrex.Condition.DateTime do
   @comparators ["equals", "does not equal", "is", "is not", "after", "on or after", "before", "on or before"]
 
   @moduledoc """
-  `Filtrex.Condition.Date` is a specific condition type for handling date filters with various comparisons.
+  `Filtrex.Condition.DateTime` is a specific condition type for handling datetime filters with various comparisons.
 
   Configuration Options:
 
   | Key    | Type    | Description                                                    |
   |--------|---------|----------------------------------------------------------------|
-  | format | string  | the date format\* to use for parsing the incoming date string \|
+  | format | string  | the format\* to use for parsing the incoming date string      \|
   |        |         | (defaults to {ISOz} and can use any valid Timex format)        |
 
   \\\* See https://hexdocs.pm/timex/Timex.Format.DateTime.Formatters.Default.html

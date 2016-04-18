@@ -6,7 +6,6 @@
 
 Filtrex is an elixir library for parsing and querying with filter data structures and parameters. It allows construction of Ecto queries from Phoenix-like query parameters or map data structures for saving smart filters. It has been tested using the Postrgres adapter but will likely work with other adapters as well.
 
-\*\*Note: **See the [v0.1.0 README](https://github.com/rcdilorenzo/filtrex/blob/b4a6830aafc6907a82b296392bb91432ed8e9024/README.md) for the latest Hex.pm release. This README is the documentation for the upcoming 0.2.0 version.**
 
 ## Parsing Filters from URL Params
 
@@ -105,7 +104,7 @@ The following condition types and comparators are supported.
     * is, is not, greater than, less than or, greater than or, less than
     * options: allow_decimal (default: false), allowed_values (default: nil)
 
-## Installation (once v0.2.0 is available)
+## Installation
 
 The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
 
