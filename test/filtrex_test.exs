@@ -3,12 +3,6 @@ defmodule FiltrexTest do
   import Ecto.Query
   require Filtrex
 
-  @config %{
-    text: %{keys: ~w(title)},
-    date: %{keys: ~w(date_column)},
-    boolean: %{keys: ~w(flag)},
-    number: %{keys: ~w(upvotes rating), allow_decimal: true}, # TODO: Refactor config to be based on the key
-  }
   @config Filtrex.SampleModel.filtrex_config
 
   test "only allows certain types" do
@@ -89,6 +83,16 @@ defmodule FiltrexTest do
           %{type: "number", column: "upvotes", comparator: "greater than", value: "100"},
         ]
       }
+    })
+    assert_count filter, 1
+  end
+
+  test "creating a filter with a datetime expression" do
+    {:ok, filter} =  Filtrex.parse(@config, %{
+      filter: %{type: "all", conditions: [
+        %{type: "datetime", column: "datetime_column", comparator: "on or after", value: "2016-03-20T12:34:58.000Z"},
+        %{type: "datetime", column: "datetime_column", comparator: "on or before", value: "2016-04-02T13:00:00.000Z"}
+      ]}
     })
     assert_count filter, 1
   end

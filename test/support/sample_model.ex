@@ -3,10 +3,10 @@ defmodule Filtrex.SampleModel do
 
   schema "sample_models" do
     field :title
-    field :date_column, Ecto.Date
-    field :time_column, Ecto.Time
-    field :upvotes,     :integer
-    field :rating,      :float
+    field :date_column,     Ecto.Date
+    field :datetime_column, Ecto.DateTime
+    field :upvotes,         :integer
+    field :rating,          :float
     field :comments
 
     timestamps
@@ -18,6 +18,7 @@ defmodule Filtrex.SampleModel do
      %Filtrex.Type.Config{type: :date, keys: ~w(date_column)},
      %Filtrex.Type.Config{type: :number, keys: ~w(upvotes)},
      %Filtrex.Type.Config{type: :boolean, keys: ~w(flag)},
+     %Filtrex.Type.Config{type: :datetime, keys: ~w(datetime_column)},
      %Filtrex.Type.Config{type: :number, keys: ~w(rating), options: %{allow_decimal: true}}]
   end
 end
