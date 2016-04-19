@@ -6,6 +6,8 @@
 
 Filtrex is an elixir library for parsing and querying with filter data structures and parameters. It allows construction of Ecto queries from Phoenix-like query parameters or map data structures for saving smart filters. It has been tested using the Postrgres adapter but will likely work with other adapters as well.
 
+**Note: See the [v0.2.0 README](https://github.com/rcdilorenzo/filtrex/blob/65c51d8f0d4a8f79504f7a88bd4357db45a5c42c/README.md) for the latest Hex.pm release. This README is the documentation for the upcoming 0.3.0 version.
+
 
 ## Parsing Filters from URL Params
 
@@ -98,7 +100,7 @@ The following condition types and comparators are supported.
 * [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
-    * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
+    * after, on or after, before, on or before, between, not between, equals, does not equal, is, is not
     * options: format (default: `{YYYY}-{0M}-{0D}`)
 * [Filtrex.Condition.DateTime](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.DateTime.html)
     * after, on or after, before, on or before, equals, does not equal, is, is not
@@ -107,13 +109,13 @@ The following condition types and comparators are supported.
     * is, is not, greater than, less than or, greater than or, less than
     * options: allow_decimal (default: false), allowed_values (default: nil)
 
-## Installation
+## Installation (when 0.3.0 is available)
 
 The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
 
 ```elixir
 def deps do
-  [{:filtrex, "~> 0.2.0"}]
+  [{:filtrex, "~> 0.3.0"}]
 end
 ```
 
