@@ -50,9 +50,6 @@ defmodule FiltrexConditionDateTimeTest do
 
     assert encode(DateTime, @column, @default, "equals")         == {"datetime_column = ?", [@default_converted]}
     assert encode(DateTime, @column, @default, "does not equal") == {"datetime_column != ?", [@default_converted]}
-
-    assert encode(DateTime, @column, @default, "is")         == {"datetime_column = ?", [@default_converted]}
-    assert encode(DateTime, @column, @default, "is not")     == {"datetime_column != ?", [@default_converted]}
   end
 
   defp encode(module, column, value, comparator) do

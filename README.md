@@ -57,7 +57,7 @@ config = [
     conditions: [
       %{column: "title", comparator: "contains", value: "Buy", type: "text"},
       %{column: "title", comparator: "does not contain", value: "Milk", type: "text"},
-      %{column: "flag", comparator: "is", value: "false", type: "boolean"}
+      %{column: "flag", comparator: "equals", value: "false", type: "boolean"}
     ],
     sub_filters: [%{
       filter: %{
@@ -96,17 +96,17 @@ The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuabl
 The following condition types and comparators are supported.
 
 * [Filtrex.Condition.Boolean](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Boolean.html)
-    * is, is not
+    * equals, does not equal
 * [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
-    * is, is not, equals, does not equal, contains, does not contain
+    * equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
-    * after, on or after, before, on or before, between, not between, equals, does not equal, is, is not
+    * after, on or after, before, on or before, between, not between, equals, does not equal
     * options: format (default: `{YYYY}-{0M}-{0D}`)
 * [Filtrex.Condition.DateTime](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.DateTime.html)
-    * after, on or after, before, on or before, equals, does not equal, is, is not
+    * after, on or after, before, on or before, equals, does not equal
     * options: format (default: `{ISOz}`)
 * [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
-    * is, is not, greater than, less than or, greater than or, less than
+    * equals, does not equal, greater than, less than or, greater than or, less than
     * options: allow_decimal (default: false), allowed_values (default: nil)
 
 ## Installation (when 0.3.0 is available)

@@ -50,12 +50,12 @@ defmodule FiltrexConditionDateTest do
                     inverse: false, type: :date, value: Timex.date({2016, 12, 29})}}
   end
 
-  test "'is' comparator" do
+  test "'equals' comparator" do
     assert Date.parse(@config, %{
       inverse: false,
       column: @column,
       value: "2016-05-18",
-      comparator: "is"
+      comparator: "equals"
     }) |> elem(0) == :ok
   end
 
@@ -76,9 +76,6 @@ defmodule FiltrexConditionDateTest do
 
     assert encode(Date, @column, "2016-03-01", "does not equal") ==
       {"date_column != ?", ["2016-03-01"]}
-
-    assert encode(Date, @column, "2016-02-10", "is") ==
-      {"date_column = ?", ["2016-02-10"]}
   end
 
   defp encode(module, column, value, comparator) do

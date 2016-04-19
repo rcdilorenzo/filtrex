@@ -1,7 +1,7 @@
 defmodule Filtrex.Condition.Date do
   use Filtrex.Condition
   use Timex
-  @string_date_comparators ["equals", "does not equal", "is", "is not", "after", "on or after", "before", "on or before"]
+  @string_date_comparators ["equals", "does not equal", "after", "on or after", "before", "on or before"]
   @start_end_comparators ["between", "not between"]
   @comparators @string_date_comparators ++ @start_end_comparators
   @shifts [:days, :weeks, :months, :years]
@@ -26,7 +26,7 @@ defmodule Filtrex.Condition.Date do
   | inverse    | boolean | See `Filtrex.Condition.Text`              |
   | column     | string  | any allowed keys from passed `config`     |
   | comparator | string  | after, on or after, before, on or before,\|
-  |            |         | is, is not, equals, does not equal        |
+  |            |         | equals, does not equal                    |
   | value      | string  | "YYYY-MM-DD"                              |
   | type       | string  | "date"                                    |
 
@@ -88,9 +88,6 @@ defmodule Filtrex.Condition.Date do
 
     encoder "equals", "does not equal", "column = ?", &default/1
     encoder "does not equal", "equals", "column != ?", &default/1
-
-    encoder "is", "is not", "column = ?", &default/1
-    encoder "is not", "is", "column != ?", &default/1
 
     defp default(timex_date) do
       {:ok, date} = Timex.format(timex_date, @format)

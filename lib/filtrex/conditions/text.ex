@@ -1,6 +1,6 @@
 defmodule Filtrex.Condition.Text do
   use Filtrex.Condition
-  @comparators ["equals", "does not equal", "is", "is not", "contains", "does not contain"]
+  @comparators ["equals", "does not equal", "contains", "does not contain"]
 
   @type t :: Filtrex.Condition.Text.t
   @moduledoc """
@@ -11,7 +11,7 @@ defmodule Filtrex.Condition.Text do
   %{
     inverse: boolean,
     column: string,
-    comparator: string,  # equals, is, is not, contains, does not contain
+    comparator: string,  # equals, does not equal, contains, does not contain
     value: string,
     type: "text"
   }
@@ -46,9 +46,6 @@ defmodule Filtrex.Condition.Text do
   end
 
   defimpl Filtrex.Encoder do
-    encoder "is", "is not", "column = ?"
-    encoder "is not", "is", "column != ?"
-
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
 

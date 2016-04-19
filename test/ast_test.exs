@@ -4,7 +4,7 @@ defmodule FiltrexASTTest do
 
   @filter %Filtrex{type: "any", conditions: [
     %Filtrex.Condition.Text{column: "title", comparator: "contains", value: "created"},
-    %Filtrex.Condition.Text{column: "title", comparator: "is not", value: "Chris McCord"}
+    %Filtrex.Condition.Text{column: "title", comparator: "does not equal", value: "Chris McCord"}
   ], sub_filters: [
     %Filtrex{type: "all", conditions: [
       %Filtrex.Condition.Date{column: "date_column", comparator: "after", value: Timex.date({2016, 5, 1})},

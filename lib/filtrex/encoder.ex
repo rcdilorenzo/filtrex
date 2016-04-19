@@ -7,7 +7,7 @@ defprotocol Filtrex.Encoder do
   Example:
   ```
   defimpl Filtrex.Encoder, for: Filtrex.Condition.Text do
-    def encode(%Filtrex.Condition.Text{column: column, comparator: "is", value: value}) do
+    def encode(%Filtrex.Condition.Text{column: column, comparator: "equals", value: value}) do
       %Filtrex.Fragment{expression: "\#\{column\} = ?", values: [value]}
     end
   end

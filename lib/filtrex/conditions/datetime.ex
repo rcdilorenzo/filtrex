@@ -3,7 +3,7 @@ defmodule Filtrex.Condition.DateTime do
   use Timex
 
   @format "{ISOz}"
-  @comparators ["equals", "does not equal", "is", "is not", "after", "on or after", "before", "on or before"]
+  @comparators ["equals", "does not equal", "after", "on or after", "before", "on or before"]
 
   @moduledoc """
   `Filtrex.Condition.DateTime` is a specific condition type for handling datetime filters with various comparisons.
@@ -24,7 +24,7 @@ defmodule Filtrex.Condition.DateTime do
   | inverse    | boolean | See `Filtrex.Condition.Text`              |
   | column     | string  | any allowed keys from passed `config`     |
   | comparator | string  | after, on or after, before, on or before,\|
-  |            |         | is, is not, equals, does not equal        |
+  |            |         | equals, does not equal                    |
   | value      | string  | "YYYY-MM-DD'T'HH:MM:ss.SSS'Z'" ({ISOz})   |
   | type       | string  | "datetime"                                |
   """
@@ -57,9 +57,6 @@ defmodule Filtrex.Condition.DateTime do
 
     encoder "equals", "does not equal", "column = ?", &default/1
     encoder "does not equal", "equals", "column != ?", &default/1
-
-    encoder "is", "is not", "column = ?", &default/1
-    encoder "is not", "is", "column != ?", &default/1
 
     defp default(timex_date) do
       {:ok, format} = Timex.format(timex_date, "{ISOdate} {ISOtime}")
