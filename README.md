@@ -98,7 +98,7 @@ The following condition types and comparators are supported.
 * [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
     * is, is not, equals, does not equal, contains, does not contain
 * [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
-    * after, on or after, before, on or before, between, not between, in the last, not in the last, in the next, not in the next, equals, does not equal, is, is not
+    * after, on or after, before, on or before, between, not between, equals, does not equal, is, is not
     * options: format (default: `{YYYY}-{0M}-{0D}`)
 * [Filtrex.Condition.DateTime](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.DateTime.html)
     * after, on or after, before, on or before, equals, does not equal, is, is not

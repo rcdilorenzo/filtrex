@@ -40,15 +40,6 @@ defmodule FiltrexConditionDateTest do
     }) == {:error, "Invalid date value format: Expected `1-2 digit month` at line 1, column 8."}
   end
 
-  test "parsing errors with the relative date formats" do
-    assert Date.parse(@config, %{
-      inverse: false,
-      column: @column,
-      value: %{interval: "weeks"},
-      comparator: "in the last"
-    }) == {:error, "Invalid date value format: Both an interval and amount key are required."}
-  end
-
   test "specifying different date formats" do
     assert Date.parse(@options_config, %{
       inverse: false,
@@ -88,36 +79,11 @@ defmodule FiltrexConditionDateTest do
 
     assert encode(Date, @column, "2016-02-10", "is") ==
       {"date_column = ?", ["2016-02-10"]}
-
-    assert encode(Date, @column, %{interval: "days", amount: 3}, "in the last") ==
-      {"(date_column >= ?) AND (date_column <= ?)", [shift(:days, -3), today]}
-
-    assert encode(Date, @column, %{interval: "weeks", amount: 1}, "not in the last") ==
-      {"(date_column < ?) AND (date_column > ?)", [shift(:weeks, -1), today]}
-
-    assert encode(Date, @column, %{interval: "years", amount: 4}, "in the next") ==
-      {"(date_column >= ?) AND (date_column <= ?)", [today, shift(:years, 4)]}
-
-    assert encode(Date, @column, %{interval: "months", amount: 1}, "not in the next") ==
-      {"(date_column < ?) AND (date_column > ?)", [today, shift(:months, 1)]}
   end
 
   defp encode(module, column, value, comparator) do
     {:ok, condition} = module.parse(@config, %{inverse: false, column: column, value: value, comparator: comparator})
     encoded = Filtrex.Encoder.encode(condition)
     {encoded.expression, encoded.values}
-  end
-
-  defp today do
-    {:ok, date} = Timex.Date.now
-      |> Timex.format("%Y-%m-%d", :strftime)
-    date
-  end
-
-  defp shift(type, amount) do
-    {:ok, date} = Timex.Date.now
-      |> Timex.Date.shift([{type, amount}])
-      |> Timex.format("%Y-%m-%d", :strftime)
-    date
   end
 end
