@@ -3,7 +3,7 @@ defmodule Filtrex.Mixfile do
 
   def project do
     [app: :filtrex,
-     version: "0.2.0",
+     version: "0.3.0-dev",
      elixir: "~> 1.2",
      description: description,
      package: package,
