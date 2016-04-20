@@ -5,50 +5,41 @@ defmodule Filtrex.AST do
   """
 
   @doc "Builds a 'from' ecto query from conditions and a join operator (e.g. 'AND')"
-  def build_query(filter, model) do
-    {:from, [], [{:in, [context: Elixir, import: Kernel],
-       [{:s, [], Elixir}, {:__aliases__, [alias: false], model(model)}]},
-      [where: {:fragment, [], build_fragments(filter)}]]}
+  def build_query(query, filter) do
+    query = Macro.escape(query)
+    fragments = {:fragment, [], build_fragments(filter)}
+    quote do: Ecto.Query.where(unquote(query), [s], unquote(fragments))
   end
 
-  defp build_fragments(%Filtrex{type: type, conditions: conditions, sub_filters: sub_filters}) do
-    join = logical_join(type)
-    Enum.map(conditions, &Filtrex.Encoder.encode/1)
+  defp build_fragments(filter) do
+    join = logical_join(filter.type)
+    Enum.map(filter.conditions, &Filtrex.Encoder.encode/1)
       |> fragments(join)
-      |> build_sub_fragments(join, sub_filters)
+      |> build_sub_fragments(join, filter.sub_filters)
   end
 
   defp build_sub_fragments(fragments, _, []), do: fragments
   defp build_sub_fragments(fragments, join, sub_filters) do
-    Enum.reduce sub_filters, fragments, fn (sub_filter, [expression | values]) ->
+    Enum.reduce(sub_filters, fragments, fn (sub_filter, [expression | values]) ->
       [sub_expression | sub_values] = build_fragments(sub_filter)
       [join(expression, sub_expression, join) | values ++ sub_values]
-    end
+    end)
   end
 
   defp join(expression1, expression2, join) do
     "(#{expression1}) #{join} (#{expression2})"
   end
 
-  defp model(model) do
-    [_ | rest] = to_string(model)
-      |> String.split(".")
-    rest |> Enum.map(&String.to_atom/1)
-  end
-
   defp fragments(fragments, join) do
-    Enum.reduce fragments, ["" | []], fn
-      (%Filtrex.Fragment{expression: new_expression, values: new_values}, ["" | values]) ->
+    Enum.reduce(fragments, ["" | []], fn
+      (%{expression: new_expression, values: new_values}, ["" | values]) ->
         ["(#{new_expression})" | values ++ new_values]
-
-      (%Filtrex.Fragment{expression: new_expression, values: new_values}, [expression | values]) ->
+      (%{expression: new_expression, values: new_values}, [expression | values]) ->
         combined = "#{expression} #{join} (#{new_expression})"
         [combined | values ++ new_values]
-    end
+    end)
   end
 
   defp logical_join("any"), do: "OR"
   defp logical_join(_),     do: "AND"
-
-
 end
