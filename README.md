@@ -12,35 +12,27 @@ Filtrex is an elixir library for parsing and querying with filter data structure
 ## Parsing Filters from URL Params
 
 ```elixir
-config = [
-  %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
-  %Filtrex.Type.Config{type: :date, keys: ~w(posted_at), options: %{format: "{0M}-{0D}-{YYYY}"}}
-]
+# Get params from phoenix controller (or anywhere else)
 params = %{
     "comments_contains" => "Chris McCord",
     "title" => "Upcoming Phoenix Features",
     "posted_at_between" => %{"start" => "01-01-2013", "end" => "12-31-2017"},
     "filter_union" => "any"  # special value for filter type (any | all | none)
 }
-# params generated from plug (phoenix) with query string:
-# "comments_contains=Chris McCord&title=Upcoming Phoenix Features&posted_at_between[start]=2013-01-01&posted_at_between[end]=2017-12-31&filter_union=any"
 
+# Create validation options for keys and formats
+config = [
+  %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
+  %Filtrex.Type.Config{type: :date, keys: ~w(posted_at), options: %{format: "{0M}-{0D}-{YYYY}"}}
+]
+
+
+# Parse params into encodable filter structures
 {:ok, filter} = Filtrex.parse_params(config, params)
-# %Filtrex{conditions: [%Filtrex.Condition.Text{column: "comments",
-#    comparator: "contains", inverse: false, type: :text, value: "Chris McCord"},
-#   %Filtrex.Condition.Date{column: "posted_at", comparator: "between",
-#    inverse: false, type: :date,
-#    value: %{end: #<Date(2017-12-31)>, start: #<Date(2013-01-01)>}},
-#   %Filtrex.Condition.Text{column: "title", comparator: "equals",
-#    inverse: false, type: :text, value: "Upcoming Phoenix Features"}],
-#  sub_filters: [], type: "any"}
 
-require Filtrex
-Filtrex.query(filter, YourApp.YourModel)
-# => #Ecto.Query<from s in YourApp.YourModel,
-#   where: fragment("(comments LIKE ?) AND ((posted_at >= ?)
-#     AND (posted_at <= ?)) AND (title = ?)", "%Chris McCord%",
-#     "2013-01-01", "2017-12-31", "Upcoming Phoenix Features")>
+# Encode filter structure into where clause on query
+query = from(s in YourApp.YourModel)
+  |> Filtrex.query(filter)  # => #Ecto.Query<...
 ```
 
 Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators.
@@ -49,12 +41,15 @@ Using parsed parameters from your phoenix application, a filter can be easily co
 ## Parsing Filter Structures
 
 ```elixir
+
+# Create validation options for keys and formats
 config = [
   %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
   %Filtrex.Type.Config{type: :date, keys: ~w(due_date)},
   %Filtrex.Type.Config{type: :boolean, keys: ~w(flag)}
 ]
 
+# Parse a "smart-filter" encoded from client (e.g. with Poison or Phoenix)
 {:ok, filter} = Filtrex.parse(config, %{
   "filter" => %{
     "type" => "all",               # all | any | none
@@ -74,27 +69,14 @@ config = [
   }
 })
 
-require Filtrex
-Filtrex.query(filter, YourApp.YourModel)
-# => #Ecto.Query<from s in YourApp.YourModel,
-#  where: fragment("((title LIKE ?) AND (title NOT LIKE ?)
-#   AND (flag = ?)) AND ((due_date = ?))",
-#   "%Buy%", "%Milk%", false, "2016-03-26")>
+query = from(m in YourApp.YourModel, where: m.rating > 90)
+  |> Filtrex.query(filter)  # => #Ecto.Query<...
 
 ```
 
 
 The configuration passed into `Filtrex.parse/2` gives the individual condition types more information to validate the filter against and is a required argument. See [this section](http://rcdilorenzo.github.io/filtrex/Filtrex.html) of the documentation for details.
 
-## Creating Ecto Queries from a Filtrex Filter
-
-To create an [Ecto](https://github.com/elixir-lang/ecto) query, simply require `Filtrex` and pass in the filter and a module that uses `Ecto.Schema` to the `Filtrex.query/2` macro; then, pipe it into oblivion!
-
-```elixir
-require Filtrex
-
-Filtrex.query(filter, YourApp.YourModel)
-```
 
 The [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuable information on how to both use and extend the library to your liking so please take a look!
 
