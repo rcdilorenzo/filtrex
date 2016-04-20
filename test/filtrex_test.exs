@@ -119,11 +119,11 @@ defmodule FiltrexTest do
   end
 
   test "parsing parameters" do
-    query_string = "title_contains=earth&date_column_between[start]=2016-01-10&date_column_between[end]=2016-12-10&flag=false"
+    query_string = "title_contains=earth&date_column_between[start]=2016-01-10&date_column_between[end]=2016-12-10&flag=false&filter_union=any"
     params = Plug.Conn.Query.decode(query_string)
     {:ok, filter} = Filtrex.parse_params(@config, params)
     assert filter == %Filtrex{
-      type: "all",
+      type: "any",
       conditions: [
         %Filtrex.Condition.Date{
           type: :date, column: "date_column", comparator: "between", inverse: false,

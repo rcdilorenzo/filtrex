@@ -94,12 +94,9 @@ defmodule Filtrex do
   ```
   """
   def parse_params(configs, params) do
-    case Filtrex.Params.parse_conditions(configs, params) do
-      {:ok, conditions} ->
-        {:ok,  %Filtrex{type: "all", conditions: conditions}}
-      {:error, reason} ->
-        {:error, reason}
-    end
+    with {:ok, {type, params}} <- parse_params_filter_union(params),
+         {:ok, conditions} <- Filtrex.Params.parse_conditions(configs, params),
+         do: {:ok, %Filtrex{type: type, conditions: conditions}}
   end
 
   @doc """
@@ -112,6 +109,15 @@ defmodule Filtrex do
       Filtrex.AST.build_query(unquote(filter), unquote(model))
         |> Code.eval_quoted([], __ENV__)
         |> elem(0)
+    end
+  end
+
+  defp parse_params_filter_union(params) do
+    case Map.fetch(params, "filter_union") do
+      {:ok, type} when type in ~w(all any none) ->
+        {:ok, {type, Map.delete(params, "filter_union")}}
+      _ ->
+        {:error, "Invalid filter union"}
     end
   end
 

@@ -19,20 +19,21 @@ config = [
 params = %{
     "comments_contains" => "Chris McCord",
     "title" => "Upcoming Phoenix Features",
-    "posted_at_between" => %{"start" => "01-01-2013", "end" => "12-31-2017"}
+    "posted_at_between" => %{"start" => "01-01-2013", "end" => "12-31-2017"},
+    "filter_union" => "any"  # special value for filter type (any | all | none)
 }
 # params generated from plug (phoenix) with query string:
-# "comments_contains=Chris McCord&title=Upcoming Phoenix Features&posted_at_between[start]=2013-01-01&posted_at_between[end]=2017-12-31"
+# "comments_contains=Chris McCord&title=Upcoming Phoenix Features&posted_at_between[start]=2013-01-01&posted_at_between[end]=2017-12-31&filter_union=any"
 
 {:ok, filter} = Filtrex.parse_params(config, params)
 # %Filtrex{conditions: [%Filtrex.Condition.Text{column: "comments",
-#     comparator: "contains", inverse: false, type: :text, value: "Chris McCord"},
-#    %Filtrex.Condition.Date{column: "posted_at", comparator: "between",
-#     inverse: false, type: :date,
-#     value: %{end: #<Date(2017-12-31)>, start: #<Date(2013-01-01)>}},
-#    %Filtrex.Condition.Text{column: "title", comparator: "equals",
-#     inverse: false, type: :text, value: "Upcoming Phoenix Features"}],
-#   sub_filters: [], type: "all"}
+#    comparator: "contains", inverse: false, type: :text, value: "Chris McCord"},
+#   %Filtrex.Condition.Date{column: "posted_at", comparator: "between",
+#    inverse: false, type: :date,
+#    value: %{end: #<Date(2017-12-31)>, start: #<Date(2013-01-01)>}},
+#   %Filtrex.Condition.Text{column: "title", comparator: "equals",
+#    inverse: false, type: :text, value: "Upcoming Phoenix Features"}],
+#  sub_filters: [], type: "any"}
 
 require Filtrex
 Filtrex.query(filter, YourApp.YourModel)
