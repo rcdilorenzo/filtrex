@@ -16,6 +16,11 @@ defmodule Filtrex do
 
   defstruct type: nil, conditions: [], sub_filters: []
 
+  @whitelist [
+    :filter, :type, :conditions, :sub_filters,
+    :column, :comparator, :value
+  ]
+
   @type t :: Filtrex.t
 
   @doc """
@@ -53,6 +58,11 @@ defmodule Filtrex do
 
   def parse(configs, %{filter: %{type: type, conditions: conditions}}) when is_list(conditions) do
     parse(configs, %{filter: %{type: type, conditions: conditions, sub_filters: []}})
+  end
+
+  def parse(configs, map) when is_map(map) do
+    with {:ok, sanitized} <- Filtrex.Params.sanitize(map, @whitelist),
+      do: parse(configs, sanitized)
   end
 
   def parse(_, _), do: {:error, "Invalid filter structure"}
