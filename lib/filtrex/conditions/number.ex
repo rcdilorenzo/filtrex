@@ -7,7 +7,6 @@ defmodule Filtrex.Condition.Number do
   integer and decimal filters with various configuration options.
 
   Comparators:
-    is, is not,
     greater than, less than or,
     greater than or, less than
 
@@ -22,7 +21,7 @@ defmodule Filtrex.Condition.Number do
   def type, do: :number
 
   def comparators, do: [
-    "is", "is not",
+    "equals", "does not equal",
     "greater than", "less than or",
     "greater than or", "less than"
   ]
@@ -94,8 +93,8 @@ defmodule Filtrex.Condition.Number do
   defp parse_value(_, value), do: {:error, parse_value_type_error(value, type)}
 
   defimpl Filtrex.Encoder do
-    encoder "is", "is not", "column = ?"
-    encoder "is not", "is", "column != ?"
+    encoder "equals", "does not equal", "column = ?"
+    encoder "does not equal", "equals", "column != ?"
     encoder "greater than", "less than or", "column > ?"
     encoder "less than or", "greater than", "column <= ?"
     encoder "less than", "greater than or", "column < ?"

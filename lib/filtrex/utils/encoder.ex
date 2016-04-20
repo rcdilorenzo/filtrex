@@ -8,7 +8,7 @@ defmodule Filtrex.Utils.Encoder do
 
   Example:
   ```
-  encoder "is", "is not", "column = ?", &(&1)
+  encoder "equals", "does not equal", "column = ?", &(&1)
   ```
 
   In this example, a comparator and its reverse are passed in followed

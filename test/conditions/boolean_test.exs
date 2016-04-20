@@ -25,18 +25,18 @@ defmodule FiltrexConditionBooleanTest do
   end
 
   test "encoding true value" do
-    assert Filtrex.Encoder.encode(condition(true, "is")) ==
+    assert Filtrex.Encoder.encode(condition(true, "equals")) ==
       %Filtrex.Fragment{expression: "flag = ?", values: [true]}
 
-    assert Filtrex.Encoder.encode(condition(true, "is not")) ==
+    assert Filtrex.Encoder.encode(condition(true, "does not equal")) ==
       %Filtrex.Fragment{expression: "flag != ?", values: [true]}
   end
 
   test "encoding false value" do
-    assert Filtrex.Encoder.encode(condition(false, "is")) ==
+    assert Filtrex.Encoder.encode(condition(false, "equals")) ==
       %Filtrex.Fragment{expression: "flag = ?", values: [false]}
 
-    assert Filtrex.Encoder.encode(condition(false, "is not")) ==
+    assert Filtrex.Encoder.encode(condition(false, "does not equal")) ==
       %Filtrex.Fragment{expression: "flag != ?", values: [false]}
   end
 
@@ -44,10 +44,10 @@ defmodule FiltrexConditionBooleanTest do
     %{inverse: false,
       column: @column,
       value: value,
-      comparator: "is"}
+      comparator: "equals"}
   end
 
-  defp condition(value, comparator \\ "is") do
+  defp condition(value, comparator \\ "equals") do
     %Boolean{type: :boolean, column: @column,
       inverse: false, comparator: comparator, value: value}
   end

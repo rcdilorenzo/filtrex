@@ -25,7 +25,7 @@ defmodule FiltrexConditionTextTest do
     assert encoded.values == ["Buy Milk"]
     assert encoded.expression == "title = ?"
 
-    {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "is not"})
+    {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "does not equal"})
     encoded = Filtrex.Encoder.encode(condition)
     assert encoded.expression == "title != ?"
 

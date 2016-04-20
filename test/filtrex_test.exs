@@ -30,7 +30,7 @@ defmodule FiltrexTest do
     {:ok, filter} =  Filtrex.parse(@config, %{
       filter: %{type: "all", conditions: [
         %{type: "text", column: "title", comparator: "contains", value: "earth"},
-        %{type: "text", column: "title", comparator: "is not", value: "The earth was without form and void;"}
+        %{type: "text", column: "title", comparator: "does not equal", value: "The earth was without form and void;"}
       ]}
     })
     assert_count filter, 1
@@ -50,7 +50,7 @@ defmodule FiltrexTest do
     {:ok, filter} =  Filtrex.parse(@config, %{
       filter: %{type: "none", conditions: [
         %{type: "text", column: "title", comparator: "contains", value: "earth"},
-        %{type: "text", column: "title", comparator: "is", value: "Chris McCord"}
+        %{type: "text", column: "title", comparator: "equals", value: "Chris McCord"}
       ]}
     })
     assert_count filter, 4
@@ -62,7 +62,7 @@ defmodule FiltrexTest do
         type: "any",
         conditions: [
           %{type: "text", column: "title", comparator: "contains", value: "earth"},
-          %{type: "text", column: "title", comparator: "is", value: "Chris McCord"}
+          %{type: "text", column: "title", comparator: "equals", value: "Chris McCord"}
         ],
         sub_filters: [%{filter: %{type: "all", conditions: [
           %{type: "date", column: "date_column", comparator: "after", value: "2016-03-26"},
@@ -114,7 +114,7 @@ defmodule FiltrexTest do
         %Filtrex.Condition.Boolean{
           type: :boolean,
           column: "flag",
-          comparator: "is",
+          comparator: "equals",
           value: false,
           inverse: false
         },
