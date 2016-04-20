@@ -159,8 +159,17 @@ defmodule FiltrexTest do
     assert {:error, "Unknown key 'types'"} == Filtrex.parse(@config, invalid_map)
   end
 
-  defp assert_count(filter, count) do
-    assert Filtrex.query(filter, Filtrex.SampleModel)
+  test "pipelining to query" do
+    query_string = "title_contains=earth"
+    params = Plug.Conn.Query.decode(query_string)
+    {:ok, filter} = Filtrex.parse_params(@config, params)
+    existing_query = from(m in Filtrex.SampleModel, where: m.rating > 90)
+    assert_count existing_query, filter, 1
+  end
+
+  defp assert_count(query \\ Filtrex.SampleModel, filter, count) do
+    assert query
+      |> Filtrex.query(filter)
       |> select([m], count(m.id))
       |> Filtrex.Repo.one! == count
   end

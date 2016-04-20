@@ -14,6 +14,8 @@ defmodule Filtrex do
     * `Filtrex.Type.Config` - struct to hold various configuration and validation options for creating a filter
   """
 
+  require Ecto.Query
+
   defstruct type: nil, conditions: [], sub_filters: []
 
   @whitelist [
@@ -103,19 +105,19 @@ defmodule Filtrex do
   Converts a filter with the specified ecto module name into a valid ecto query
   expression that is compiled when called.
   """
-  @spec query(Filter.t, module) :: Ecto.Query.t
-  defmacro query(filter, model) do
-    quote do
-      Filtrex.AST.build_query(unquote(filter), unquote(model))
-        |> Code.eval_quoted([], __ENV__)
-        |> elem(0)
-    end
+  @spec query(Ecto.Query.t, Filter.t) :: Ecto.Query.t
+  def query(query, filter) do
+    {result, _} = Filtrex.AST.build_query(query, filter)
+      |> Code.eval_quoted([], __ENV__)
+    result
   end
 
   defp parse_params_filter_union(params) do
     case Map.fetch(params, "filter_union") do
       {:ok, type} when type in ~w(all any none) ->
         {:ok, {type, Map.delete(params, "filter_union")}}
+      :error ->
+        {:ok, {"all", params}}
       _ ->
         {:error, "Invalid filter union"}
     end
