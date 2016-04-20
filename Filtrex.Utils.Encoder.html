@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Utils.Encoder – Filtrex v0.2.0</title>
+    <title>Filtrex.Utils.Encoder – Filtrex v0.3.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Filtrex
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.0
+        v0.3.0-dev
       </h2>
     </div>
     
@@ -61,7 +61,7 @@
 
 
       <h1>
-        <small class="visible-xs">Filtrex v0.2.0</small>
+        <small class="visible-xs">Filtrex v0.3.0-dev</small>
         Filtrex.Utils.Encoder
         
         
@@ -141,7 +141,7 @@
   <section class="docstring">
     <p>This macro allows a simple creation of encoders using a simple DSL.</p>
 <p>Example:</p>
-<pre><code class="elixir">encoder &quot;is&quot;, &quot;is not&quot;, &quot;column = ?&quot;, &amp;(&amp;1)</code></pre>
+<pre><code class="elixir">encoder &quot;equals&quot;, &quot;does not equal&quot;, &quot;column = ?&quot;, &amp;(&amp;1)</code></pre>
 <p>In this example, a comparator and its reverse are passed in followed
 by an expression where “column” is substituted for the actual column
 name from the struct. The final argument is a function (which is not

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex.Encoder – Filtrex v0.2.0</title>
+    <title>Filtrex.Encoder – Filtrex v0.3.0-dev</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Filtrex
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.2.0
+        v0.3.0-dev
       </h2>
     </div>
     
@@ -61,7 +61,7 @@
 
 
       <h1>
-        <small class="visible-xs">Filtrex v0.2.0</small>
+        <small class="visible-xs">Filtrex v0.3.0-dev</small>
         Filtrex.Encoder
         
           <small>protocol</small>
@@ -80,7 +80,7 @@ Implementing this protocol is required for any new conditions.
 See <a href="Filtrex.Utils.Encoder.html"><code class="inline">Filtrex.Utils.Encoder</code></a> for helper methods with this implementation.</p>
 <p>Example:</p>
 <pre><code class="elixir">defimpl Filtrex.Encoder, for: Filtrex.Condition.Text do
-  def encode(%Filtrex.Condition.Text{column: column, comparator: &quot;is&quot;, value: value}) do
+  def encode(%Filtrex.Condition.Text{column: column, comparator: &quot;equals&quot;, value: value}) do
     %Filtrex.Fragment{expression: &quot;#{column} = ?&quot;, values: [value]}
   end
 end</code></pre>
