@@ -38,4 +38,17 @@ defmodule ParamsTest do
     assert Filtrex.Params.parse_conditions(@config, params) ==
       {:error, "Unknown filter key 'extra_key'"}
   end
+
+  test "sanitizing map keys recursively" do
+    map = %{"key1" => %{"sub_key" => [%{:key => 1, "sub_sub_key" => nil}]}, "key2" => :value}
+
+    assert Filtrex.Params.sanitize(map, [:key1, :sub_key, :sub_sub_key, :key2]) ==
+      {:ok, %{key1: %{sub_key: [%{key: 1, sub_sub_key: nil}]}, key2: :value}}
+
+    assert Filtrex.Params.sanitize(map, [:key1, :sub_sub_key, :key2]) ==
+      {:error, "Unknown key 'sub_key'"}
+
+    assert Filtrex.Params.sanitize(%{1 => "value"}, [:key1, :sub_sub_key, :key2]) ==
+      {:error, "Invalid key. Only string keys are supported."}
+  end
 end

@@ -7,6 +7,42 @@ defmodule Filtrex.Params do
   ```
   """
 
+  @doc "Converts a string-key map to atoms from whitelist"
+  def sanitize(map, whitelist) when is_map(map) do
+    sanitize_value(map, Enum.map(whitelist, &to_string/1))
+  end
+
+  defp sanitize_value(map, whitelist) when is_map(map) do
+    Enum.reduce_while(map, {:ok, %{}}, fn ({key, value}, {:ok, acc}) ->
+      cond do
+        is_atom(key) ->
+          case sanitize_value(value, whitelist) do
+            {:ok, sanitized} -> {:cont, {:ok, Map.put(acc, key, sanitized)}}
+            error            -> {:halt, error}
+          end
+        key in whitelist ->
+          atom = String.to_existing_atom(key)
+          case sanitize_value(value, whitelist) do
+            {:ok, sanitized} -> {:cont, {:ok, Map.put(acc, atom, sanitized)}}
+            error            -> {:halt, error}
+          end
+        not is_binary(key) ->
+          {:halt, {:error, "Invalid key. Only string keys are supported."}}
+        true ->
+          {:halt, {:error, "Unknown key '#{key}'"}}
+      end
+    end)
+  end
+  defp sanitize_value(list, whitelist) when is_list(list) do
+    Enum.reduce_while(list, {:ok, []}, fn (value, {:ok, acc}) ->
+      case sanitize_value(value, whitelist) do
+        {:ok, sanitized} -> {:cont, {:ok, acc ++ [sanitized]}}
+        error            -> {:halt, error}
+      end
+    end)
+  end
+  defp sanitize_value(value, _), do: {:ok, value}
+
   @doc "Converts parameters to a list of conditions"
   def parse_conditions(configs, params) when is_map(params) do
     Enum.reduce(params, {:ok, []}, fn

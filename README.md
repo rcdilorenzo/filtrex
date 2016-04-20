@@ -52,18 +52,18 @@ config = [
 ]
 
 {:ok, filter} = Filtrex.parse(config, %{
-  filter: %{
-    type: "all",               # all | any | none
-    conditions: [
-      %{column: "title", comparator: "contains", value: "Buy", type: "text"},
-      %{column: "title", comparator: "does not contain", value: "Milk", type: "text"},
-      %{column: "flag", comparator: "equals", value: "false", type: "boolean"}
+  "filter" => %{
+    "type" => "all",               # all | any | none
+    "conditions" => [
+      %{"column" => "title", "comparator" => "contains", "value" => "Buy", "type" => "text"},
+      %{"column" => "title", "comparator" => "does not contain", "value" => "Milk", "type" => "text"},
+      %{"column" => "flag", "comparator" => "equals", "value" => "false", "type" => "boolean"}
     ],
-    sub_filters: [%{
-      filter: %{
-        type: "any",
-        conditions: [
-          %{column: "due_date", comparator: "in the last", value: %{interval: "days", amount: 4}, type: "date"}
+    "sub_filters" => [%{
+      "filter" => %{
+        "type" => "any",
+        "conditions" => [
+          %{"column" => "due_date", "comparator" => "equals", "value" => "2016-03-26", "type" => "date"}
         ]
       }
     }]
@@ -72,7 +72,8 @@ config = [
 
 require Filtrex
 Filtrex.query(filter, YourApp.YourModel)
-# => #Ecto.Query<from s in Filtrex.SampleModel, where: fragment("((title LIKE ?) AND (title NOT LIKE ?) AND (flag = ?)) AND (((due_date >= ?) AND (due_date <= ?)))", "%Buy%", "%Milk%", false, "2016-03-09", "2016-03-13")>
+# => #Ecto.Query<from s in YourApp.YourModel,
+ where: fragment("((title LIKE ?) AND (title NOT LIKE ?) AND (flag = ?)) AND ((due_date = ?))", "%Buy%", "%Milk%", false, "2016-03-26")>
 
 ```
 
