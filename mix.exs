@@ -23,7 +23,7 @@ defmodule Filtrex.Mixfile do
     [applications: [:logger, :tzdata] ++ applications(Mix.env)]
   end
 
-  defp applications(:test), do: [:postgrex, :ecto]
+  defp applications(:test), do: [:postgrex, :ecto, :ex_machina]
   defp applications(_), do: []
 
   defp description do
@@ -40,7 +40,8 @@ defmodule Filtrex.Mixfile do
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
-      {:plug, "~> 1.1.2", only: :test}
+      {:plug, "~> 1.1.2", only: :test},
+      {:ex_machina, "~> 0.6.1", only: :test}
     ]
   end
 

@@ -6,25 +6,16 @@ defmodule ParamsTest do
   test "parsing valid text parameters" do
     params = %{"title_contains" => "blah"}
     assert Filtrex.Params.parse_conditions(@config, params) ==
-      {:ok, [%Filtrex.Condition.Text{
-        type: :text,
-        inverse: false,
-        column: "title",
-        value: "blah",
-        comparator: "contains"
-      }]}
+      {:ok, [%Filtrex.Condition.Text{type: :text, inverse: false,
+        column: "title", value: "blah", comparator: "contains" }]}
   end
 
   test "parsing valid date parameters" do
     params = %{"date_column_between" => %{"start" => "2016-03-10", "end" => "2016-03-20"}}
     assert Filtrex.Params.parse_conditions(@config, params) ==
       {:ok, [%Filtrex.Condition.Date{
-        type: :date,
-        inverse: false,
-        column: "date_column",
-        value: %{start: Timex.date({2016, 3, 10}), end: Timex.date({2016, 3, 20})},
-        comparator: "between"
-      }]}
+        type: :date, inverse: false, column: "date_column", comparator: "between",
+        value: %{start: Timex.date({2016, 3, 10}), end: Timex.date({2016, 3, 20})}}]}
   end
 
   test "bubbling up errors from value parsing" do

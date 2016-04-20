@@ -1,120 +1,122 @@
 defmodule FiltrexTest do
   use ExUnit.Case
   import Ecto.Query
-  require Filtrex
+  alias Factory.ConditionParams
+  alias Factory.FilterParams
 
   @config Filtrex.SampleModel.filtrex_config
 
+  @tag :validate_structure
   test "only allows certain types" do
-    assert Filtrex.parse(@config, %{
-      filter: %{type: "dash-combine", conditions: []}
-    }) == {:errors, ["Invalid filter type dash-combine"]}
+    assert FilterParams.build(:all)
+      |> FilterParams.type("dash-combine")
+      |> Filtrex.validate_structure ==
+        {:errors, ["Invalid filter type 'dash-combine'"]}
   end
 
+  @tag :validate_structure
   test "requiring more than one condition" do
-    assert Filtrex.parse(@config, %{
-      filter: %{type: "all", conditions: []}
-    }) == {:errors, ["One or more conditions required to filter"]}
+    assert FilterParams.build(:all)
+      |> Filtrex.validate_structure ==
+        {:errors, ["One or more conditions required to filter"]}
+  end
+
+  @tag :validate_structure
+  test "validating sub-filters is a list" do
+    assert FilterParams.build(:all)
+      |> FilterParams.conditions([ConditionParams.build(:text)])
+      |> FilterParams.sub_filters(%{})
+      |> Filtrex.validate_structure ==
+        {:errors, ["Sub-filters must be a valid list of filters"]}
+  end
+
+  @tag :validate_structure
+  test "validating sub-filters recursively" do
+    assert FilterParams.build(:all)
+      |> FilterParams.conditions([ConditionParams.build(:text)])
+      |> FilterParams.sub_filters([
+          FilterParams.build(:all)
+            |> FilterParams.type("blah")
+            |> FilterParams.conditions([ConditionParams.build(:text)])])
+      |> Filtrex.validate_structure ==
+        {:errors, ["Invalid filter type 'blah'"]}
   end
 
   test "trickling up errors from conditions" do
-    assert Filtrex.parse(@config, %{
-      filter: %{type: "all", conditions: [
-        %{type: "text", column: "wrong_column",
-          comparator: "contains", value: "Milk"},
-        %{type: "text", column: "title",
-          comparator: "invalid", value: "Blah"}
-      ]}
-    }) == {:errors, [
+    params = FilterParams.build(:all) |> FilterParams.conditions([
+      ConditionParams.build(:text, column: "wrong_column"),
+      ConditionParams.build(:text, comparator: "invalid")
+    ])
+
+    assert Filtrex.parse(@config, params) == {:errors, [
       "Unknown column 'wrong_column'",
       "Invalid text comparator 'invalid'"
     ]}
   end
 
   test "creating an 'all' ecto filter query" do
-    {:ok, filter} =  Filtrex.parse(@config, %{
-      filter: %{type: "all", conditions: [
-        %{type: "text", column: "title",
-          comparator: "contains", value: "earth"},
-        %{type: "text", column: "title",
-          comparator: "does not equal",
-          value: "The earth was without form and void;"}
-      ]}
-    })
+    params = FilterParams.build(:all) |> FilterParams.conditions([
+      ConditionParams.build(:text, comparator: "contains", value: "earth"),
+      ConditionParams.build(:text, comparator: "does not equal", value: "The earth was without form and void;")
+    ])
+
+    {:ok, filter} =  Filtrex.parse(@config, params)
     assert_count filter, 1
   end
 
   test "creating an 'any' ecto filter query" do
-    {:ok, filter} =  Filtrex.parse(@config, %{
-      filter: %{type: "any", conditions: [
-        %{type: "date", column: "date_column",
-          comparator: "on or before", value: "2016-03-20"},
-        %{type: "date", column: "date_column",
-          comparator: "on or after", value: "2016-05-04"}
-      ]}
-    })
+    params = FilterParams.build(:any) |> FilterParams.conditions([
+      ConditionParams.build(:date, comparator: "on or before", value: "2016-03-20"),
+      ConditionParams.build(:date, comparator: "on or after", value: "2016-05-04")
+    ])
+
+    {:ok, filter} =  Filtrex.parse(@config, params)
     assert_count filter, 6
   end
 
   test "creating a 'none' ecto filter query" do
-    {:ok, filter} =  Filtrex.parse(@config, %{
-      filter: %{type: "none", conditions: [
-        %{type: "text", column: "title",
-          comparator: "contains", value: "earth"},
-        %{type: "text", column: "title",
-          comparator: "equals", value: "Chris McCord"}
-      ]}
-    })
+    params = FilterParams.build(:none) |> FilterParams.conditions([
+      ConditionParams.build(:text, comparator: "contains", value: "earth"),
+      ConditionParams.build(:text, value: "Chris McCord")
+    ])
+
+    {:ok, filter} =  Filtrex.parse(@config, params)
     assert_count filter, 4
   end
 
   test "creating subfilters" do
-    {:ok, filter} =  Filtrex.parse(@config, %{
-      filter: %{
-        type: "any",
-        conditions: [
-          %{type: "text", column: "title",
-            comparator: "contains", value: "earth"},
-          %{type: "text", column: "title",
-            comparator: "equals", value: "Chris McCord"}
-        ],
-        sub_filters: [%{filter: %{type: "all", conditions: [
-          %{type: "date", column: "date_column",
-            comparator: "after", value: "2016-03-26"},
-          %{type: "date", column: "date_column",
-            comparator: "before", value: "2016-06-01"},
-        ]}}]
-      }
-    })
+    params = FilterParams.build(:any) |> FilterParams.conditions([
+      ConditionParams.build(:text, comparator: "contains", value: "earth"),
+      ConditionParams.build(:text, value: "Chris McCord")
+    ]) |> FilterParams.sub_filters([
+      FilterParams.build(:all) |> FilterParams.conditions([
+        ConditionParams.build(:date, comparator: "after", value: "2016-03-26"),
+        ConditionParams.build(:date, comparator: "before", value: "2016-06-01")
+      ])
+    ])
+
+    {:ok, filter} =  Filtrex.parse(@config, params)
     assert_count filter, 5
   end
 
   test "creating filter with numbers in the conditions" do
-    {:ok, filter} =  Filtrex.parse(@config, %{
-      filter: %{
-        type: "all",
-        conditions: [
-          %{type: "number", column: "rating",
-            comparator: "greater than or", value: "50"},
-          %{type: "number", column: "rating",
-            comparator: "less than", value: "99.9"},
-          %{type: "number", column: "upvotes",
-            comparator: "greater than", value: "100"},
-        ]
-      }
-    })
+    params = FilterParams.build(:all) |> FilterParams.conditions([
+      ConditionParams.build(:number_rating, comparator: "greater than or", value: 50),
+      ConditionParams.build(:number_rating, comparator: "less than", value: 99.9),
+      ConditionParams.build(:number_upvotes, comparator: "greater than", value: 100)
+    ])
+
+    {:ok, filter} =  Filtrex.parse(@config, params)
     assert_count filter, 1
   end
 
   test "creating a filter with a datetime expression" do
-    {:ok, filter} =  Filtrex.parse(@config, %{
-      filter: %{type: "all", conditions: [
-        %{type: "datetime", column: "datetime_column",
-          comparator: "on or after", value: "2016-03-20T12:34:58.000Z"},
-        %{type: "datetime", column: "datetime_column",
-          comparator: "on or before", value: "2016-04-02T13:00:00.000Z"}
-      ]}
-    })
+    params = FilterParams.build(:all) |> FilterParams.conditions([
+      ConditionParams.build(:datetime, comparator: "on or after", value: "2016-03-20T12:34:58.000Z"),
+      ConditionParams.build(:datetime, comparator: "on or before", value: "2016-04-02T13:00:00.000Z")
+    ])
+
+    {:ok, filter} =  Filtrex.parse(@config, params)
     assert_count filter, 1
   end
 
@@ -127,18 +129,13 @@ defmodule FiltrexTest do
       conditions: [
         %Filtrex.Condition.Date{
           type: :date, column: "date_column", comparator: "between", inverse: false,
-          value: %{start: Timex.date({2016, 1, 10}), end: Timex.date({2016, 12, 10})}
-        },
+          value: %{start: Timex.date({2016, 1, 10}), end: Timex.date({2016, 12, 10})}},
         %Filtrex.Condition.Boolean{
           type: :boolean, column: "flag",
-          comparator: "equals", value: false, inverse: false
-        },
+          comparator: "equals", value: false, inverse: false},
         %Filtrex.Condition.Text{
           type: :text, column: "title",
-          comparator: "contains", value: "earth", inverse: false
-        }
-      ]
-    }
+          comparator: "contains", value: "earth", inverse: false}]}
   end
 
   test "parsing string keys" do
