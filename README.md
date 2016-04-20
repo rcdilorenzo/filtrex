@@ -37,7 +37,10 @@ params = %{
 
 require Filtrex
 Filtrex.query(filter, YourApp.YourModel)
-# => #Ecto.Query<from s in YourApp.YourModel, where: fragment("(comments LIKE ?) AND ((posted_at >= ?) AND (posted_at <= ?)) AND (title = ?)", "%Chris McCord%", "2013-01-01", "2017-12-31", "Upcoming Phoenix Features")>
+# => #Ecto.Query<from s in YourApp.YourModel,
+#   where: fragment("(comments LIKE ?) AND ((posted_at >= ?)
+#     AND (posted_at <= ?)) AND (title = ?)", "%Chris McCord%",
+#     "2013-01-01", "2017-12-31", "Upcoming Phoenix Features")>
 ```
 
 Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators.
@@ -74,7 +77,9 @@ config = [
 require Filtrex
 Filtrex.query(filter, YourApp.YourModel)
 # => #Ecto.Query<from s in YourApp.YourModel,
- where: fragment("((title LIKE ?) AND (title NOT LIKE ?) AND (flag = ?)) AND ((due_date = ?))", "%Buy%", "%Milk%", false, "2016-03-26")>
+#  where: fragment("((title LIKE ?) AND (title NOT LIKE ?)
+#   AND (flag = ?)) AND ((due_date = ?))",
+#   "%Buy%", "%Milk%", false, "2016-03-26")>
 
 ```
 
