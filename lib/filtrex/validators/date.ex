@@ -16,7 +16,7 @@ defmodule Filtrex.Validator.Date do
   end
 
 
-  def parse_start_end(config, value = %{start: start, end: end_value}) do
+  def parse_start_end(config, %{start: start, end: end_value}) do
     case {parse_format(config, start), parse_format(config, end_value)} do
       {{:ok, start}, {:ok, end_value}} ->
         {:ok, %{start: start, end: end_value}}
@@ -26,19 +26,6 @@ defmodule Filtrex.Validator.Date do
   end
   def parse_start_end(_, _) do
     {:error, wrap_specific_error("Both a start and end key are required.")}
-  end
-
-  def parse_relative(value = %{interval: interval, amount: amount}) do
-    cond do
-      !is_integer(amount) ->
-        {:error, "Amount must be an integer value."}
-      not interval in @intervals ->
-        {:error, "'#{interval}' is not a valid interval."}
-      true -> {:ok, value}
-    end
-  end
-  def parse_relative(_) do
-    {:error, wrap_specific_error("Both an interval and amount key are required.")}
   end
 
   defp wrap_specific_error(error) do

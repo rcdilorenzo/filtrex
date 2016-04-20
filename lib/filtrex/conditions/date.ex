@@ -63,8 +63,6 @@ defmodule Filtrex.Condition.Date do
         Filtrex.Validator.Date.parse_string_date(config, value)
       comparator in @start_end_comparators ->
         Filtrex.Validator.Date.parse_start_end(config, value)
-      comparator in @relative_date_comparators ->
-        Filtrex.Validator.Date.parse_relative(value)
     end
   end
 
@@ -95,10 +93,5 @@ defmodule Filtrex.Condition.Date do
     end
 
     defp default_value(timex_date), do: default(timex_date) |> List.first
-
-    defp today do
-      {:ok, date} = Timex.Date.now |> Timex.format(@format)
-      date
-    end
   end
 end

@@ -18,7 +18,7 @@ defmodule Filtrex do
 
   @whitelist [
     :filter, :type, :conditions, :sub_filters,
-    :column, :comparator, :value
+    :column, :comparator, :value, :start, :end
   ]
 
   @type t :: Filtrex.t
