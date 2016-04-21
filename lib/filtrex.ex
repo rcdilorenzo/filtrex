@@ -16,7 +16,7 @@ defmodule Filtrex do
 
   require Ecto.Query
 
-  defstruct type: nil, conditions: [], sub_filters: []
+  defstruct type: nil, conditions: [], sub_filters: [], empty: false
 
   @whitelist [
     :filter, :type, :conditions, :sub_filters,
@@ -50,6 +50,7 @@ defmodule Filtrex do
     "created_at_between" => %{"start" => "2014-01-01", "end" => "2016-01-01"}}
   ```
   """
+  def parse_params(configs, params) when params == %{}, do: {:ok, %Filtrex{empty: true}}
   def parse_params(configs, params) do
     with {:ok, {type, params}} <- parse_params_filter_union(params),
          {:ok, conditions} <- Filtrex.Params.parse_conditions(configs, params),
@@ -60,7 +61,9 @@ defmodule Filtrex do
   Converts a filter with the specified ecto module name into a valid ecto query
   expression that is compiled when called.
   """
-  @spec query(Ecto.Query.t, Filter.t) :: Ecto.Query.t
+  @spec query(Ecto.Query.t, Filtrex.t) :: Ecto.Query.t
+  def query(query, %Filtrex{empty: true}), do: query
+
   def query(query, filter) do
     {result, _} = Filtrex.AST.build_query(query, filter)
       |> Code.eval_quoted([], __ENV__)

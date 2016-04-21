@@ -138,6 +138,11 @@ defmodule FiltrexTest do
           comparator: "contains", value: "earth", inverse: false}]}
   end
 
+  test "parsing empty parameters" do
+    {:ok, filter} = Filtrex.parse_params(@config, %{})
+    assert_count filter, 7
+  end
+
   test "parsing string keys" do
     {:ok, filter} =  Filtrex.parse(@config, %{
       "filter" => %{"type" => "all", "conditions" => [
