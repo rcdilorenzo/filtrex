@@ -31,11 +31,11 @@ defmodule FiltrexConditionTextTest do
 
     {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "contains"})
     encoded = Filtrex.Encoder.encode(condition)
-    assert encoded.expression == "title LIKE ?"
+    assert encoded.expression == "lower(title) LIKE lower(?)"
 
     {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "does not contain"})
     encoded = Filtrex.Encoder.encode(condition)
-    assert encoded.expression == "title NOT LIKE ?"
+    assert encoded.expression == "lower(title) NOT LIKE lower(?)"
     assert encoded.values == ["%Buy Milk%"]
   end
 end
