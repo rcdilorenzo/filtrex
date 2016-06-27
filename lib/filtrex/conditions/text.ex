@@ -49,7 +49,7 @@ defmodule Filtrex.Condition.Text do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
 
-    encoder "contains", "does not contain", "column LIKE ?", &(["%#{&1}%"])
-    encoder "does not contain", "contains", "column NOT LIKE ?", &(["%#{&1}%"])
+    encoder "contains", "does not contain", "lower(column) LIKE lower(?)", &(["%#{&1}%"])
+    encoder "does not contain", "contains", "lower(column) NOT LIKE lower(?)", &(["%#{&1}%"])
   end
 end
