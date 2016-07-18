@@ -43,6 +43,20 @@ defmodule Filtrex do
   end
 
   @doc """
+  Parses a filter expression, like `parse/2`. If any exception is raised when
+  parsing the map, a `%Filtrex{empty: true}` struct will be returned.
+  """
+  @spec parse!([Filtrex.Type.Config.t], Map.t) :: Filtrex.t
+  def parse!(configs, map) do
+    try do
+      {:ok, filter} = parse(configs, map)
+      filter
+    rescue
+      _ -> %Filtrex{empty: true}
+    end
+  end
+
+  @doc """
   This function converts Plug-decoded params like the example below into a filtrex struct based on options in the configs.
   ```
   %{"comments_contains" => "love",
@@ -50,7 +64,7 @@ defmodule Filtrex do
     "created_at_between" => %{"start" => "2014-01-01", "end" => "2016-01-01"}}
   ```
   """
-  def parse_params(configs, params) when params == %{}, do: {:ok, %Filtrex{empty: true}}
+  def parse_params(_configs, params) when params == %{}, do: {:ok, %Filtrex{empty: true}}
   def parse_params(configs, params) do
     with {:ok, {type, params}} <- parse_params_filter_union(params),
          {:ok, conditions} <- Filtrex.Params.parse_conditions(configs, params),
@@ -58,14 +72,46 @@ defmodule Filtrex do
   end
 
   @doc """
+  Converts Plug-decoded params into a Filtrex struct, like `parse_params/1`. If
+  an exception is raised while parsing the params, a `%Filtrex{empty: true}` struct
+  will be returned.
+  """
+  def parse_params!(_configs, params) when params == %{}, do: %Filtrex{empty: true}
+  def parse_params!(configs, params) do
+    try do
+      {:ok, filter} = parse_params(configs, params)
+      filter
+    rescue
+      _ -> %Filtrex{empty: true}
+    end
+  end
+
+  @doc """
   Converts a filter with the specified ecto module name into a valid ecto query
   expression that is compiled when called.
-  """
-  @spec query(Ecto.Query.t, Filtrex.t) :: Ecto.Query.t
-  def query(query, %Filtrex{empty: true}), do: query
 
-  def query(query, filter) do
-    {result, _} = Filtrex.AST.build_query(query, filter)
+  If a `%Filtrex{empty: true}` struct is passed as the filter, the query will
+  not be modified. If you want the query to return no results when this happens,
+  set the `allow_empty` option to `true`:
+
+  ```
+  Filtrex.query(query, filter, allow_empty: true)
+  ```
+  """
+  @spec query(Ecto.Query.t, Filtrex.t, Keyword.t) :: Ecto.Query.t
+  def query(queryable, filter, opts \\ [allow_empty: true])
+  def query(queryable, %Filtrex{empty: true}, opts) do
+    if opts[:allow_empty] do
+      queryable
+    else
+      Ecto.Query.where(queryable, false)
+    end
+  end
+
+  def query(queryable, filter, _opts) do
+    {result, _} =
+      queryable
+      |> Filtrex.AST.build_query(filter)
       |> Code.eval_quoted([], __ENV__)
     result
   end
