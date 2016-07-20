@@ -8,12 +8,12 @@ So often, filtering from URL parameters or from some client description of a "sm
 
 Filtrex is an elixir library for parsing and querying with filter data structures and parameters. It allows the construction of Ecto queries from Phoenix-like query parameters or map data structures for saving "smart" filters. It has been tested using the Postgres adapter but will potentially work with other adapters as well.
 
-**Note: See the [v0.2.0 README](https://github.com/rcdilorenzo/filtrex/blob/65c51d8f0d4a8f79504f7a88bd4357db45a5c42c/README.md) for the latest Hex.pm release. This README is the documentation for the upcoming 0.3.0 version.
+Feel free to check out the [published docs](https://hexdocs.pm/filtrex/) for the latest and greatest information.
 
 
 ## Parsing Filters from URL Params
 
-Here's the rough outline of how to use the parameter parsing capabilities of Filtrex. Keep in mind that the config options are discussed in further detail later in this README. Also, see below for an [example using Phoenix](#params-filter-example-with-phoenix).
+Here's the rough outline of how to use the parameter parsing capabilities of Filtrex. Config options presented are discussed in further detail later in this README. Also, see below for an [example using Phoenix](#params-filter-example-with-phoenix).
 
 ```elixir
 # Get params from phoenix controller (or anywhere else)
@@ -143,7 +143,7 @@ The following condition types and comparators are supported.
     * equals, does not equal, greater than, less than or, greater than or, less than
     * options: allow_decimal (default: false), allowed_values (default: nil)
 
-## Installation (when 0.3.0 is available)
+## Installation
 
 The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
 
@@ -156,7 +156,7 @@ end
 
 ## License
 
-Copyright (c) 2015 Christian Di Lorenzo
+Copyright (c) 2015-2016 Christian Di Lorenzo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
