@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.2">
-    <title>Filtrex – Filtrex v0.3.0-dev</title>
+    <title>Filtrex – Filtrex v0.3.0</title>
     <link rel="stylesheet" href="dist/app-feafe9a25b.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         Filtrex
       </h1>
       <h2 class="sidebar-projectVersion">
-        v0.3.0-dev
+        v0.3.0
       </h2>
     </div>
     
@@ -61,7 +61,7 @@
 
 
       <h1>
-        <small class="visible-xs">Filtrex v0.3.0-dev</small>
+        <small class="visible-xs">Filtrex v0.3.0</small>
         Filtrex
         
         
@@ -131,6 +131,16 @@ the appropriate parsed sub-structures</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#parse!/2">parse!(configs, map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Parses a filter expression, like <a href="#parse/2"><code class="inline">parse/2</code></a>. If any exception is raised when
+parsing the map, a <code class="inline">%Filtrex{empty: true}</code> struct will be returned</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#parse_params/2">parse_params(configs, params)</a>
   </div>
   
@@ -141,18 +151,20 @@ the appropriate parsed sub-structures</p>
 </div>
   
 </div>
-
-  </div>
-
-
-          
-  <div class="summary-macros summary">
-    <h2>
-      <a href="#macros">Macros</a>
-    </h2>
-    <div class="summary-row">
+<div class="summary-row">
   <div class="summary-signature">
-    <a href="#query/2">query(filter, model)</a>
+    <a href="#parse_params!/2">parse_params!(configs, params)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Converts Plug-decoded params into a Filtrex struct, like <code class="inline">parse_params/1</code>. If
+an exception is raised while parsing the params, a <code class="inline">%Filtrex{empty: true}</code> struct
+will be returned</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#query/3">query(queryable, filter, opts \\ [allow_empty: true])</a>
   </div>
   
     <div class="summary-synopsis"><p>Converts a filter with the specified ecto module name into a valid ecto query
@@ -160,9 +172,20 @@ expression that is compiled when called</p>
 </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#validate_structure/1">validate_structure(map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Validates the rough filter params structure</p>
+</div>
+  
+</div>
 
   </div>
 
+
+          
 
           
 
@@ -202,7 +225,7 @@ expression that is compiled when called</p>
     </a>
     <span class="signature">parse(configs, map)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L37" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L39" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -228,6 +251,34 @@ Example:</p>
 
   </section>
 </div>
+<div class="detail" id="parse!/2">
+  <div class="detail-header">
+    <a href="#parse!/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">parse!(configs, map)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L50" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">parse!([<a href="Filtrex.Type.Config.html#t:t/0">Filtrex.Type.Config.t</a>], <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: <a href="Filtrex.html#t:t/0">Filtrex.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Parses a filter expression, like <a href="#parse/2"><code class="inline">parse/2</code></a>. If any exception is raised when
+parsing the map, a <code class="inline">%Filtrex{empty: true}</code> struct will be returned.</p>
+
+  </section>
+</div>
 <div class="detail" id="parse_params/2">
   <div class="detail-header">
     <a href="#parse_params/2" class="detail-link" title="Link to this function">
@@ -235,7 +286,7 @@ Example:</p>
     </a>
     <span class="signature">parse_params(configs, params)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L96" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L67" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -249,26 +300,34 @@ Example:</p>
 
   </section>
 </div>
-
-        </section>
-      
-
-      
-        <section id="macros" class="details-list">
-          <h1 class="section-heading">
-            <a class="hover-link" href="#macros">
-              <i class="icon-link"></i>
-            </a>
-            Macros
-          </h1>
-          <div class="detail" id="query/2">
+<div class="detail" id="parse_params!/2">
   <div class="detail-header">
-    <a href="#query/2" class="detail-link" title="Link to this macro">
+    <a href="#parse_params!/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">query(filter, model)</span>
+    <span class="signature">parse_params!(configs, params)</span>
       
-      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L107" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L79" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Converts Plug-decoded params into a Filtrex struct, like <code class="inline">parse_params/1</code>. If
+an exception is raised while parsing the params, a <code class="inline">%Filtrex{empty: true}</code> struct
+will be returned.</p>
+
+  </section>
+</div>
+<div class="detail" id="query/3">
+  <div class="detail-header">
+    <a href="#query/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">query(queryable, filter, opts \\ [allow_empty: true])</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L102" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -278,7 +337,7 @@ Example:</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">query(term, Filter.t, module) :: Ecto.Query.t</code></pre>
+          <pre><code class="elixir">query(Ecto.Query.t, <a href="Filtrex.html#t:t/0">Filtrex.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Keyword.html#t:t/0">Keyword.t</a>) :: Ecto.Query.t</code></pre>
         
       </div>
     </div>
@@ -286,11 +345,35 @@ Example:</p>
   <section class="docstring">
     <p>Converts a filter with the specified ecto module name into a valid ecto query
 expression that is compiled when called.</p>
+<p>If a <code class="inline">%Filtrex{empty: true}</code> struct is passed as the filter, the query will
+not be modified. If you want the query to return no results when this happens,
+set the <code class="inline">allow_empty</code> option to <code class="inline">true</code>:</p>
+<pre><code class="elixir">Filtrex.query(query, filter, allow_empty: true)</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="validate_structure/1">
+  <div class="detail-header">
+    <a href="#validate_structure/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validate_structure(map)</span>
+      
+      <a href="https://github.com/rcdilorenzo/filtrex/blob/master/lib/filtrex.ex#L122" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Validates the rough filter params structure</p>
 
   </section>
 </div>
 
         </section>
+      
+
       
 
       
