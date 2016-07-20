@@ -169,6 +169,42 @@ defmodule FiltrexTest do
     assert_count existing_query, filter, 1
   end
 
+  test ".query returns no results if allow_empty: false" do
+    results =
+      Filtrex.SampleModel
+      |> where([m], m.rating > 90)
+      |> Filtrex.query(%Filtrex{empty: true}, allow_empty: false)
+      |> Filtrex.Repo.all
+      
+    assert length(results) == 0
+  end
+
+  test ".parse! returns %Filtrex{empty: true} when error occurs" do
+    invalid_map = %{"filter" => %{"types" => "all"}}
+    assert %Filtrex{empty: true} == Filtrex.parse!(@config, invalid_map)
+  end
+
+  test ".parse! returns %Filtrex{} when no error occurs" do
+    params = FilterParams.build(:all) |> FilterParams.conditions([
+      ConditionParams.build(:text, comparator: "contains", value: "earth"),
+      ConditionParams.build(:text, comparator: "does not equal", value: "The earth was without form and void;")
+    ])
+
+    assert %Filtrex{} = Filtrex.parse!(@config, params)
+  end
+
+  test ".parse_params! returns %Filtrex{empty: true} when error occurs" do
+    query_string = "title_contans=earth"
+    params = Plug.Conn.Query.decode(query_string)
+    assert %Filtrex{empty: true} = Filtrex.parse_params!(@config, params)
+  end
+
+  test ".parse_params! returns %Filtrex{} when no error occurs" do
+    query_string = "title_contains=earth&date_column_between[start]=2016-01-10&date_column_between[end]=2016-12-10&flag=false&filter_union=any"
+    params = Plug.Conn.Query.decode(query_string)
+    assert %Filtrex{} = Filtrex.parse_params!(@config, params)
+  end
+
   defp assert_count(query \\ Filtrex.SampleModel, filter, count) do
     assert query
       |> Filtrex.query(filter)
