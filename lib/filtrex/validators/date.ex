@@ -34,7 +34,7 @@ defmodule Filtrex.Validator.Date do
 
   defp parse_format(config, value) do
     result = with {:ok, datetime} <- TimexParser.parse(value, config.options[:format] || @format),
-                  {:ok, date}     <- Timex.Date.from(datetime), do: date
+                  {:ok, date}     <- Timex.to_date(datetime), do: date
     case result do
       {:error, error} -> {:error, wrap_specific_error(error)}
       date            -> {:ok, date}

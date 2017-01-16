@@ -4,7 +4,7 @@ defmodule Filtrex.Mixfile do
   def project do
     [app: :filtrex,
      version: "0.3.0",
-     elixir: "~> 1.2",
+     elixir: "~> 1.3",
      description: description,
      package: package,
      build_embedded: Mix.env == :prod,
@@ -35,8 +35,8 @@ defmodule Filtrex.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0", only: :test},
-      {:ecto, ">= 1.1.0"},
-      {:timex, "~> 2.1.4"},
+      {:ecto, "~> 2.1"},
+      {:timex, "~> 3.1"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},

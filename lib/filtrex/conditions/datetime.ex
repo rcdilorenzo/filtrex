@@ -2,7 +2,7 @@ defmodule Filtrex.Condition.DateTime do
   use Filtrex.Condition
   use Timex
 
-  @format "{ISOz}"
+  @format "{ISO:Extended}"
   @comparators ["equals", "does not equal", "after", "on or after", "before", "on or before"]
 
   @moduledoc """
