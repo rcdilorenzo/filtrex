@@ -12,7 +12,6 @@ defmodule FiltrexConditionDateTimeTest do
   @options_default "Mon, 18 Apr 2016 13:30:45 GMT"
   @options_config %{@config | options: %{format: "{RFC1123}"}}
 
-  @tag :skip
   test "parsing with default format" do
     assert DateTime.parse(@config, %{
       inverse: false,
@@ -20,7 +19,11 @@ defmodule FiltrexConditionDateTimeTest do
       value: @default,
       comparator: "after"
     }) == {:ok, %Filtrex.Condition.DateTime{column: @column, comparator: "after",
-                  inverse: false, type: :datetime, value: Timex.to_datetime({{2016, 4, 1}, {12, 30, 45}})}}
+                  inverse: false, type: :datetime, value: %Elixir.DateTime{calendar: Calendar.ISO, day: 1, hour: 12,
+                                                                           minute: 30, month: 4, second: 45,
+                                                                           std_offset: 0, time_zone: "Etc/UTC",
+                                                                           utc_offset: 0, year: 2016, zone_abbr: "UTC",
+                                                                           microsecond: {0, 3}}}}
   end
 
   test "parsing with custom format" do
