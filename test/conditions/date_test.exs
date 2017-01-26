@@ -14,7 +14,7 @@ defmodule FiltrexConditionDateTest do
       column: @column,
       value: "2015-09-34",
       comparator: "after"
-    }) == {:error, "Invalid date value format: Expected `day of month` at line 1, column 11."}
+    }) == {:error, "Invalid date value format: Expected `day of month` at line 1, column 9."}
 
     assert Date.parse(@config, %{
       inverse: false,
@@ -37,7 +37,7 @@ defmodule FiltrexConditionDateTest do
       column: @column,
       value: %{start: "2015-03-01", end: "2015-13-21"},
       comparator: "between"
-    }) == {:error, "Invalid date value format: Expected `1-2 digit month` at line 1, column 8."}
+    }) == {:error, "Invalid date value format: Expected `1-2 digit month` at line 1, column 6."}
   end
 
   test "specifying different date formats" do
@@ -47,7 +47,7 @@ defmodule FiltrexConditionDateTest do
       value: "12-29-2016",
       comparator: "after"
     }) == {:ok, %Filtrex.Condition.Date{column: "date_column", comparator: "after",
-                    inverse: false, type: :date, value: Timex.date({2016, 12, 29})}}
+                    inverse: false, type: :date, value: Timex.to_date({2016, 12, 29})}}
   end
 
   test "'equals' comparator" do

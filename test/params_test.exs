@@ -15,7 +15,7 @@ defmodule ParamsTest do
     assert Filtrex.Params.parse_conditions(@config, params) ==
       {:ok, [%Filtrex.Condition.Date{
         type: :date, inverse: false, column: "date_column", comparator: "between",
-        value: %{start: Timex.date({2016, 3, 10}), end: Timex.date({2016, 3, 20})}}]}
+        value: %{start: Timex.to_date({2016, 3, 10}), end: Timex.to_date({2016, 3, 20})}}]}
   end
 
   test "bubbling up errors from value parsing" do

@@ -7,8 +7,8 @@ defmodule FiltrexASTTest do
     %Filtrex.Condition.Text{column: "title", comparator: "does not equal", value: "Chris McCord"}
   ], sub_filters: [
     %Filtrex{type: "all", conditions: [
-      %Filtrex.Condition.Date{column: "date_column", comparator: "after", value: Timex.date({2016, 5, 1})},
-      %Filtrex.Condition.Date{column: "date_column", comparator: "before", value: Timex.date({2017, 1, 1})}
+      %Filtrex.Condition.Date{column: "date_column", comparator: "after", value: Timex.to_date({2016, 5, 1})},
+      %Filtrex.Condition.Date{column: "date_column", comparator: "before", value: Timex.to_date({2017, 1, 1})}
     ]}
   ]}
 

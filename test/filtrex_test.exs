@@ -129,7 +129,7 @@ defmodule FiltrexTest do
       conditions: [
         %Filtrex.Condition.Date{
           type: :date, column: "date_column", comparator: "between", inverse: false,
-          value: %{start: Timex.date({2016, 1, 10}), end: Timex.date({2016, 12, 10})}},
+          value: %{start: Timex.to_date({2016, 1, 10}), end: Timex.to_date({2016, 12, 10})}},
         %Filtrex.Condition.Boolean{
           type: :boolean, column: "flag",
           comparator: "equals", value: false, inverse: false},
@@ -165,17 +165,17 @@ defmodule FiltrexTest do
     query_string = "title_contains=earth"
     params = Plug.Conn.Query.decode(query_string)
     {:ok, filter} = Filtrex.parse_params(@config, params)
-    existing_query = from(m in Filtrex.SampleModel, where: m.rating > 90)
+    existing_query = from(m in Filtrex.SampleModel, where: m.rating > 90.0)
     assert_count existing_query, filter, 1
   end
 
   test ".query returns no results if allow_empty: false" do
     results =
       Filtrex.SampleModel
-      |> where([m], m.rating > 90)
+      |> where([m], m.rating > 90.0)
       |> Filtrex.query(%Filtrex{empty: true}, allow_empty: false)
       |> Filtrex.Repo.all
-      
+
     assert length(results) == 0
   end
 
