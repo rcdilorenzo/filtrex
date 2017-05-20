@@ -27,17 +27,17 @@ params = %{
 }
 
 # Create validation options for keys and formats
-config = [
-  %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
-  %Filtrex.Type.Config{type: :date, keys: ~w(posted_at), options: %{format: "{0M}-{0D}-{YYYY}"}}
-]
+import Filtrex.Type.Config
+config = defconfig do
+  text [:title, :comments]
+  date :posted_at, format: "{0M}-{0D}-{YYYY}"
+end
 
 # Parse params into encodable filter structures
 {:ok, filter} = Filtrex.parse_params(config, params)
 
 # Encode filter structure into where clause on Ecto query
-query = from(s in YourApp.YourModel)
-  |> Filtrex.query(filter)  # => #Ecto.Query<...
+query = YourApp.YourModel |> Filtrex.query(filter)  # => #Ecto.Query<...
 ```
 
 Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators.
@@ -46,11 +46,12 @@ Using parsed parameters from your phoenix application, a filter can be easily co
 
 ```elixir
 # Create validation options for keys and formats
-config = [
-  %Filtrex.Type.Config{type: :text, keys: ~w(title comments)},
-  %Filtrex.Type.Config{type: :date, keys: ~w(due_date)},
-  %Filtrex.Type.Config{type: :boolean, keys: ~w(flag)}
-]
+import Filtrex.Type.Config
+config = defconfig do
+  text [:title, :comments]
+  date :due_date
+  boolean :flag
+end
 
 # Parse a "smart-filter" encoded from client (e.g. with Poison or Phoenix)
 {:ok, filter} = Filtrex.parse(config, %{
@@ -100,15 +101,17 @@ end
 
 In `model.ex`:
 ```elixir
-alias Filtrex.Type.Config
+import Filtrex.Type.Config
 
 def filter_options(:admin) do
-  [%Config{type: :text, keys: ~w(title)},
-   %Config{type: :date, keys: ~w(published)},
-   %Config{type: :number, keys: ~w(upvotes)},
-   %Config{type: :boolean, keys: ~w(flag)},
-   %Config{type: :datetime, keys: ~w(updated_at inserted_at)},
-   %Config{type: :number, keys: ~w(rating), options: %{allow_decimal: true}}]
+  defconfig do
+    text :title
+    date :published
+    number :upvotes
+    number :rating, allow_decimal: true
+    boolean :flag
+    datetime [:updated_at, :inserted_at]
+  end
 end
 ```
 

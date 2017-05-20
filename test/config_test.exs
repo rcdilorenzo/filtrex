@@ -1,6 +1,8 @@
 defmodule FiltrexTypeConfigTest do
   use ExUnit.Case
   alias Filtrex.Type.Config
+  import Filtrex.Type.Config
+  doctest Filtrex.Type.Config
 
   @configs Filtrex.SampleModel.filtrex_config
 

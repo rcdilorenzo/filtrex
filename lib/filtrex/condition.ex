@@ -132,7 +132,8 @@ defmodule Filtrex.Condition do
     end
   end
 
-  defp condition_modules do
+  @doc "List out the available condition modules"
+  def condition_modules do
     Application.get_env(:filtrex, :conditions, @modules)
   end
 
