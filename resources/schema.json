@@ -1,0 +1,58 @@
+{
+  "definitions": {
+    "Filter": {
+      "title": "Filter",
+      "type": "object",
+      "properties": {
+        "filter": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "all",
+                "any",
+                "none"
+              ]
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "column": {
+                    "type": "string"
+                  },
+                  "comparator": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "boolean",
+                      "text",
+                      "date",
+                      "datetime",
+                      "number"
+                    ]
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "sub_filters": {
+              "type": "array",
+              "required": false,
+              "items": {
+                "$ref": "#/definitions/Filter"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$ref": "#/definitions/Filter"
+}

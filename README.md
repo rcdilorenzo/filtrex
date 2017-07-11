@@ -1,10 +1,85 @@
+![Banner](resources/filtrex-banner.png)
+
 # Filtrex
 
 [![Join the chat at https://gitter.im/filtrex-elixir/Lobby](https://badges.gitter.im/filtrex-elixir/Lobby.svg)](https://gitter.im/filtrex-elixir/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Hex.pm](https://img.shields.io/hexpm/v/filtrex.svg)](https://hex.pm/packages/filtrex)
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
 [![Docs Status](http://inch-ci.org/github/rcdilorenzo/filtrex.svg?branch=master)](http://inch-ci.org/github/rcdilorenzo/filtrex)
+
+Filtrex aims to make filter management with [Ecto](https://hex.pm/packages/ecto) a breeze. This library attempts to help you solve problems such as...
+
+- Building filters from URL parameters
+- Establishing a readable, consistent convention for filter parameters
+- Validating filters do not expose unintended data or allow unauthorized access
+- Saving filters for later use (e.g. a smart filter feature)
+
+Note that this library does not require using a web dependency such as [Phoenix](https://hex.pm/packages/phoenix) but is geared towards web applications.
+
+## Outline
+
+- [Usage](#usage)
+  - [Filtering from parameters](#filtering-from-parameters)
+    - [Create filter](#create-filter)
+    - [Compose query](#compose-query)
+    - [Example with Phoenix](#example-with-phoenix)
+  - [Storing filters](#storing-filters)
+    - [JSON format](#json-format)
+    - [Load filter](#load-filter)
+- [Configuration](#configuration)
+- [Filter Types](#filter-types)
+
+## Usage 
+
+Here is a simple example of how to filter incoming parameters with filtrex:
+
+```elixir
+# in controller
+defmodule MyApp.CommentController do
+  use MyAppWeb, :controller
+  
+  def index(conn, params) do
+    # step 1: convert and validate incoming parameters
+    {:ok, filter} = MyApp.FilterConfig.comments()
+      |> Filtrex.parse_params(params)
+
+    # step 2: build query
+    query = MyApp.Comment
+      |> where([c], c.user_id == ^conn.assigns[:user_id])
+      |> Filtrex.query(filter)
+      
+    json conn, Repo.all(query)
+  end
+end
+
+# in lib/my_app/filter_config.ex
+defmodule MyApp.FilterConfig do
+  import Filtrex.Type.Config
+  
+  def comments() do
+    defconfig do
+      text [:title, :comments]
+      date :posted_at, format: "{0M}-{0D}-{YYYY}"
+    end
+  end
+end
+
+# reference model
+defmodule MyApp.Comment do
+  use Ecto.Schema
+
+  schema "comments" do
+    field :title
+    field :comments
+    field :posted_at, :date
+  end
+end
+
+```
+
+For more details on the structure of the filter after parsing, feel free to take a look at the [example json schema](http://jeremydorn.com/json-editor/?schema=N4IgJgpgZglgdjALjA9nAziAXKAYjAG0QgCdtRlECJsR8jSQAaERATwAcasQUAjAFYQAxomYgOJFFxLIImHCFgMyi9l1r8ho8ZOmk5Cip27GNPdIhLwA5uIhwArgFtsAbRABDAgXGe4bOJwaDQAugC+LMJoYEioGOSsJrSeJCSegSxIEM5GSea8giJiLHoyhonRBC5wiercIJbWcHaRINHOHKmeiCiqZg1NtiBt9XXJFlbDLA4u7iB8KCjU/uLEAB4l4D00LGA7yM67IE7OfIwRLABu3o6m+YNTLSPhryzojnwA+srEJHljHipdKZEAkCAAR0cMHBYGwUG86AgWWIuUSABJwVBaABiAD0kFgCGQaHQePofxer2pLEx0FxBOg8DipPJhEp4SAAA==&value=N4IgZglgNgLgpgJxALlDAngBzikBDKKEAGhAGMB7AOwBMIYJqBnFAbVEqgFcBbK3BjCg5SlHpjwI8MCkmTlqMPBCotSGbALgAPGCRAA3AlxzyAQl3QgAvsQ4VufAfWH6xEqTLkgaFOEwACKgoYAMoqJRV9DVMQeF19I25YgFloAGsbOwVHfnkwKDwAczcKcUlpWVw4AEcuAjU4rFiAIwoHODx+UiSTXDAGnGsAXVImLhaAfUhYRBZkdnBoeDk0Ztwuq1FqOgZmNntc3BoTSZppEQVyzyr5WvqoRpjji8TjWIAmAAYARgA2AC0XwAzACPn8bMNrCNoUAAAA==&theme=bootstrap2&iconlib=fontawesome4&object_layout=grid&show_errors=interaction).
+
+## Filtering From Parameters
 
 So often, filtering from URL parameters or from some client description of a "smart" filter can be extremely tedious. This library is an attempt to address that problem by flexibly converting either URL parameters or a parsed JSON body to a consistent filter structure and even straight to an `Ecto` query. It also supports validation of both allowed keys and their value types with configuration options specific to that type (e.g. allowing a decimal point in a number filter or what format is allowed for dates).
 
