@@ -74,12 +74,22 @@ defmodule MyApp.Comment do
     field :posted_at, :date
   end
 end
-
 ```
 
-For more details on the structure of the filter after parsing, feel free to take a look at the [example json schema](http://jeremydorn.com/json-editor/?schema=N4IgJgpgZglgdjALjA9nAziAXKAYjAG0QgCdtRlECJsR8jSQAaERATwAcasQUAjAFYQAxomYgOJFFxLIImHCFgMyi9l1r8ho8ZOmk5Cip27GNPdIhLwA5uIhwArgFtsAbRABDAgXGe4bOJwaDQAugC+LMJoYEioGOSsJrSeJCSegSxIEM5GSea8giJiLHoyhonRBC5wiercIJbWcHaRINHOHKmeiCiqZg1NtiBt9XXJFlbDLA4u7iB8KCjU/uLEAB4l4D00LGA7yM67IE7OfIwRLABu3o6m+YNTLSPhryzojnwA+srEJHljHipdKZEAkCAAR0cMHBYGwUG86AgWWIuUSABJwVBaABiAD0kFgCGQaHQePofxer2pLEx0FxBOg8DipPJhEp4SAAA==&value=N4IgZglgNgLgpgJxALlDAngBzikBDKKEAGhAGMB7AOwBMIYJqBnFAbVEqgFcBbK3BjCg5SlHpjwI8MCkmTlqMPBCotSGbALgAPGCRAA3AlxzyAQl3QgAvsQ4VufAfWH6xEqTLkgaFOEwACKgoYAMoqJRV9DVMQeF19I25YgFloAGsbOwVHfnkwKDwAczcKcUlpWVw4AEcuAjU4rFiAIwoHODx+UiSTXDAGnGsAXVImLhaAfUhYRBZkdnBoeDk0Ztwuq1FqOgZmNntc3BoTSZppEQVyzyr5WvqoRpjji8TjWIAmAAYARgA2AC0XwAzACPn8bMNrCNoUAAAA==&theme=bootstrap2&iconlib=fontawesome4&object_layout=grid&show_errors=interaction).
+With this example, here are some of the query parameters that can be used:
+
+| Example Key                         | Example Value                              |
+|-------------------------------------|--------------------------------------------|
+| `comments_contains`                 | Chris McCord                               |
+| `title`                             | Upcoming Phoenix Features                  |
+| `posted_at_between` (nested value)  | start: "01-01-2013" <br> end: "12-31-2017" |
+| `filter_union` (any \| all \| none) | any                                        |
+
+
 
 ## Filtering From Parameters
+
+For more details on the structure of the filter after parsing, feel free to take a look at the [example json schema](http://jeremydorn.com/json-editor/?schema=N4IgJgpgZglgdjALjA9nAziAXKAYjAG0QgCdtRlECJsR8jSQAaERATwAcasQUAjAFYQAxomYgOJFFxLIImHCFgMyi9l1r8ho8ZOmk5Cip27GNPdIhLwA5uIhwArgFtsAbRABDAgXGe4bOJwaDQAugC+LMJoYEioGOSsJrSeJCSegSxIEM5GSea8giJiLHoyhonRBC5wiercIJbWcHaRINHOHKmeiCiqZg1NtiBt9XXJFlbDLA4u7iB8KCjU/uLEAB4l4D00LGA7yM67IE7OfIwRLABu3o6m+YNTLSPhryzojnwA+srEJHljHipdKZEAkCAAR0cMHBYGwUG86AgWWIuUSABJwVBaABiAD0kFgCGQaHQePofxer2pLEx0FxBOg8DipPJhEp4SAAA==&value=N4IgZglgNgLgpgJxALlDAngBzikBDKKEAGhAGMB7AOwBMIYJqBnFAbVEqgFcBbK3BjCg5SlHpjwI8MCkmTlqMPBCotSGbALgAPGCRAA3AlxzyAQl3QgAvsQ4VufAfWH6xEqTLkgaFOEwACKgoYAMoqJRV9DVMQeF19I25YgFloAGsbOwVHfnkwKDwAczcKcUlpWVw4AEcuAjU4rFiAIwoHODx+UiSTXDAGnGsAXVImLhaAfUhYRBZkdnBoeDk0Ztwuq1FqOgZmNntc3BoTSZppEQVyzyr5WvqoRpjji8TjWIAmAAYARgA2AC0XwAzACPn8bMNrCNoUAAAA==&theme=bootstrap2&iconlib=fontawesome4&object_layout=grid&show_errors=interaction).
 
 So often, filtering from URL parameters or from some client description of a "smart" filter can be extremely tedious. This library is an attempt to address that problem by flexibly converting either URL parameters or a parsed JSON body to a consistent filter structure and even straight to an `Ecto` query. It also supports validation of both allowed keys and their value types with configuration options specific to that type (e.g. allowing a decimal point in a number filter or what format is allowed for dates).
 
