@@ -1,7 +1,6 @@
 ![Banner](resources/filtrex-banner.png)
 
 # Filtrex
-
 [![Join the chat at https://gitter.im/filtrex-elixir/Lobby](https://badges.gitter.im/filtrex-elixir/Lobby.svg)](https://gitter.im/filtrex-elixir/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Hex.pm](https://img.shields.io/hexpm/v/filtrex.svg)](https://hex.pm/packages/filtrex)
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
@@ -14,22 +13,19 @@ Filtrex aims to make filter management with [Ecto](https://hex.pm/packages/ecto)
 - Validating filters do not expose unintended data or allow unauthorized access
 - Saving filters for later use (e.g. a smart filter feature)
 
-Note that this library does not require using a web dependency such as [Phoenix](https://hex.pm/packages/phoenix) but is geared towards web applications.
+Check out the [docs](https://hexdocs.pm/filtrex/) or read on for a quick start on how to use.
+
+_Note that this library does not require using a web dependency such as [Phoenix](https://hex.pm/packages/phoenix) but is geared towards web applications. It also has only been tested with a Postgres backing but may work with other database adapters._
 
 ## Outline
 
-- [Usage](#usage)
-  - [Filtering from parameters](#filtering-from-parameters)
-    - [Create filter](#create-filter)
-    - [Compose query](#compose-query)
-    - [Example with Phoenix](#example-with-phoenix)
-  - [Storing filters](#storing-filters)
-    - [JSON format](#json-format)
-    - [Load filter](#load-filter)
+- [Example Usage](#example-usage)
+- [Filtering from parameters](#filtering-from-parameters) (and an [example with phoenix](#example-with-phoenix))
+- [Storing filters](#storing-filters)
 - [Configuration](#configuration)
 - [Filter Types](#filter-types)
 
-## Usage 
+# Example Usage 
 
 Here is a simple example of how to filter incoming parameters with filtrex:
 
@@ -56,6 +52,7 @@ end
 defmodule MyApp.FilterConfig do
   import Filtrex.Type.Config
   
+  # create configuration for transforming / validating parameters
   def comments() do
     defconfig do
       text [:title, :comments]
@@ -87,50 +84,107 @@ With this example, here are some of the query parameters that can be used:
 
 
 
-## Filtering From Parameters
+# Filtering From Parameters
 
-For more details on the structure of the filter after parsing, feel free to take a look at the [example json schema](http://jeremydorn.com/json-editor/?schema=N4IgJgpgZglgdjALjA9nAziAXKAYjAG0QgCdtRlECJsR8jSQAaERATwAcasQUAjAFYQAxomYgOJFFxLIImHCFgMyi9l1r8ho8ZOmk5Cip27GNPdIhLwA5uIhwArgFtsAbRABDAgXGe4bOJwaDQAugC+LMJoYEioGOSsJrSeJCSegSxIEM5GSea8giJiLHoyhonRBC5wiercIJbWcHaRINHOHKmeiCiqZg1NtiBt9XXJFlbDLA4u7iB8KCjU/uLEAB4l4D00LGA7yM67IE7OfIwRLABu3o6m+YNTLSPhryzojnwA+srEJHljHipdKZEAkCAAR0cMHBYGwUG86AgWWIuUSABJwVBaABiAD0kFgCGQaHQePofxer2pLEx0FxBOg8DipPJhEp4SAAA==&value=N4IgZglgNgLgpgJxALlDAngBzikBDKKEAGhAGMB7AOwBMIYJqBnFAbVEqgFcBbK3BjCg5SlHpjwI8MCkmTlqMPBCotSGbALgAPGCRAA3AlxzyAQl3QgAvsQ4VufAfWH6xEqTLkgaFOEwACKgoYAMoqJRV9DVMQeF19I25YgFloAGsbOwVHfnkwKDwAczcKcUlpWVw4AEcuAjU4rFiAIwoHODx+UiSTXDAGnGsAXVImLhaAfUhYRBZkdnBoeDk0Ztwuq1FqOgZmNntc3BoTSZppEQVyzyr5WvqoRpjji8TjWIAmAAYARgA2AC0XwAzACPn8bMNrCNoUAAAA==&theme=bootstrap2&iconlib=fontawesome4&object_layout=grid&show_errors=interaction).
+Filtering from parameters is often a tedious process of special keys and validation. Filtrex standardizes this process by using a human-readable format for columns. Consider these examples:
 
-So often, filtering from URL parameters or from some client description of a "smart" filter can be extremely tedious. This library is an attempt to address that problem by flexibly converting either URL parameters or a parsed JSON body to a consistent filter structure and even straight to an `Ecto` query. It also supports validation of both allowed keys and their value types with configuration options specific to that type (e.g. allowing a decimal point in a number filter or what format is allowed for dates).
+| Query Key                | Column     | Intention     |
+|--------------------------|------------|---------------|
+| `comments_is_not`        | `comments` | `!=`          |
+| `title_contains`         | `title`    | includes text |
+| `rating_greater_than_or` | `rating`   | `>=`          |
+| `posted_on_or_before`    | `posted`   | `<=`          |
 
-Filtrex is an elixir library for parsing and querying with filter data structures and parameters. It allows the construction of Ecto queries from Phoenix-like query parameters or map data structures for saving "smart" filters. It has been tested using the Postgres adapter but will potentially work with other adapters as well.
-
-Feel free to check out the [published docs](https://hexdocs.pm/filtrex/) for the latest and greatest information.
-
-
-## Parsing Filters from URL Params
-
-Here's the rough outline of how to use the parameter parsing capabilities of Filtrex. Config options presented are discussed in further detail later in this README. Also, see below for an [example using Phoenix](#params-filter-example-with-phoenix).
+Assuming that these keys are in a map along with the associated values, the parameters can be passed into filtrex with a simple configuration DSL that will validate and parse them effectively. See [Configuration](#configuration) for more details on how to create the appropriate config.
 
 ```elixir
-# Get params from phoenix controller (or anywhere else)
-params = %{
-    "comments_contains" => "Chris McCord",
-    "title" => "Upcoming Phoenix Features",
-    "posted_at_between" => %{"start" => "01-01-2013", "end" => "12-31-2017"},
-    "filter_union" => "any"  # special value for filter type (any | all | none)
-}
-
-# Create validation options for keys and formats
+# create necesary configuration
 import Filtrex.Type.Config
 config = defconfig do
   text [:title, :comments]
-  date :posted_at, format: "{0M}-{0D}-{YYYY}"
+  date :posted
+  number :rating, allow_decimal: true
 end
 
-# Parse params into encodable filter structures
-{:ok, filter} = Filtrex.parse_params(config, params)
-
-# Encode filter structure into where clause on Ecto query
-query = YourApp.YourModel |> Filtrex.query(filter)  # => #Ecto.Query<...
+# convert params into a validated filter
+case Filtrex.parse_params(config, params) do
+  {:ok, filter} ->
+    # use filter to create query
+    query = Filtrex.query(MyApp.Comment, filter)
+  {:error, error} ->
+    # e.g. {:error, "Unknown filter key 'title_means'"}
+end
 ```
 
-Using parsed parameters from your phoenix application, a filter can be easily constructed with type validation and custom comparators.
+## Example with Phoenix
 
-## Parsing Filter Structures
+Here is an example of how filtrex might be used within an elixir app that uses [phoenix](http://phoenixframework.org):
+
 
 ```elixir
-# Create validation options for keys and formats
+# in controller
+def index(conn, params = %{"user_id" => user_id}) do
+  # remove keys that are not filtered against
+  filter_params = Map.drop(params, ~w(user_id))
+  
+  # create base query
+  base_query = from(c in MyApp.Comment, c.user_id == ^user_id)
+
+  # create relevant configuration
+  config = MyApp.Comment.filter_options(:admin)
+
+  # parse filter parameters
+  case Filtrex.parse_params(config, filter_params) do
+    {:ok, filter} ->
+      # retrieve from database
+      render conn, "index.json", data: Filtrex.query(base_query, filter) |> Repo.all
+
+    {:error, error} ->
+      # render filter error
+      render conn, "errors.json", data: [error]
+  end
+end
+
+# in model-level module
+defmodule MyApp.Comment do
+  import Filtrex.Type.Config
+  # ...
+
+  def filter_options(:admin) do
+    defconfig do
+      text :title
+      date :published
+      number :upvotes
+      number :rating, allow_decimal: true
+      boolean :flag
+      datetime [:updated_at, :inserted_at]
+    end
+  end
+end
+```
+
+With this example, a query such as this one would filter comments:
+
+```elixir
+%{
+  "title_contains" => "Conf",
+  "published_on_or_before" => "2016-04-01",
+  "upvotes_greater_than" => 45,
+  "flag" => true,
+  "updated_at_after" => "2016-04-01T12:34:56Z",
+  "rating_greater_than_or" => 90.5,
+
+  "filter_union" => "any"
+  # ^ filter based on any of the columns
+}
+```
+
+# Storing Filters
+
+In addition to parsing parameters, filtrex also enables parsing from a map syntax that is easily encodable to and from JSON. This feature allows storing a filter for future use (e.g. routinely checking for comments that mention "ElixirConf" or todos that are not completed).
+
+```elixir
+# create validation options for keys and formats
 import Filtrex.Type.Config
 config = defconfig do
   text [:title, :comments]
@@ -138,7 +192,7 @@ config = defconfig do
   boolean :flag
 end
 
-# Parse a "smart-filter" encoded from client (e.g. with Poison or Phoenix)
+# parse a filter from map syntax
 {:ok, filter} = Filtrex.parse(config, %{
   "filter" => %{
     "type" => "all",               # all | any | none
@@ -159,63 +213,52 @@ end
 })
 
 # Encode filter structure into where clause on Ecto query
-query = from(m in YourApp.YourModel, where: m.rating > 90)
+query = from(m in MyApp.Todo, where: m.rating > 90)
   |> Filtrex.query(filter)  # => #Ecto.Query<...
 
 ```
 
-The configuration passed into `Filtrex.parse/2` gives the individual condition types more information to validate the filter against and is a required argument. See [this section](http://rcdilorenzo.github.io/filtrex/Filtrex.html) of the documentation for details. The entire [documentation](http://rcdilorenzo.github.io/filtrex) is filled with valuable information on how to both use and extend the library to your liking so please take a look!
+For more details on the acceptable structure of this map, feel free to take a look at the [example json schema](http://jeremydorn.com/json-editor/?schema=N4IgJgpgZglgdjALjA9nAziAXKAYjAG0QgCdtRlECJsR8jSQAaERATwAcasQUAjAFYQAxomYgOJFFxLIImHCFgMyi9l1r8ho8ZOmk5Cip27GNPdIhLwA5uIhwArgFtsAbRABDAgXGe4bOJwaDQAugC+LMJoYEioGOSsJrSeJCSegSxIEM5GSea8giJiLHoyhonRBC5wiercIJbWcHaRINHOHKmeiCiqZg1NtiBt9XXJFlbDLA4u7iB8KCjU/uLEAB4l4D00LGA7yM67IE7OfIwRLABu3o6m+YNTLSPhryzojnwA+srEJHljHipdKZEAkCAAR0cMHBYGwUG86AgWWIuUSABJwVBaABiAD0kFgCGQaHQePofxer2pLEx0FxBOg8DipPJhEp4SAAA==&value=N4IgZglgNgLgpgJxALlDAngBzikBDKKEAGhAGMB7AOwBMIYJqBnFAbVEqgFcBbK3BjCg5SlHpjwI8MCkmTlqMPBCotSGbALgAPGCRAA3AlxzyAQl3QgAvsQ4VufAfWH6xEqTLkgaFOEwACKgoYAMoqJRV9DVMQeF19I25YgFloAGsbOwVHfnkwKDwAczcKcUlpWVw4AEcuAjU4rFiAIwoHODx+UiSTXDAGnGsAXVImLhaAfUhYRBZkdnBoeDk0Ztwuq1FqOgZmNntc3BoTSZppEQVyzyr5WvqoRpjji8TjWIAmAAYARgA2AC0XwAzACPn8bMNrCNoUAAAA==&theme=bootstrap2&iconlib=fontawesome4&object_layout=grid&show_errors=interaction) or the raw [JSON schema config](resources/schema.json).
 
-## Params Filter Example with Phoenix
+# Configuration
 
-In `some_controller.ex`:
+Each of the methods of creating a filter requires passing a configuration that filtrex then validates against. This data structure is really just a list of type configs.
+
 ```elixir
-import Ecto.Query
-
-def index(conn, params = %{"user_id" => user_id}) do
-  filter_params = Map.drop(params, ~w(user_id))
-  base_query = from(m in Model, m.user_id == ^user_id)
-  case Filtrex.parse_params(Model.filter_options(:admin), filter_params) do
-    {:ok, filter} ->
-      render conn, "index.json", data: Filtrex.query(base_query, filter) |> Repo.all
-    {:errors, errors} ->
-      render conn, "errors.json", data: errors
-  end
-end
+[%Filtrex.Type.Config{keys: ["title", "description"], options: %{}, type: :text},
+ %Filtrex.Type.Config{keys: ["published"],  options: %{}, type: :boolean},
+ %Filtrex.Type.Config{keys: ["posted_at"],  options: %{format: "{YYYY}-{0M}-{0D}"}, type: :date},
+ %Filtrex.Type.Config{keys: ["updated_at"], options: %{}, type: :datetime},
+ %Filtrex.Type.Config{keys: ["views"],      options: %{allow_decimal: false}, type: :number}]
 ```
 
-In `model.ex`:
+However, for convenience and for validating the filter types, this DSL can be used to generate that exact data structure.
+
 ```elixir
 import Filtrex.Type.Config
 
-def filter_options(:admin) do
-  defconfig do
-    text :title
-    date :published
-    number :upvotes
-    number :rating, allow_decimal: true
-    boolean :flag
-    datetime [:updated_at, :inserted_at]
-  end
+defconfig do
+  # multiple text keys
+  text [:title, :description]
+  
+  # boolean type
+  boolean :published
+  
+  # date type with options
+  date :posted_at, format: "{YYYY}-{0M}-{0D}"
+  
+  # simple datetime
+  datetime :updated_at
+  
+  # integer value
+  number :views, allow_decimal: false
 end
 ```
 
-With this example, below is a sample URL query that could be made:
+The options passed to each type gives the individual condition types more information to validate the filter against and is a required argument. See [filter types](#filter-types) for details on the available options.
 
-```elixir
-%{
-  "title_contains" => "Conf",
-  "published_on_or_before" => "2016-04-01",
-  "upvotes_greater_than" => 45,
-  "flag" => true,
-  "updated_at_after" => "2016-04-01T12:34:56Z",
-  "rating_greater_than_or" => 90.5,
 
-  "filter_union" => "any"
-}
-```
-
-## Filter Types
+# Filter Types
 
 The following condition types and comparators are supported.
 
