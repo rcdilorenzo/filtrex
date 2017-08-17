@@ -6,9 +6,9 @@
 [![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
 [![Docs Status](http://inch-ci.org/github/rcdilorenzo/filtrex.svg?branch=master)](http://inch-ci.org/github/rcdilorenzo/filtrex)
 
-Filtrex aims to make filter management with [Ecto](https://hex.pm/packages/ecto) a breeze. This library attempts to help you solve problems such as...
+Filtrex aims to make filtering database results with [Ecto](https://hex.pm/packages/ecto) a breeze. This library attempts to help you solve problems such as...
 
-- Building filters from URL parameters
+- Building database query filters from URL parameters
 - Establishing a readable, consistent convention for filter parameters
 - Validating filters do not expose unintended data or allow unauthorized access
 - Saving filters for later use (e.g. a smart filter feature)
@@ -16,6 +16,16 @@ Filtrex aims to make filter management with [Ecto](https://hex.pm/packages/ecto)
 Check out the [docs](https://hexdocs.pm/filtrex/) or read on for a quick start on how to use.
 
 _Note that this library does not require using a web dependency such as [Phoenix](https://hex.pm/packages/phoenix) but is geared towards web applications. It also has only been tested with a Postgres backing but may work with other database adapters._
+
+## Installation
+
+The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
+
+```elixir
+def deps do
+  [{:filtrex, "~> 0.3.0"}]
+end
+```
 
 ## Outline
 
@@ -275,17 +285,6 @@ The following condition types and comparators are supported.
 * [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
     * equals, does not equal, greater than, less than or, greater than or, less than
     * options: allow_decimal (default: false), allowed_values (default: nil)
-
-## Installation
-
-The package is available on [Hex](https://hex.pm) and can be installed by adding it to your list of dependencies:
-
-```elixir
-def deps do
-  [{:filtrex, "~> 0.3.0"}]
-end
-```
-
 
 ## License
 
