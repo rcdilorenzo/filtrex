@@ -1,0 +1,40 @@
+{
+  "filter": {
+    "type": "all",
+    "conditions": [
+      {
+        "column": "title",
+        "comparator": "contains",
+        "type": "text",
+        "value": "Buy"
+      },
+      {
+        "column": "title",
+        "comparator": "does not contain",
+        "type": "text",
+        "value": "Milk"
+      },
+      {
+        "column": "flag",
+        "comparator": "equals",
+        "type": "boolean",
+        "value": "false"
+      }
+    ],
+    "sub_filters": [
+      {
+        "filter": {
+          "type": "any",
+          "conditions": [
+            {
+              "column": "due_date",
+              "comparator": "equals",
+              "type": "date",
+              "value": "2016-03-26"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
