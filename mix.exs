@@ -5,12 +5,12 @@ defmodule Filtrex.Mixfile do
     [app: :filtrex,
      version: "0.3.0",
      elixir: "~> 1.3",
-     description: description,
-     package: package,
+     description: description(),
+     package: package(),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      elixirc_paths: elixirc_paths(Mix.env),
-     deps: deps,
+     deps: deps(),
      name: "Filtrex",
      docs: [main: "Filtrex",
             source_url: "https://github.com/rcdilorenzo/filtrex"]]
@@ -41,7 +41,8 @@ defmodule Filtrex.Mixfile do
       {:ex_doc, "~> 0.11", only: :dev},
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
       {:plug, "~> 1.1.2", only: :test},
-      {:ex_machina, "~> 0.6.1", only: :test}
+      {:ex_machina, "~> 0.6.1", only: :test},
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
     ]
   end
 

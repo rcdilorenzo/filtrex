@@ -46,8 +46,8 @@ defmodule Filtrex do
   Parses a filter expression, like `parse/2`. If any exception is raised when
   parsing the map, a `%Filtrex{empty: true}` struct will be returned.
   """
-  @spec parse!([Filtrex.Type.Config.t], Map.t) :: Filtrex.t
-  def parse!(configs, map) do
+  @spec safe_parse([Filtrex.Type.Config.t], Map.t) :: Filtrex.t
+  def safe_parse(configs, map) do
     try do
       {:ok, filter} = parse(configs, map)
       filter
@@ -76,8 +76,8 @@ defmodule Filtrex do
   an exception is raised while parsing the params, a `%Filtrex{empty: true}` struct
   will be returned.
   """
-  def parse_params!(_configs, params) when params == %{}, do: %Filtrex{empty: true}
-  def parse_params!(configs, params) do
+  def safe_parse_params(_configs, params) when params == %{}, do: %Filtrex{empty: true}
+  def safe_parse_params(configs, params) do
     try do
       {:ok, filter} = parse_params(configs, params)
       filter
