@@ -11,14 +11,14 @@ defmodule FiltrexTest do
     assert FilterParams.build(:all)
       |> FilterParams.type("dash-combine")
       |> Filtrex.validate_structure ==
-        {:errors, ["Invalid filter type 'dash-combine'"]}
+        {:error, "Invalid filter type 'dash-combine'"}
   end
 
   @tag :validate_structure
   test "requiring more than one condition" do
     assert FilterParams.build(:all)
       |> Filtrex.validate_structure ==
-        {:errors, ["One or more conditions required to filter"]}
+        {:error, "One or more conditions required to filter"}
   end
 
   @tag :validate_structure
@@ -27,7 +27,7 @@ defmodule FiltrexTest do
       |> FilterParams.conditions([ConditionParams.build(:text)])
       |> FilterParams.sub_filters(%{})
       |> Filtrex.validate_structure ==
-        {:errors, ["Sub-filters must be a valid list of filters"]}
+        {:error, "Sub-filters must be a valid list of filters"}
   end
 
   @tag :validate_structure
@@ -39,7 +39,7 @@ defmodule FiltrexTest do
             |> FilterParams.type("blah")
             |> FilterParams.conditions([ConditionParams.build(:text)])])
       |> Filtrex.validate_structure ==
-        {:errors, ["Invalid filter type 'blah'"]}
+        {:error, "Invalid filter type 'blah'"}
   end
 
   test "trickling up errors from conditions" do
@@ -48,10 +48,8 @@ defmodule FiltrexTest do
       ConditionParams.build(:text, comparator: "invalid")
     ])
 
-    assert Filtrex.parse(@config, params) == {:errors, [
-      "Unknown column 'wrong_column'",
-      "Invalid text comparator 'invalid'"
-    ]}
+    assert Filtrex.parse(@config, params) ==
+      {:error, "Unknown column 'wrong_column', Invalid text comparator 'invalid'"}
   end
 
   test "creating an 'all' ecto filter query" do

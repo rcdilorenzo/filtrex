@@ -26,7 +26,7 @@ defmodule Filtrex do
   @type t :: Filtrex.t
 
   @doc """
-  Parses a filter expression and returns errors or the parsed filter with
+  Parses a filter expression and returns an error or the parsed filter with
   the appropriate parsed sub-structures.
 
   The `configs` option is a list of type configs (See `Filtrex.Type.Config`)
@@ -35,7 +35,7 @@ defmodule Filtrex do
   [%Filtrex.Type.Config{type: :text, keys: ~w(title comments)}]
   ```
   """
-  @spec parse([Filtrex.Type.Config.t], Map.t) :: {:errors, List.t} | {:ok, Filtrex.t}
+  @spec parse([Filtrex.Type.Config.t], Map.t) :: {:error, string} | {:ok, Filtrex.t}
   def parse(configs, map) do
     with {:ok, sanitized} <- Filtrex.Params.sanitize(map, @whitelist),
          {:ok, valid_structured_map} <- validate_structure(sanitized),
@@ -122,23 +122,23 @@ defmodule Filtrex do
   def validate_structure(map) do
     case map do
       %{filter: %{type: type}} when not type in ~w(all any none) ->
-        {:errors, ["Invalid filter type '#{type}'"]}
+        {:error, "Invalid filter type '#{type}'"}
       %{filter: %{conditions: conditions}} when conditions == [] or not is_list(conditions) ->
-        {:errors, ["One or more conditions required to filter"]}
+        {:error, "One or more conditions required to filter"}
       %{filter: %{sub_filters: sub_filters}} when not is_list(sub_filters) ->
-        {:errors, ["Sub-filters must be a valid list of filters"]}
+        {:error, "Sub-filters must be a valid list of filters"}
       validated = %{filter: params} ->
         sub_filters = Map.get(params, :sub_filters, [])
         result = Enum.reduce_while(sub_filters, {:ok, []}, fn (sub_map, {:ok, acc}) ->
           case validate_structure(sub_map) do
-            {:errors, errors} -> {:halt, {:errors, errors}}
             {:ok, sub_validated} -> {:cont, {:ok, acc ++ [sub_validated]}}
+            {:error, error} -> {:halt, {:error, error}}
           end
         end)
         with {:ok, validated_sub_filters} <- result,
           do: {:ok, put_in(validated.filter[:sub_filters], validated_sub_filters)}
       _ ->
-        {:errors, ["Invalid filter structure"]}
+        {:error, "Invalid filter structure"}
     end
   end
 
@@ -146,7 +146,7 @@ defmodule Filtrex do
     parsed_filters = Enum.reduce_while(params[:sub_filters], {:ok, []}, fn (to_parse, {:ok, acc}) ->
       case parse(configs, to_parse) do
         {:ok, filter} -> {:cont, {:ok, acc ++ [filter]}}
-        {:errors, errors} -> {:halt, {:errors, errors}}
+        {:error, error} -> {:halt, {:error, error}}
       end
     end)
     with {:ok, filters} <- parsed_filters,
@@ -169,7 +169,7 @@ defmodule Filtrex do
     {:ok, %Filtrex{type: type, conditions: conditions, sub_filters: parsed_filters}}
   end
   defp parse_condition_results(%{errors: errors}, _, _) do
-    {:errors, errors}
+    {:error, Enum.join(errors, ", ")}
   end
 
   defp parse_params_filter_union(params) do
@@ -179,7 +179,7 @@ defmodule Filtrex do
       :error ->
         {:ok, {"all", params}}
       _ ->
-        {:errors, ["Invalid filter union"]}
+        {:error, "Invalid filter union"}
     end
   end
 
