@@ -1,5 +1,4 @@
 defmodule Filtrex.Validator.Date do
-  @intervals ~w(days weeks months years)
   @format "{YYYY}-{0M}-{0D}"
   @moduledoc false
 

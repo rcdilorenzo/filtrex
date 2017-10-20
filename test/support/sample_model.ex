@@ -9,7 +9,7 @@ defmodule Filtrex.SampleModel do
     field :rating,          :float
     field :comments
 
-    timestamps
+    timestamps()
   end
 
   def filtrex_config do

@@ -35,7 +35,7 @@ defmodule Filtrex do
   [%Filtrex.Type.Config{type: :text, keys: ~w(title comments)}]
   ```
   """
-  @spec parse([Filtrex.Type.Config.t], Map.t) :: {:error, string} | {:ok, Filtrex.t}
+  @spec parse([Filtrex.Type.Config.t], Map.t) :: {:error, String.t} | {:ok, Filtrex.t}
   def parse(configs, map) do
     with {:ok, sanitized} <- Filtrex.Params.sanitize(map, @whitelist),
          {:ok, valid_structured_map} <- validate_structure(sanitized),
