@@ -1,6 +1,7 @@
 defmodule FiltrexConditionDateTimeTest do
   use ExUnit.Case
   use Timex
+  import Filtrex.TestHelpers
   alias Filtrex.Condition.DateTime
 
   @column "datetime_column"
@@ -46,14 +47,14 @@ defmodule FiltrexConditionDateTimeTest do
   end
 
   test "encoding as SQL fragments for ecto" do
-    assert encode(DateTime, @column, @default, "after")        == {"datetime_column > ?",  [@default_converted]}
-    assert encode(DateTime, @column, @default, "on or after")  == {"datetime_column >= ?", [@default_converted]}
+    assert encode(DateTime, @column, @default, "after")        == {"? > ?",  [column_ref(:datetime_column), @default_converted]}
+    assert encode(DateTime, @column, @default, "on or after")  == {"? >= ?", [column_ref(:datetime_column), @default_converted]}
 
-    assert encode(DateTime, @column, @default, "before")       == {"datetime_column < ?", [@default_converted]}
-    assert encode(DateTime, @column, @default, "on or before") == {"datetime_column <= ?", [@default_converted]}
+    assert encode(DateTime, @column, @default, "before")       == {"? < ?", [column_ref(:datetime_column), @default_converted]}
+    assert encode(DateTime, @column, @default, "on or before") == {"? <= ?", [column_ref(:datetime_column), @default_converted]}
 
-    assert encode(DateTime, @column, @default, "equals")         == {"datetime_column = ?", [@default_converted]}
-    assert encode(DateTime, @column, @default, "does not equal") == {"datetime_column != ?", [@default_converted]}
+    assert encode(DateTime, @column, @default, "equals")         == {"? = ?", [column_ref(:datetime_column), @default_converted]}
+    assert encode(DateTime, @column, @default, "does not equal") == {"? != ?", [column_ref(:datetime_column), @default_converted]}
   end
 
   defp encode(module, column, value, comparator) do

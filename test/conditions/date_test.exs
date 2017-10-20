@@ -1,6 +1,7 @@
 defmodule FiltrexConditionDateTest do
   use ExUnit.Case
   use Timex
+  import Filtrex.TestHelpers
   alias Filtrex.Condition.Date
 
   @column "date_column"
@@ -60,22 +61,22 @@ defmodule FiltrexConditionDateTest do
   end
 
   test "encoding as SQL fragments for ecto" do
-    assert encode(Date, @column, @default, "after")        == {"date_column > ?",  [@default]}
-    assert encode(Date, @column, @default, "on or after")  == {"date_column >= ?", [@default]}
-    assert encode(Date, @column, @default, "before")       == {"date_column < ?", [@default]}
-    assert encode(Date, @column, @default, "on or before") == {"date_column <= ?", [@default]}
+    assert encode(Date, @column, @default, "after")        == {"? > ?",  [column_ref(:date_column), @default]}
+    assert encode(Date, @column, @default, "on or after")  == {"? >= ?", [column_ref(:date_column), @default]}
+    assert encode(Date, @column, @default, "before")       == {"? < ?",  [column_ref(:date_column), @default]}
+    assert encode(Date, @column, @default, "on or before") == {"? <= ?", [column_ref(:date_column), @default]}
 
     assert encode(Date, @column, %{start: @default, end: "2015-12-31"}, "between") ==
-      {"(date_column >= ?) AND (date_column <= ?)", [@default, "2015-12-31"]}
+      {"(? >= ?) AND (? <= ?)", [column_ref(:date_column), @default, column_ref(:date_column), "2015-12-31"]}
 
     assert encode(Date, @column, %{start: @default, end: "2015-12-31"}, "not between") ==
-      {"(date_column > ?) AND (date_column < ?)", ["2015-12-31", @default]}
+      {"(? > ?) AND (? < ?)", [column_ref(:date_column), "2015-12-31", column_ref(:date_column), @default]}
 
     assert encode(Date, @column, "2016-03-01", "equals") ==
-      {"date_column = ?", ["2016-03-01"]}
+      {"? = ?", [column_ref(:date_column), "2016-03-01"]}
 
     assert encode(Date, @column, "2016-03-01", "does not equal") ==
-      {"date_column != ?", ["2016-03-01"]}
+      {"? != ?", [column_ref(:date_column), "2016-03-01"]}
   end
 
   defp encode(module, column, value, comparator) do

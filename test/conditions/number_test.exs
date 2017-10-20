@@ -1,5 +1,6 @@
 defmodule FiltrexConditionNumberTest do
   use ExUnit.Case
+  import Filtrex.TestHelpers
   alias Filtrex.Condition.Number
 
   @column "age"
@@ -52,7 +53,7 @@ defmodule FiltrexConditionNumberTest do
 
   test "encoding 'greater than'" do
     assert Filtrex.Encoder.encode(condition("greater than", 10)) ==
-      %Filtrex.Fragment{expression: "age > ?", values: [10]}
+      %Filtrex.Fragment{expression: "? > ?", values: [column_ref(:age), 10]}
   end
 
   defp params(comparator, value) do
