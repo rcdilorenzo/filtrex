@@ -34,9 +34,9 @@ defmodule Filtrex.Condition.DateTime do
   def comparators, do: @comparators
 
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
-    with {:ok, parsed_comparator} <- validate_comparator(type, comparator, @comparators),
+    with {:ok, parsed_comparator} <- validate_comparator(type(), comparator, @comparators),
          {:ok, parsed_value}      <- validate_value(config, value) do
-      {:ok, %__MODULE__{type: type, inverse: inverse,
+      {:ok, %__MODULE__{type: type(), inverse: inverse,
           column: column, comparator: parsed_comparator,
           value: parsed_value}}
     end
@@ -47,8 +47,6 @@ defmodule Filtrex.Condition.DateTime do
   end
 
   defimpl Filtrex.Encoder do
-    @format Filtrex.Validator.Date.format
-
     encoder "after", "before", "column > ?", &default/1
     encoder "before", "after", "column < ?", &default/1
 

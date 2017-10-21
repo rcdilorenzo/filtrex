@@ -4,7 +4,6 @@ defmodule Filtrex.Condition.Date do
   @string_date_comparators ["equals", "does not equal", "after", "on or after", "before", "on or before"]
   @start_end_comparators ["between", "not between"]
   @comparators @string_date_comparators ++ @start_end_comparators
-  @shifts [:days, :weeks, :months, :years]
 
   @type t :: Filtrex.Condition.Date.t
   @moduledoc """

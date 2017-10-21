@@ -68,7 +68,7 @@ defmodule Filtrex.Condition do
 
   @doc "Parses a params key into the condition type, column, and comparator"
   def param_key_type(configs, key_with_comparator) do
-    result = Enum.find_value(condition_modules, fn (module) ->
+    result = Enum.find_value(condition_modules(), fn (module) ->
       Enum.find_value(module.comparators, fn (comparator) ->
         normalized = "_" <> String.replace(comparator, " ", "_")
         key = String.replace_trailing(key_with_comparator, normalized, "")
@@ -138,7 +138,7 @@ defmodule Filtrex.Condition do
   end
 
   defp condition_module(type) do
-    Enum.find(condition_modules, fn (module) ->
+    Enum.find(condition_modules(), fn (module) ->
       type == to_string(module.type)
     end)
   end

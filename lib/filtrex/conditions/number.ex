@@ -28,16 +28,16 @@ defmodule Filtrex.Condition.Number do
 
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     result = with {:ok, parsed_value} <- parse_value(config.options, value),
-      do: %Condition.Number{type: type, inverse: inverse, value: parsed_value, column: column,
-        comparator: validate_in(comparator, comparators)}
+      do: %Condition.Number{type: type(), inverse: inverse, value: parsed_value, column: column,
+        comparator: validate_in(comparator, comparators())}
 
     case result do
       {:error, error} ->
         {:error, error}
       %Condition.Number{comparator: nil} ->
-        {:error, parse_error(column, :comparator, type)}
+        {:error, parse_error(column, :comparator, type())}
       %Condition.Number{value: nil} ->
-        {:error, parse_value_type_error(value, type)}
+        {:error, parse_value_type_error(value, type())}
       _ ->
         {:ok, result}
     end
@@ -46,14 +46,14 @@ defmodule Filtrex.Condition.Number do
   defp parse_value(options = %{allow_decimal: true}, string) when is_binary(string) do
     case Float.parse(string) do
       {float, ""} -> parse_value(options, float)
-      _           -> {:error, parse_value_type_error(string, type)}
+      _           -> {:error, parse_value_type_error(string, type())}
     end
   end
 
   defp parse_value(options, string) when is_binary(string) do
     case Integer.parse(string) do
       {integer, ""} -> parse_value(options, integer)
-      _             -> {:error, parse_value_type_error(string, type)}
+      _             -> {:error, parse_value_type_error(string, type())}
     end
   end
 
@@ -61,7 +61,7 @@ defmodule Filtrex.Condition.Number do
     allowed_values = options[:allowed_values]
     cond do
       options[:allow_decimal] == false ->
-        {:error, parse_value_type_error(float, type)}
+        {:error, parse_value_type_error(float, type())}
       allowed_values == nil ->
         {:ok, float}
       Range.range?(allowed_values) ->
@@ -82,7 +82,7 @@ defmodule Filtrex.Condition.Number do
     allowed_values = options[:allowed_values]
     cond do
       options[:allow_decimal] == false ->
-        {:error, parse_value_type_error(integer, type)}
+        {:error, parse_value_type_error(integer, type())}
       allowed_values == nil or integer in allowed_values ->
         {:ok, integer}
       not integer in allowed_values ->
@@ -90,7 +90,7 @@ defmodule Filtrex.Condition.Number do
     end
   end
 
-  defp parse_value(_, value), do: {:error, parse_value_type_error(value, type)}
+  defp parse_value(_, value), do: {:error, parse_value_type_error(value, type())}
 
   defimpl Filtrex.Encoder do
     encoder "equals", "does not equal", "column = ?"
