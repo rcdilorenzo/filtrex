@@ -16,7 +16,7 @@ defmodule FiltrexASTTest do
     ast = Filtrex.AST.build_query(Filtrex.SampleModel, @filter)
     expression = Macro.to_string(quote do: unquote(ast))
     assert with_newline(expression) == """
-    Ecto.Query.where(Filtrex.SampleModel, [s], fragment("((lower(title) LIKE lower(?)) OR (title != ?)) OR ((date_column > ?) AND (date_column < ?))", "%created%", "Chris McCord", "2016-05-01", "2017-01-01"))
+    Ecto.Query.where(Filtrex.SampleModel, [s], fragment("((lower(?) LIKE lower(?)) OR (? != ?)) OR ((? > ?) AND (? < ?))", s.title(), "%created%", s.title(), "Chris McCord", s.date_column(), "2016-05-01", s.date_column(), "2017-01-01"))
     """
   end
 

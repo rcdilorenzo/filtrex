@@ -1,5 +1,6 @@
 defmodule FiltrexConditionBooleanTest do
   use ExUnit.Case
+  import Filtrex.TestHelpers
   alias Filtrex.Condition.Boolean
 
   @column "flag"
@@ -26,18 +27,18 @@ defmodule FiltrexConditionBooleanTest do
 
   test "encoding true value" do
     assert Filtrex.Encoder.encode(condition(true, "equals")) ==
-      %Filtrex.Fragment{expression: "flag = ?", values: [true]}
+      %Filtrex.Fragment{expression: "? = ?", values: [column_ref(:flag), true]}
 
     assert Filtrex.Encoder.encode(condition(true, "does not equal")) ==
-      %Filtrex.Fragment{expression: "flag != ?", values: [true]}
+      %Filtrex.Fragment{expression: "? != ?", values: [column_ref(:flag), true]}
   end
 
   test "encoding false value" do
     assert Filtrex.Encoder.encode(condition(false, "equals")) ==
-      %Filtrex.Fragment{expression: "flag = ?", values: [false]}
+      %Filtrex.Fragment{expression: "? = ?", values: [column_ref(:flag), false]}
 
     assert Filtrex.Encoder.encode(condition(false, "does not equal")) ==
-      %Filtrex.Fragment{expression: "flag != ?", values: [false]}
+      %Filtrex.Fragment{expression: "? != ?", values: [column_ref(:flag), false]}
   end
 
   defp params(value) do
