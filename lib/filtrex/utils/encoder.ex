@@ -39,6 +39,37 @@ defmodule Filtrex.Utils.Encoder do
     end
   end
 
+  @doc """
+  Intersperses proper Ecto column references between values to be 
+  queried.
+
+  ## Examples
+
+      intersperse_column_refs(["post"], "title")
+      # => [s.title, "post"]
+      
+      intersperse_column_refs(["best", "post"], "title")
+      # => [s.title, "best", s.title, "post"]
+
+  ## Background
+  
+  Ecto queries support string query fragments, but fields referenced in
+  these fragments need to specifically reference fields, or you will get 
+  "Ambiguous column" errors for some queries.
+
+  In other words:
+
+      # Good
+      where(query, [s], fragment("lower(?) = lower(?)", s.title, "post")
+
+      # Bad
+      where(query, [s], fragment("lower(title) = lower(?)", "post"))
+
+  Interpolating `s.title` into the fragment arguments ensures that joined
+  tables which also have the `title` column will not conflict.
+
+  See `Ecto.Query.API.fragment/1` for more details.
+  """
   def intersperse_column_refs(values, column) do
     column = String.to_existing_atom(column)
 
