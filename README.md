@@ -23,7 +23,7 @@ The package is available on [Hex](https://hex.pm) and can be installed by adding
 
 ```elixir
 def deps do
-  [{:filtrex, "~> 0.4.0"}]
+  [{:filtrex, "~> 0.4.1"}]
 end
 ```
 
