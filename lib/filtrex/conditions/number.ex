@@ -81,8 +81,6 @@ defmodule Filtrex.Condition.Number do
   defp parse_value(options, integer) when is_integer(integer) do
     allowed_values = options[:allowed_values]
     cond do
-      options[:allow_decimal] == false ->
-        {:error, parse_value_type_error(integer, type())}
       allowed_values == nil or integer in allowed_values ->
         {:ok, integer}
       not integer in allowed_values ->
