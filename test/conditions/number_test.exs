@@ -16,6 +16,9 @@ defmodule FiltrexConditionNumberTest do
 
     assert Number.parse(@config, params("equals", 5)) ==
       {:ok, condition("equals", 5)}
+
+    assert Number.parse(put_in(@config.options[:allow_decimal], false), params("equals", 5)) ==
+      {:ok, condition("equals", 5)}
   end
 
   test "parsing float successfully" do
