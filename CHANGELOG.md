@@ -1,6 +1,6 @@
 # Changelog
 
-### Next Release (0.5.0)
+### 0.4.2
 
 - Fix Integer Parsing When Decimal Option Is False (#49)
 
