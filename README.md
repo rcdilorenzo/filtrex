@@ -92,7 +92,7 @@ With this example, here are some of the query parameters that can be used:
 | `posted_at_between` (nested value)  | start: "01-01-2013" <br> end: "12-31-2017" |
 | `filter_union` (any \| all \| none) | any                                        |
 
-## Filtering across associations
+## Filtering Across Associations
 Here is a more complex example for filtering across an association:
 
 ```elixir
