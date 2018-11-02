@@ -114,6 +114,7 @@ defmodule MyApp.CommentController do
       Profile
       |> Filtrex.query(profile_filter)
 
+    # step 3: combine queries
     query =
       from(parent in user_query,
         join: pi in ^profile_query,
