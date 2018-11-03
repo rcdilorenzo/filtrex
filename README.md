@@ -35,7 +35,7 @@ end
 - [Configuration](#configuration)
 - [Filter Types](#filter-types)
 
-# Example Usage 
+# Example Usage
 
 Here is a simple example of how to filter incoming parameters with filtrex:
 
@@ -43,7 +43,7 @@ Here is a simple example of how to filter incoming parameters with filtrex:
 # in controller
 defmodule MyApp.CommentController do
   use MyAppWeb, :controller
-  
+
   def index(conn, params) do
     # step 1: convert and validate incoming parameters
     {:ok, filter} = MyApp.FilterConfig.comments()
@@ -53,7 +53,7 @@ defmodule MyApp.CommentController do
     query = MyApp.Comment
       |> where([c], c.user_id == ^conn.assigns[:user_id])
       |> Filtrex.query(filter)
-      
+
     json conn, Repo.all(query)
   end
 end
@@ -61,7 +61,7 @@ end
 # in lib/my_app/filter_config.ex
 defmodule MyApp.FilterConfig do
   import Filtrex.Type.Config
-  
+
   # create configuration for transforming / validating parameters
   def comments() do
     defconfig do
@@ -92,8 +92,62 @@ With this example, here are some of the query parameters that can be used:
 | `posted_at_between` (nested value)  | start: "01-01-2013" <br> end: "12-31-2017" |
 | `filter_union` (any \| all \| none) | any                                        |
 
+## Filtering Across Associations
+Here is a more complex example for filtering across an association:
 
+```elixir
+# in controller
+defmodule MyApp.CommentController do
+  use MyAppWeb, :controller
 
+  def index(conn, params) do
+    # step 1: convert and validate incoming parameters
+    {:ok, user_filter} = Filtrex.parse_params(user_filter(), params["user"] || %{})
+    {:ok, profile_filter} = Filtrex.parse_params(profile_filter(), params["profile"] || %{})
+
+    # step 2: build query
+    user_query =
+      User
+      |> Filtrex.query(user_filter)
+
+    profile_query =
+      Profile
+      |> Filtrex.query(profile_filter)
+
+    # step 3: combine queries
+    query =
+      from(parent in user_query,
+        join: pi in ^profile_query,
+        on: pi.parent_id == parent.id
+      )
+
+    results = query
+    |> preload([:profile])
+    |> Repo.all(params)
+
+    json conn, results
+  end
+end
+
+# in lib/my_app/filter_config.ex
+defmodule MyApp.FilterConfig do
+  import Filtrex.Type.Config
+
+  # create configuration for transforming / validating parameters
+  def user_filter() do
+    defconfig do
+      text [:email]
+    end
+  end
+
+  def profile_filter() do
+    defconfig do
+      text [:first_name]
+      text [:last_name]
+    end
+  end
+end
+```
 # Filtering From Parameters
 
 Filtering from parameters is often a tedious process of special keys and validation. Filtrex standardizes this process by using a human-readable format for columns. Consider these examples:
@@ -136,7 +190,7 @@ Here is an example of how filtrex might be used within an elixir app that uses [
 def index(conn, params = %{"user_id" => user_id}) do
   # remove keys that are not filtered against
   filter_params = Map.drop(params, ~w(user_id))
-  
+
   # create base query
   base_query = from(c in MyApp.Comment, c.user_id == ^user_id)
 
@@ -250,16 +304,16 @@ import Filtrex.Type.Config
 defconfig do
   # multiple text keys
   text [:title, :description]
-  
+
   # boolean type
   boolean :published
-  
+
   # date type with options
   date :posted_at, format: "{YYYY}-{0M}-{0D}"
-  
+
   # simple datetime
   datetime :updated_at
-  
+
   # integer value
   number :views, allow_decimal: false
 end
