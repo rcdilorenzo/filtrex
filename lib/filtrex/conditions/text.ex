@@ -22,6 +22,7 @@ defmodule Filtrex.Condition.Text do
 
   def comparators, do: @comparators
 
+  def dump_value(value), do: value
   @doc """
   Tries to create a valid text condition struct, calling helper methods
   from `Filtrex.Condition` to validate each type. If any of the types are not valid,

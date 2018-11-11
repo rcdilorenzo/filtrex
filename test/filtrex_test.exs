@@ -159,6 +159,36 @@ defmodule FiltrexTest do
     assert {:error, "Unknown key 'types'"} == Filtrex.parse(@config, invalid_map)
   end
 
+  test "dumping" do
+    filters_dump = %{
+      "filter" =>
+      %{
+        "type" => "all",
+        "conditions" => [
+        %{"column" => "title", "comparator" => "contains", "value" => "Buy", "type" => "text"},
+       ],
+      "sub_filters" => [
+          %{
+            "filter" =>
+            %{
+              "type" => "any",
+              "conditions" => [
+                %{
+                  "column" => "date_column",
+                  "comparator" => "equals",
+                  "value" => "2016-03-26",
+                  "type" => "date"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+    {:ok, filter} = Filtrex.parse(@config, filters_dump)
+    assert Filtrex.dump(filter) == filters_dump
+  end
+
   test "pipelining to query" do
     query_string = "title_contains=earth"
     params = Plug.Conn.Query.decode(query_string)

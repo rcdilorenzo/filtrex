@@ -60,6 +60,10 @@ defmodule FiltrexConditionDateTest do
     }) |> elem(0) == :ok
   end
 
+  test "dumping date value" do
+    assert Date.dump_value(~D[2018-11-11]) == "2018-11-11"
+  end
+
   test "encoding as SQL fragments for ecto" do
     assert encode(Date, @column, @default, "after")        == {"? > ?",  [column_ref(:date_column), @default]}
     assert encode(Date, @column, @default, "on or after")  == {"? >= ?", [column_ref(:date_column), @default]}

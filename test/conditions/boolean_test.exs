@@ -20,9 +20,15 @@ defmodule FiltrexConditionBooleanTest do
       {:ok, condition(false)}
   end
 
+
   test "throwing error for non-boolean value" do
     assert Boolean.parse(@config, params("blah")) ==
       {:error, "Invalid boolean value for blah"}
+  end
+
+  test "dumping boolean values" do
+    assert Boolean.dump_value(false) == "false"
+    assert Boolean.dump_value(true) == "true"
   end
 
   test "encoding true value" do

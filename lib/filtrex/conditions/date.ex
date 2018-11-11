@@ -42,6 +42,8 @@ defmodule Filtrex.Condition.Date do
 
   def comparators, do: @comparators
 
+  def dump_value(value), do: Timex.format!(value, "{YYYY}-{0M}-{0D}")
+
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     with {:ok, parsed_comparator} <- validate_comparator(comparator),
          {:ok, parsed_value}      <- validate_value(config, parsed_comparator, value) do

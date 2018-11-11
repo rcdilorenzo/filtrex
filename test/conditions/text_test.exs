@@ -20,6 +20,11 @@ defmodule FiltrexConditionTextTest do
     })
   end
 
+  test "dumping text" do
+    text = "Lorem Ipsum"
+    assert Text.dump_value(text) == text
+  end
+
   test "encoding as SQL fragments for ecto" do
     {:ok, condition} = Text.parse(@config, %{inverse: false, column: "title", value: "Buy Milk", comparator: "equals"})
     encoded = Filtrex.Encoder.encode(condition)

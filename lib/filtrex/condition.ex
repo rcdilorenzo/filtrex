@@ -15,10 +15,19 @@ defmodule Filtrex.Condition do
     Filtrex.Condition.Number
   ]
 
+  @type any_condition ::
+    Filtrex.Condition.Text.t |
+    Filtrex.Condition.Date.t |
+    Filtrex.Condition.DateTime.t |
+    Filtrex.Condition.Boolean.t |
+    Filtrex.Condition.Number.t
+
+
   @callback parse(Filtrex.Type.Config.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
   @callback type :: Atom.t
   @callback comparators :: [String.t]
-
+  @callback dump_value(any) :: String
+  @whitelisted_dump_values ~w(column comparator value type)
   defstruct column: nil, comparator: nil, value: nil
 
   defmacro __using__(_) do
@@ -81,6 +90,19 @@ defmodule Filtrex.Condition do
     if result, do: result, else: {:error, "Unknown filter key '#{key_with_comparator}'"}
   end
 
+  @doc "Dumps condition into map"
+  @spec dump(any_condition) :: Map.t
+  def dump(condition) do
+    condition
+    |> put_dump_value
+    |> Map.from_struct
+    |> Enum.reduce(%{}, fn ({key, value}, acc) ->
+      Map.put(acc, Atom.to_string(key), value)
+    end)
+    |> Map.update!("type", &(Atom.to_string(&1)))
+    |> Map.take(@whitelisted_dump_values)
+  end
+
   @doc "Helper method to validate that a comparator is in list"
   @spec validate_comparator(atom, binary, List.t) :: {:ok, binary} | {:error, binary}
   def validate_comparator(type, comparator, comparators) do
@@ -135,6 +157,10 @@ defmodule Filtrex.Condition do
   @doc "List out the available condition modules"
   def condition_modules do
     Application.get_env(:filtrex, :conditions, @modules)
+  end
+
+  defp put_dump_value(condition) do
+    Map.update!(condition, :value, &(condition.__struct__.dump_value(&1)))
   end
 
   defp condition_module(type) do

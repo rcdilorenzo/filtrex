@@ -10,6 +10,8 @@ defmodule Filtrex.Condition.Boolean do
 
   def comparators, do: ["equals", "does not equal"]
 
+  def dump_value(value), do: "#{value}"
+
   def parse(_config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     parsed_comparator = validate_in(comparator, comparators())
 

@@ -43,6 +43,21 @@ defmodule Filtrex do
   end
 
   @doc """
+  Dumps filter into map
+  """
+  @spec dump(Filtrex.t) :: Map.t
+  def dump(%Filtrex{type: type, conditions: conditions, sub_filters: sub_filters}) do
+    %{
+      "filter" =>
+      %{
+        "type" => type,
+        "conditions" => Enum.map(conditions, &Filtrex.Condition.dump/1),
+        "sub_filters" => Enum.map(sub_filters, &dump_sub_filters/1)
+      }
+    }
+  end
+
+  @doc """
   Parses a filter expression, like `parse/2`. If any exception is raised when
   parsing the map, a `%Filtrex{empty: true}` struct will be returned.
   """
@@ -189,5 +204,15 @@ defmodule Filtrex do
   defp update_list_in_map(map, key, value) do
     values = Map.get(map, key)
     Map.put(map, key, values ++ [value])
+  end
+
+ 
+  defp dump_sub_filters(%Filtrex{type: type, conditions: conditions}) do
+    %{
+      "filter" => %{
+        "type" => type,
+        "conditions" => Enum.map(conditions, &Filtrex.Condition.dump/1),
+      }
+    }
   end
 end

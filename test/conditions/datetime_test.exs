@@ -46,6 +46,10 @@ defmodule FiltrexConditionDateTimeTest do
     }) |> elem(0) == :error
   end
 
+  test "dumping datetime value" do
+    assert DateTime.dump_value(Timex.parse!(@default, "{ISO:Extended}")) == @default_converted
+  end
+
   test "encoding as SQL fragments for ecto" do
     assert encode(DateTime, @column, @default, "after")        == {"? > ?",  [column_ref(:datetime_column), @default_converted]}
     assert encode(DateTime, @column, @default, "on or after")  == {"? >= ?", [column_ref(:datetime_column), @default_converted]}

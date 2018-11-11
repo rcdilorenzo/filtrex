@@ -41,6 +41,10 @@ defmodule FiltrexConditionNumberTest do
       {:error, "Invalid number value for 10.5"}
   end
 
+  test "dumping numbers" do
+    assert Number.dump_value(123) == "123"
+  end
+
   test "validating range of allowed integer values" do
     assert Number.parse(@config, params("equals", "101")) ==
       {:error, "Provided number value not allowed"}
