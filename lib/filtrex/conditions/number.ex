@@ -92,7 +92,7 @@ defmodule Filtrex.Condition.Number do
 
   defp parse_value(_, value), do: {:error, parse_value_type_error(value, type())}
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.FragmentEncoder do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
     encoder "greater than", "less than or", "column > ?"

@@ -42,7 +42,8 @@ defmodule Filtrex.Mixfile do
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
       {:plug, "~> 1.1.2", only: :test},
       {:ex_machina, "~> 0.6.1", only: :test},
-      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
     ]
   end
 

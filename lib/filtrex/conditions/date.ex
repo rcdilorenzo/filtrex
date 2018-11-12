@@ -67,7 +67,7 @@ defmodule Filtrex.Condition.Date do
     end
   end
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.FragmentEncoder do
     @format Filtrex.Validator.Date.format
 
     encoder "after", "before", "column > ?", &default/1
