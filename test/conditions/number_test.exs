@@ -59,7 +59,7 @@ defmodule FiltrexConditionNumberTest do
   end
 
   test "encoding 'greater than'" do
-    assert Filtrex.FragmentEncoder.encode(condition("greater than", 10)) ==
+    assert Filtrex.Encoders.FragmentEncoder.encode(condition("greater than", 10)) ==
       %Filtrex.Fragment{expression: "? > ?", values: [column_ref(:age), 10]}
   end
 

@@ -39,7 +39,7 @@ defmodule Filtrex.Condition.Boolean do
   defp validate_value(bool) when is_boolean(bool), do: bool
   defp validate_value(_), do: nil
 
-  defimpl Filtrex.FragmentEncoder do
+  defimpl Filtrex.Encoders.FragmentEncoder do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
   end

@@ -46,7 +46,7 @@ defmodule Filtrex.Condition.Text do
     end
   end
 
-  defimpl Filtrex.FragmentEncoder do
+  defimpl Filtrex.Encoders.FragmentEncoder do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
 

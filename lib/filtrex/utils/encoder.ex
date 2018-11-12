@@ -1,6 +1,6 @@
 defmodule Filtrex.Utils.Encoder do
   @moduledoc """
-  Helper methods for implementing the `Filtrex.FragmentEncoder` protocol.
+  Helper methods for implementing the `Filtrex.Encoders.FragmentEncoder` protocol.
   """
 
   @doc """
