@@ -13,7 +13,7 @@ defmodule Filtrex.AST do
 
   defp build_fragments(filter) do
     join = logical_join(filter.type)
-    Enum.map(filter.conditions, &Filtrex.Encoders.FragmentEncoder.encode/1)
+    Enum.map(filter.conditions, &Filtrex.Encoders.Fragment.encode/1)
       |> fragments(join)
       |> build_sub_fragments(join, filter.sub_filters)
   end

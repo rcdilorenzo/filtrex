@@ -85,7 +85,7 @@ defmodule FiltrexConditionDateTest do
 
   defp encode(module, column, value, comparator) do
     {:ok, condition} = module.parse(@config, %{inverse: false, column: column, value: value, comparator: comparator})
-    encoded = Filtrex.Encoders.FragmentEncoder.encode(condition)
+    encoded = Filtrex.Encoders.Fragment.encode(condition)
     {encoded.expression, encoded.values}
   end
 end

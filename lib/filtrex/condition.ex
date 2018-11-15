@@ -32,7 +32,7 @@ defmodule Filtrex.Condition do
 
   defmacro __using__(_) do
     quote do
-      import Filtrex.Utils.Encoder
+      import Filtrex.Utils.FragmentEncoderDSL
       alias Filtrex.Condition
       import unquote(__MODULE__), except: [parse: 2]
       @behaviour Filtrex.Condition

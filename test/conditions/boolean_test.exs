@@ -32,18 +32,18 @@ defmodule FiltrexConditionBooleanTest do
   end
 
   test "encoding true value" do
-    assert Filtrex.Encoders.FragmentEncoder.encode(condition(true, "equals")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(true, "equals")) ==
       %Filtrex.Fragment{expression: "? = ?", values: [column_ref(:flag), true]}
 
-    assert Filtrex.Encoders.FragmentEncoder.encode(condition(true, "does not equal")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(true, "does not equal")) ==
       %Filtrex.Fragment{expression: "? != ?", values: [column_ref(:flag), true]}
   end
 
   test "encoding false value" do
-    assert Filtrex.Encoders.FragmentEncoder.encode(condition(false, "equals")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(false, "equals")) ==
       %Filtrex.Fragment{expression: "? = ?", values: [column_ref(:flag), false]}
 
-    assert Filtrex.Encoders.FragmentEncoder.encode(condition(false, "does not equal")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(false, "does not equal")) ==
       %Filtrex.Fragment{expression: "? != ?", values: [column_ref(:flag), false]}
   end
 

@@ -48,7 +48,7 @@ defmodule Filtrex.Condition.DateTime do
     Timex.parse(value, config.options[:format] || @format)
   end
 
-  defimpl Filtrex.Encoders.FragmentEncoder  do
+  defimpl Filtrex.Encoders.Fragment  do
     encoder "after", "before", "column > ?", &default/1
     encoder "before", "after", "column < ?", &default/1
 
