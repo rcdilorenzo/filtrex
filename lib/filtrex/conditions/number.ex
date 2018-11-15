@@ -26,8 +26,6 @@ defmodule Filtrex.Condition.Number do
     "greater than or", "less than"
   ]
 
-  def dump_value(value), do: "#{value}"
-
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     result = with {:ok, parsed_value} <- parse_value(config.options, value),
       do: %Condition.Number{type: type(), inverse: inverse, value: parsed_value, column: column,
@@ -99,5 +97,9 @@ defmodule Filtrex.Condition.Number do
     encoder "less than or", "greater than", "column <= ?"
     encoder "less than", "greater than or", "column < ?"
     encoder "greater than or", "less than", "column >= ?"
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: to_string(condition.value)
   end
 end

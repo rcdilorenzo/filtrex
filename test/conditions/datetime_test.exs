@@ -46,8 +46,9 @@ defmodule FiltrexConditionDateTimeTest do
     }) |> elem(0) == :error
   end
 
-  test "dumping datetime value" do
-    assert DateTime.dump_value(Timex.parse!(@default, "{ISO:Extended}")) == @default_converted
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", Timex.parse!(@default_converted, "{ISOdate} {ISOtime}"))) ==
+      "2016-04-01 12:30:45"
   end
 
   test "encoding as SQL fragments for ecto" do
@@ -65,5 +66,10 @@ defmodule FiltrexConditionDateTimeTest do
     {:ok, condition} = module.parse(@config, %{inverse: false, column: column, value: value, comparator: comparator})
     encoded = Filtrex.Encoders.Fragment.encode(condition)
     {encoded.expression, encoded.values}
+  end
+
+  defp condition(comparator, value) do
+    %DateTime{type: :number, column: @column,
+            inverse: false, comparator: comparator, value: value}
   end
 end

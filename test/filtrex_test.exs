@@ -159,7 +159,7 @@ defmodule FiltrexTest do
     assert {:error, "Unknown key 'types'"} == Filtrex.parse(@config, invalid_map)
   end
 
-  test "dumping" do
+  test "encoding" do
     filters_dump = %{
       "filter" =>
       %{
@@ -186,7 +186,7 @@ defmodule FiltrexTest do
       }
     }
     {:ok, filter} = Filtrex.parse(@config, filters_dump)
-    assert Filtrex.dump(filter) == filters_dump
+    assert Filtrex.encode(filter) == filters_dump
   end
 
   test "pipelining to query" do

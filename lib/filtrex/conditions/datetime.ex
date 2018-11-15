@@ -33,8 +33,6 @@ defmodule Filtrex.Condition.DateTime do
 
   def comparators, do: @comparators
 
-  def dump_value(value), do: Timex.format!(value, "{ISOdate} {ISOtime}")
-
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     with {:ok, parsed_comparator} <- validate_comparator(type(), comparator, @comparators),
          {:ok, parsed_value}      <- validate_value(config, value) do
@@ -62,5 +60,9 @@ defmodule Filtrex.Condition.DateTime do
       {:ok, format} = Timex.format(timex_date, "{ISOdate} {ISOtime}")
       [format]
     end
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: Timex.format!(condition.value, "{ISOdate} {ISOtime}")
   end
 end

@@ -26,9 +26,9 @@ defmodule FiltrexConditionBooleanTest do
       {:error, "Invalid boolean value for blah"}
   end
 
-  test "dumping boolean values" do
-    assert Boolean.dump_value(false) == "false"
-    assert Boolean.dump_value(true) == "true"
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition(false)) == "false"
+    assert Filtrex.Encoders.Map.encode_map_value(condition(true)) == "true"
   end
 
   test "encoding true value" do

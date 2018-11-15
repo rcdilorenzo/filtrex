@@ -60,8 +60,8 @@ defmodule FiltrexConditionDateTest do
     }) |> elem(0) == :ok
   end
 
-  test "dumping date value" do
-    assert Date.dump_value(~D[2018-11-11]) == "2018-11-11"
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", ~D[2015-01-01])) == @default
   end
 
   test "encoding as SQL fragments for ecto" do
@@ -88,4 +88,9 @@ defmodule FiltrexConditionDateTest do
     encoded = Filtrex.Encoders.Fragment.encode(condition)
     {encoded.expression, encoded.values}
   end
+  defp condition(comparator, value) do
+    %Date{type: :number, column: @column,
+              inverse: false, comparator: comparator, value: value}
+  end
+
 end

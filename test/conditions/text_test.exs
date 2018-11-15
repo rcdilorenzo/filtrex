@@ -20,9 +20,9 @@ defmodule FiltrexConditionTextTest do
     })
   end
 
-  test "dumping text" do
+  test "encoding map value" do
     text = "Lorem Ipsum"
-    assert Text.dump_value(text) == text
+    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", text)) == text
   end
 
   test "encoding as SQL fragments for ecto" do
@@ -44,4 +44,10 @@ defmodule FiltrexConditionTextTest do
     assert encoded.expression == "lower(?) NOT LIKE lower(?)"
     assert encoded.values == [column_ref(:title), "%Buy Milk%"]
   end
+
+  defp condition(comparator, value) do
+    %Text{type: :text, column: @column,
+          inverse: false, comparator: comparator, value: value}
+  end
+
 end

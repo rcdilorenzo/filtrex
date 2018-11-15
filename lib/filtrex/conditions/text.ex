@@ -22,7 +22,6 @@ defmodule Filtrex.Condition.Text do
 
   def comparators, do: @comparators
 
-  def dump_value(value), do: value
   @doc """
   Tries to create a valid text condition struct, calling helper methods
   from `Filtrex.Condition` to validate each type. If any of the types are not valid,
@@ -52,5 +51,9 @@ defmodule Filtrex.Condition.Text do
 
     encoder "contains", "does not contain", "lower(column) LIKE lower(?)", &(["%#{&1}%"])
     encoder "does not contain", "contains", "lower(column) NOT LIKE lower(?)", &(["%#{&1}%"])
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: condition.value
   end
 end

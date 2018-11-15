@@ -10,8 +10,6 @@ defmodule Filtrex.Condition.Boolean do
 
   def comparators, do: ["equals", "does not equal"]
 
-  def dump_value(value), do: "#{value}"
-
   def parse(_config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     parsed_comparator = validate_in(comparator, comparators())
 
@@ -42,5 +40,9 @@ defmodule Filtrex.Condition.Boolean do
   defimpl Filtrex.Encoders.Fragment do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: to_string(condition.value)
   end
 end

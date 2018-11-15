@@ -41,8 +41,8 @@ defmodule FiltrexConditionNumberTest do
       {:error, "Invalid number value for 10.5"}
   end
 
-  test "dumping numbers" do
-    assert Number.dump_value(123) == "123"
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", "123")) == "123"
   end
 
   test "validating range of allowed integer values" do

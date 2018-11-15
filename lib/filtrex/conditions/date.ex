@@ -42,8 +42,6 @@ defmodule Filtrex.Condition.Date do
 
   def comparators, do: @comparators
 
-  def dump_value(value), do: Timex.format!(value, "{YYYY}-{0M}-{0D}")
-
   def parse(config, %{column: column, comparator: comparator, value: value, inverse: inverse}) do
     with {:ok, parsed_comparator} <- validate_comparator(comparator),
          {:ok, parsed_value}      <- validate_value(config, parsed_comparator, value) do
@@ -94,5 +92,9 @@ defmodule Filtrex.Condition.Date do
     end
 
     defp default_value(timex_date), do: default(timex_date) |> List.first
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: Timex.format!(condition.value, "{YYYY}-{0M}-{0D}")
   end
 end

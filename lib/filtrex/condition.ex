@@ -36,6 +36,7 @@ defmodule Filtrex.Condition do
       alias Filtrex.Condition
       import unquote(__MODULE__), except: [parse: 2]
       @behaviour Filtrex.Condition
+      # @behaviour Filtrex.
 
       defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
     end
@@ -96,11 +97,15 @@ defmodule Filtrex.Condition do
     condition
     |> put_dump_value
     |> Map.from_struct
-    |> Enum.reduce(%{}, fn ({key, value}, acc) ->
+    |> stringify_keys
+    |> Map.update!("type", &Atom.to_string/1)
+    |> Map.take(@whitelisted_dump_values)
+  end
+
+  defp stringify_keys(condition) do
+    Enum.reduce(condition, %{}, fn ({key, value}, acc) ->
       Map.put(acc, Atom.to_string(key), value)
     end)
-    |> Map.update!("type", &(Atom.to_string(&1)))
-    |> Map.take(@whitelisted_dump_values)
   end
 
   @doc "Helper method to validate that a comparator is in list"
@@ -160,7 +165,7 @@ defmodule Filtrex.Condition do
   end
 
   defp put_dump_value(condition) do
-    Map.update!(condition, :value, &(condition.__struct__.dump_value(&1)))
+    %{condition | value: Filtrex.Encoders.Map.encode_map_value(condition)}
   end
 
   defp condition_module(type) do

@@ -45,8 +45,8 @@ defmodule Filtrex do
   @doc """
   Dumps filter into map
   """
-  @spec dump(Filtrex.t) :: Map.t
-  def dump(%Filtrex{type: type, conditions: conditions, sub_filters: sub_filters}) do
+  @spec encode(Filtrex.t) :: Map.t
+  def encode(%Filtrex{type: type, conditions: conditions, sub_filters: sub_filters}) do
     %{
       "filter" =>
       %{
