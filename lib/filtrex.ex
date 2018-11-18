@@ -43,7 +43,7 @@ defmodule Filtrex do
   end
 
   @doc """
-  Dumps filter into map
+  Encode filter into map
   """
   @spec encode(Filtrex.t) :: Map.t
   def encode(%Filtrex{type: type, conditions: conditions, sub_filters: sub_filters}) do

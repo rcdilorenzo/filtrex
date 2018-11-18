@@ -26,8 +26,7 @@ defmodule Filtrex.Condition do
   @callback parse(Filtrex.Type.Config.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
   @callback type :: Atom.t
   @callback comparators :: [String.t]
-  @callback dump_value(any) :: String
-  @whitelisted_dump_values ~w(column comparator value type)
+  @whitelisted_encode_values ~w(column comparator value type)
   defstruct column: nil, comparator: nil, value: nil
 
   defmacro __using__(_) do
@@ -36,7 +35,6 @@ defmodule Filtrex.Condition do
       alias Filtrex.Condition
       import unquote(__MODULE__), except: [parse: 2]
       @behaviour Filtrex.Condition
-      # @behaviour Filtrex.
 
       defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
     end
@@ -99,7 +97,7 @@ defmodule Filtrex.Condition do
     |> Map.from_struct
     |> stringify_keys
     |> Map.update!("type", &Atom.to_string/1)
-    |> Map.take(@whitelisted_dump_values)
+    |> Map.take(@whitelisted_encode_values)
   end
 
   defp stringify_keys(condition) do
