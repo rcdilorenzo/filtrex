@@ -282,7 +282,7 @@ query = from(m in MyApp.Todo, where: m.rating > 90)
   |> Filtrex.query(filter)  # => #Ecto.Query<...
 
 # Dumping filter
-Filtrex.dump(filter) == filter_dump
+Filtrex.encode(filter) == filter_dump
 ```
 
 For more details on the acceptable structure of this map, feel free to take a look at the [example json schema](http://jeremydorn.com/json-editor/?schema=N4IgJgpgZglgdjALjA9nAziAXKAYjAG0QgCdtRlECJsR8jSQAaERATwAcasQUAjAFYQAxomYgOJFFxLIImHCFgMyi9l1r8ho8ZOmk5Cip27GNPdIhLwA5uIhwArgFtsAbRABDAgXGe4bOJwaDQAugC+LMJoYEioGOSsJrSeJCSegSxIEM5GSea8giJiLHoyhonRBC5wiercIJbWcHaRINHOHKmeiCiqZg1NtiBt9XXJFlbDLA4u7iB8KCjU/uLEAB4l4D00LGA7yM67IE7OfIwRLABu3o6m+YNTLSPhryzojnwA+srEJHljHipdKZEAkCAAR0cMHBYGwUG86AgWWIuUSABJwVBaABiAD0kFgCGQaHQePofxer2pLEx0FxBOg8DipPJhEp4SAAA==&value=N4IgZglgNgLgpgJxALlDAngBzikBDKKEAGhAGMB7AOwBMIYJqBnFAbVEqgFcBbK3BjCg5SlHpjwI8MCkmTlqMPBCotSGbALgAPGCRAA3AlxzyAQl3QgAvsQ4VufAfWH6xEqTLkgaFOEwACKgoYAMoqJRV9DVMQeF19I25YgFloAGsbOwVHfnkwKDwAczcKcUlpWVw4AEcuAjU4rFiAIwoHODx+UiSTXDAGnGsAXVImLhaAfUhYRBZkdnBoeDk0Ztwuq1FqOgZmNntc3BoTSZppEQVyzyr5WvqoRpjji8TjWIAmAAYARgA2AC0XwAzACPn8bMNrCNoUAAAA==&theme=bootstrap2&iconlib=fontawesome4&object_layout=grid&show_errors=interaction) or the raw [JSON schema config](resources/schema.json).
