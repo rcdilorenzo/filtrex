@@ -51,8 +51,8 @@ defmodule Filtrex do
       "filter" =>
       %{
         "type" => type,
-        "conditions" => Enum.map(conditions, &Filtrex.Condition.dump/1),
-        "sub_filters" => Enum.map(sub_filters, &dump_sub_filters/1)
+        "conditions" => Enum.map(conditions, &Filtrex.Condition.encode_condition/1),
+        "sub_filters" => Enum.map(sub_filters, &encode_sub_filters/1)
       }
     }
   end
@@ -207,11 +207,11 @@ defmodule Filtrex do
   end
 
  
-  defp dump_sub_filters(%Filtrex{type: type, conditions: conditions}) do
+  defp encode_sub_filters(%Filtrex{type: type, conditions: conditions}) do
     %{
       "filter" => %{
         "type" => type,
-        "conditions" => Enum.map(conditions, &Filtrex.Condition.dump/1),
+        "conditions" => Enum.map(conditions, &Filtrex.Condition.encode_condition/1),
       }
     }
   end

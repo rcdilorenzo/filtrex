@@ -91,11 +91,11 @@ defmodule Filtrex.Condition do
     if result, do: result, else: {:error, "Unknown filter key '#{key_with_comparator}'"}
   end
 
-  @doc "Dumps condition into map"
-  @spec dump(any_condition) :: Map.t
-  def dump(condition) do
+  @doc "encode condition into map"
+  @spec encode_condition(any_condition) :: Map.t
+  def encode_condition(condition) do
     condition
-    |> put_dump_value
+    |> put_encoded_map_value
     |> Map.from_struct
     |> stringify_keys
     |> Map.update!("type", &Atom.to_string/1)
@@ -164,7 +164,7 @@ defmodule Filtrex.Condition do
     Application.get_env(:filtrex, :conditions, @modules)
   end
 
-  defp put_dump_value(condition) do
+  defp put_encoded_map_value(condition) do
     %{condition | value: Filtrex.Encoders.Map.encode_map_value(condition)}
   end
 
