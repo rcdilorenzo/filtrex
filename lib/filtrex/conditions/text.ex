@@ -45,11 +45,15 @@ defmodule Filtrex.Condition.Text do
     end
   end
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.Encoders.Fragment do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
 
     encoder "contains", "does not contain", "lower(column) LIKE lower(?)", &(["%#{&1}%"])
     encoder "does not contain", "contains", "lower(column) NOT LIKE lower(?)", &(["%#{&1}%"])
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: condition.value
   end
 end

@@ -20,24 +20,30 @@ defmodule FiltrexConditionBooleanTest do
       {:ok, condition(false)}
   end
 
+
   test "throwing error for non-boolean value" do
     assert Boolean.parse(@config, params("blah")) ==
       {:error, "Invalid boolean value for blah"}
   end
 
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition(false)) == "false"
+    assert Filtrex.Encoders.Map.encode_map_value(condition(true)) == "true"
+  end
+
   test "encoding true value" do
-    assert Filtrex.Encoder.encode(condition(true, "equals")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(true, "equals")) ==
       %Filtrex.Fragment{expression: "? = ?", values: [column_ref(:flag), true]}
 
-    assert Filtrex.Encoder.encode(condition(true, "does not equal")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(true, "does not equal")) ==
       %Filtrex.Fragment{expression: "? != ?", values: [column_ref(:flag), true]}
   end
 
   test "encoding false value" do
-    assert Filtrex.Encoder.encode(condition(false, "equals")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(false, "equals")) ==
       %Filtrex.Fragment{expression: "? = ?", values: [column_ref(:flag), false]}
 
-    assert Filtrex.Encoder.encode(condition(false, "does not equal")) ==
+    assert Filtrex.Encoders.Fragment.encode(condition(false, "does not equal")) ==
       %Filtrex.Fragment{expression: "? != ?", values: [column_ref(:flag), false]}
   end
 

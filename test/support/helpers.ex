@@ -7,7 +7,7 @@ defmodule Filtrex.TestHelpers do
   Returns a quoted reference to a column in a query, such as `s.title`.
   """
   def column_ref(column) do
-    quote [context: Filtrex.Utils.Encoder] do
+    quote [context: Filtrex.Utils.FragmentEncoderDSL] do
       s.unquote(column)
     end
   end

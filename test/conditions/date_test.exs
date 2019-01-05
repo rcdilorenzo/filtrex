@@ -60,6 +60,10 @@ defmodule FiltrexConditionDateTest do
     }) |> elem(0) == :ok
   end
 
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", ~D[2015-01-01])) == @default
+  end
+
   test "encoding as SQL fragments for ecto" do
     assert encode(Date, @column, @default, "after")        == {"? > ?",  [column_ref(:date_column), @default]}
     assert encode(Date, @column, @default, "on or after")  == {"? >= ?", [column_ref(:date_column), @default]}
@@ -81,7 +85,12 @@ defmodule FiltrexConditionDateTest do
 
   defp encode(module, column, value, comparator) do
     {:ok, condition} = module.parse(@config, %{inverse: false, column: column, value: value, comparator: comparator})
-    encoded = Filtrex.Encoder.encode(condition)
+    encoded = Filtrex.Encoders.Fragment.encode(condition)
     {encoded.expression, encoded.values}
   end
+  defp condition(comparator, value) do
+    %Date{type: :number, column: @column,
+              inverse: false, comparator: comparator, value: value}
+  end
+
 end

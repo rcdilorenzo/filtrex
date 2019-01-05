@@ -90,12 +90,16 @@ defmodule Filtrex.Condition.Number do
 
   defp parse_value(_, value), do: {:error, parse_value_type_error(value, type())}
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.Encoders.Fragment do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
     encoder "greater than", "less than or", "column > ?"
     encoder "less than or", "greater than", "column <= ?"
     encoder "less than", "greater than or", "column < ?"
     encoder "greater than or", "less than", "column >= ?"
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: to_string(condition.value)
   end
 end

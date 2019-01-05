@@ -1,8 +1,8 @@
-defprotocol Filtrex.Encoder do
+defprotocol Filtrex.Encoders.Fragment do
   @moduledoc """
   Encodes a condition into `Filtrex.Fragment` as an expression with values.
   Implementing this protocol is required for any new conditions.
-  See `Filtrex.Utils.Encoder` for helper methods with this implementation.
+  See `Filtrex.Utils.FragmentEncoderDSL` for helper methods with this implementation.
 
   Example:
   ```

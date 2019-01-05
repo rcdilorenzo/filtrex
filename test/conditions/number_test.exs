@@ -41,6 +41,10 @@ defmodule FiltrexConditionNumberTest do
       {:error, "Invalid number value for 10.5"}
   end
 
+  test "encoding map value" do
+    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", "123")) == "123"
+  end
+
   test "validating range of allowed integer values" do
     assert Number.parse(@config, params("equals", "101")) ==
       {:error, "Provided number value not allowed"}
@@ -55,7 +59,7 @@ defmodule FiltrexConditionNumberTest do
   end
 
   test "encoding 'greater than'" do
-    assert Filtrex.Encoder.encode(condition("greater than", 10)) ==
+    assert Filtrex.Encoders.Fragment.encode(condition("greater than", 10)) ==
       %Filtrex.Fragment{expression: "? > ?", values: [column_ref(:age), 10]}
   end
 

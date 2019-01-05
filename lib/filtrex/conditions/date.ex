@@ -65,7 +65,7 @@ defmodule Filtrex.Condition.Date do
     end
   end
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.Encoders.Fragment do
     @format Filtrex.Validator.Date.format
 
     encoder "after", "before", "column > ?", &default/1
@@ -92,5 +92,9 @@ defmodule Filtrex.Condition.Date do
     end
 
     defp default_value(timex_date), do: default(timex_date) |> List.first
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: Timex.format!(condition.value, "{YYYY}-{0M}-{0D}")
   end
 end

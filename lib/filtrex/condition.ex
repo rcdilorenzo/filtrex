@@ -15,18 +15,29 @@ defmodule Filtrex.Condition do
     Filtrex.Condition.Number
   ]
 
+  @type any_condition ::
+    Filtrex.Condition.Text.t |
+    Filtrex.Condition.Date.t |
+    Filtrex.Condition.DateTime.t |
+    Filtrex.Condition.Boolean.t |
+    Filtrex.Condition.Number.t
+
+
+
   @callback parse(Filtrex.Type.Config.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
   @callback type :: Atom.t
   @callback comparators :: [String.t]
-
+  @whitelisted_encode_values ~w(column comparator value type)
+  @required_protocols [Filtrex.Encoders.Fragment, Filtrex.Encoders.Map]
   defstruct column: nil, comparator: nil, value: nil
 
   defmacro __using__(_) do
     quote do
-      import Filtrex.Utils.Encoder
+      import Filtrex.Utils.FragmentEncoderDSL
       alias Filtrex.Condition
       import unquote(__MODULE__), except: [parse: 2]
       @behaviour Filtrex.Condition
+      @after_compile {Filtrex.Condition , :ensure_protocols_implemented}
 
       defstruct type: nil, column: nil, comparator: nil, value: nil, inverse: false
     end
@@ -79,6 +90,23 @@ defmodule Filtrex.Condition do
       end)
     end)
     if result, do: result, else: {:error, "Unknown filter key '#{key_with_comparator}'"}
+  end
+
+  @doc "encode condition into map"
+  @spec encode_condition(any_condition) :: Map.t
+  def encode_condition(condition) do
+    condition
+    |> put_encoded_map_value
+    |> Map.from_struct
+    |> stringify_keys
+    |> Map.update!("type", &Atom.to_string/1)
+    |> Map.take(@whitelisted_encode_values)
+  end
+
+  defp stringify_keys(condition) do
+    Enum.reduce(condition, %{}, fn ({key, value}, acc) ->
+      Map.put(acc, Atom.to_string(key), value)
+    end)
   end
 
   @doc "Helper method to validate that a comparator is in list"
@@ -137,9 +165,26 @@ defmodule Filtrex.Condition do
     Application.get_env(:filtrex, :conditions, @modules)
   end
 
+  defp put_encoded_map_value(condition) do
+    %{condition | value: Filtrex.Encoders.Map.encode_map_value(condition)}
+  end
+
   defp condition_module(type) do
     Enum.find(condition_modules(), fn (module) ->
       type == to_string(module.type)
     end)
+  end
+
+  def ensure_protocols_implemented(env, _) do
+    Enum.each(@required_protocols, &(check_if_protocol_implemented(&1, env)))
+  end
+
+  defp check_if_protocol_implemented(protocol, %{module: module, file: file}) do
+    try do
+      Protocol.assert_impl!(protocol, module)
+    rescue
+      ArgumentError ->
+        :elixir_errors.warn 1, file, "Please implement #{inspect(protocol)} protocol"
+    end
   end
 end

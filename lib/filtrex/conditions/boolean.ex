@@ -37,8 +37,12 @@ defmodule Filtrex.Condition.Boolean do
   defp validate_value(bool) when is_boolean(bool), do: bool
   defp validate_value(_), do: nil
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.Encoders.Fragment do
     encoder "equals", "does not equal", "column = ?"
     encoder "does not equal", "equals", "column != ?"
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: to_string(condition.value)
   end
 end

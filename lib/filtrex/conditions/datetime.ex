@@ -46,7 +46,7 @@ defmodule Filtrex.Condition.DateTime do
     Timex.parse(value, config.options[:format] || @format)
   end
 
-  defimpl Filtrex.Encoder do
+  defimpl Filtrex.Encoders.Fragment  do
     encoder "after", "before", "column > ?", &default/1
     encoder "before", "after", "column < ?", &default/1
 
@@ -60,5 +60,9 @@ defmodule Filtrex.Condition.DateTime do
       {:ok, format} = Timex.format(timex_date, "{ISOdate} {ISOtime}")
       [format]
     end
+  end
+
+  defimpl Filtrex.Encoders.Map do
+    def encode_map_value(condition), do: Timex.format!(condition.value, "{ISOdate} {ISOtime}")
   end
 end

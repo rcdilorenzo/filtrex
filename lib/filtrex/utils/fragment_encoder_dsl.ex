@@ -1,6 +1,6 @@
-defmodule Filtrex.Utils.Encoder do
+defmodule Filtrex.Utils.FragmentEncoderDSL do
   @moduledoc """
-  Helper methods for implementing the `Filtrex.Encoder` protocol.
+  Helper methods for implementing the `Filtrex.Encoders.FragmentEncoder` protocol.
   """
 
   @doc """
@@ -20,7 +20,7 @@ defmodule Filtrex.Utils.Encoder do
   """
   defmacro encoder(comparator, reverse_comparator, expression, values_function \\ {:&, [], [[{:&, [], [1]}]]}) do
     quote do
-      import Filtrex.Utils.Encoder
+      import Filtrex.Utils.FragmentEncoderDSL
 
       def encode(condition = %{comparator: unquote(comparator), inverse: true}) do
         condition |> struct(inverse: false, comparator: unquote(reverse_comparator)) |> encode
