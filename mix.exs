@@ -2,25 +2,26 @@ defmodule Filtrex.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :filtrex,
-     version: "0.4.2",
-     elixir: "~> 1.3",
-     description: description(),
-     package: package(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     elixirc_paths: elixirc_paths(Mix.env),
-     deps: deps(),
-     name: "Filtrex",
-     docs: [main: "Filtrex",
-            source_url: "https://github.com/rcdilorenzo/filtrex"]]
+    [
+      app: :filtrex,
+      version: "0.4.2",
+      elixir: "~> 1.3",
+      description: description(),
+      package: package(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      deps: deps(),
+      name: "Filtrex",
+      docs: [main: "Filtrex", source_url: "https://github.com/rcdilorenzo/filtrex"]
+    ]
   end
 
   defp elixirc_paths(:test), do: ~w(lib test/support)
   defp elixirc_paths(_), do: ~w(lib)
 
   def application do
-    [applications: [:logger, :tzdata] ++ applications(Mix.env)]
+    [extra_applications: [:logger, :tzdata] ++ applications(Mix.env())]
   end
 
   defp applications(:test), do: [:postgrex, :ecto, :ex_machina]
@@ -51,8 +52,10 @@ defmodule Filtrex.Mixfile do
     [
       maintainers: ["Christian Di Lorenzo"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/rcdilorenzo/filtrex",
-               "Docs" => "http://rcdilorenzo.github.io/filtrex"}
+      links: %{
+        "GitHub" => "https://github.com/rcdilorenzo/filtrex",
+        "Docs" => "http://rcdilorenzo.github.io/filtrex"
+      }
     ]
   end
 end
