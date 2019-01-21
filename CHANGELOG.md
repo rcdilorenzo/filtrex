@@ -1,5 +1,10 @@
 # Changelog
 
+### 0.4.3
+
+- Update compatibility with Ecto 3.x
+- Add README example for filtering with associations
+
 ### 0.4.2
 
 - Fix Integer Parsing When Decimal Option Is False (#49)
