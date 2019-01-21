@@ -121,7 +121,7 @@ defmodule Filtrex do
   """
   def validate_structure(map) do
     case map do
-      %{filter: %{type: type}} when not type in ~w(all any none) ->
+      %{filter: %{type: type}} when type not in ~w(all any none) ->
         {:error, "Invalid filter type '#{type}'"}
       %{filter: %{conditions: conditions}} when conditions == [] or not is_list(conditions) ->
         {:error, "One or more conditions required to filter"}

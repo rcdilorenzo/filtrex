@@ -2,25 +2,26 @@ defmodule Filtrex.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :filtrex,
-     version: "0.4.2",
-     elixir: "~> 1.3",
-     description: description(),
-     package: package(),
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     elixirc_paths: elixirc_paths(Mix.env),
-     deps: deps(),
-     name: "Filtrex",
-     docs: [main: "Filtrex",
-            source_url: "https://github.com/rcdilorenzo/filtrex"]]
+    [
+      app: :filtrex,
+      version: "0.4.2",
+      elixir: "~> 1.3",
+      description: description(),
+      package: package(),
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      deps: deps(),
+      name: "Filtrex",
+      docs: [main: "Filtrex", source_url: "https://github.com/rcdilorenzo/filtrex"]
+    ]
   end
 
   defp elixirc_paths(:test), do: ~w(lib test/support)
   defp elixirc_paths(_), do: ~w(lib)
 
   def application do
-    [applications: [:logger, :tzdata] ++ applications(Mix.env)]
+    [extra_applications: [:logger, :tzdata] ++ applications(Mix.env())]
   end
 
   defp applications(:test), do: [:postgrex, :ecto, :ex_machina]
@@ -35,7 +36,8 @@ defmodule Filtrex.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0", only: :test},
-      {:ecto, "~> 2.1"},
+      {:ecto, "~> 3.0"},
+      {:ecto_sql, "~> 3.0"},
       {:timex, "~> 3.1"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
@@ -50,8 +52,10 @@ defmodule Filtrex.Mixfile do
     [
       maintainers: ["Christian Di Lorenzo"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/rcdilorenzo/filtrex",
-               "Docs" => "http://rcdilorenzo.github.io/filtrex"}
+      links: %{
+        "GitHub" => "https://github.com/rcdilorenzo/filtrex",
+        "Docs" => "http://rcdilorenzo.github.io/filtrex"
+      }
     ]
   end
 end

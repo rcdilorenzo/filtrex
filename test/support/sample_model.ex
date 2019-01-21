@@ -3,8 +3,8 @@ defmodule Filtrex.SampleModel do
 
   schema "sample_models" do
     field :title
-    field :date_column,     Ecto.Date
-    field :datetime_column, Ecto.DateTime
+    field :date_column,     :date
+    field :datetime_column, :naive_datetime
     field :upvotes,         :integer
     field :rating,          :float
     field :comments

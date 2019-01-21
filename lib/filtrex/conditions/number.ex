@@ -73,7 +73,7 @@ defmodule Filtrex.Condition.Number do
         end
       is_list(allowed_values) and float in allowed_values ->
         {:ok, float}
-      is_list(allowed_values) and not float in allowed_values ->
+      is_list(allowed_values) and float not in allowed_values ->
         {:error, "Provided number value not allowed"}
     end
   end
@@ -83,7 +83,7 @@ defmodule Filtrex.Condition.Number do
     cond do
       allowed_values == nil or integer in allowed_values ->
         {:ok, integer}
-      not integer in allowed_values ->
+      integer not in allowed_values ->
         {:error, "Provided number value not allowed"}
     end
   end
