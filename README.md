@@ -23,7 +23,7 @@ The package is available on [Hex](https://hex.pm) and can be installed by adding
 
 ```elixir
 def deps do
-  [{:filtrex, "~> 0.4.1"}]
+  [{:filtrex, "~> 0.4.3"}]
 end
 ```
 
@@ -342,7 +342,7 @@ The following condition types and comparators are supported.
 
 ## License
 
-Copyright (c) 2015-2017 Christian Di Lorenzo
+Copyright (c) 2015-2019 Christian Di Lorenzo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
