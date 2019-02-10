@@ -207,11 +207,12 @@ defmodule Filtrex do
   end
 
  
-  defp encode_sub_filters(%Filtrex{type: type, conditions: conditions}) do
+  defp encode_sub_filters(%Filtrex{type: type, conditions: conditions, sub_filters: sub_filters}) do
     %{
       "filter" => %{
         "type" => type,
         "conditions" => Enum.map(conditions, &Filtrex.Condition.encode_condition/1),
+        "sub_filters" => Enum.map(sub_filters, &encode_sub_filters/1)
       }
     }
   end

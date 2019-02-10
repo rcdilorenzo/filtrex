@@ -47,7 +47,8 @@ defmodule FiltrexConditionDateTimeTest do
   end
 
   test "encoding map value" do
-    assert Filtrex.Encoders.Map.encode_map_value(condition("equals", Timex.parse!(@default_converted, "{ISOdate} {ISOtime}"))) ==
+    time_value = condition("equals", Timex.parse!(@default_converted, "{ISOdate} {ISOtime}"))
+    assert Filtrex.Encoders.Map.encode_map_value(time_value) ==
       "2016-04-01 12:30:45"
   end
 
@@ -70,6 +71,6 @@ defmodule FiltrexConditionDateTimeTest do
 
   defp condition(comparator, value) do
     %DateTime{type: :number, column: @column,
-            inverse: false, comparator: comparator, value: value}
+              inverse: false, comparator: comparator, value: value}
   end
 end

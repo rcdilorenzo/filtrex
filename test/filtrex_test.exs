@@ -178,8 +178,9 @@ defmodule FiltrexTest do
                   "comparator" => "equals",
                   "value" => "2016-03-26",
                   "type" => "date"
-                }
-              ]
+                },
+              ],
+              "sub_filters" => []
             }
           }
         ]
