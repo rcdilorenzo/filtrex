@@ -98,7 +98,7 @@ defmodule Filtrex do
   Filtrex.query(query, filter, allow_empty: true)
   ```
   """
-  @spec query(Ecto.Query.t, Filtrex.t, Keyword.t) :: Ecto.Query.t
+  @spec query(Ecto.Queryable.t, Filtrex.t, Keyword.t) :: Ecto.Query.t
   def query(queryable, filter, opts \\ [allow_empty: true])
   def query(queryable, %Filtrex{empty: true}, opts) do
     if opts[:allow_empty] do
