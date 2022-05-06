@@ -55,6 +55,9 @@ defmodule FiltrexConditionDateTimeTest do
 
     assert encode(DateTime, @column, @default, "equals")         == {"? = ?", [column_ref(:datetime_column), @default_converted]}
     assert encode(DateTime, @column, @default, "does not equal") == {"? != ?", [column_ref(:datetime_column), @default_converted]}
+
+    assert encode(DateTime, @column, @default, "is null")         == {"? is ?", [column_ref(:datetime_column), nil]}
+    assert encode(DateTime, @column, @default, "is not null") == {"? is not ?", [column_ref(:datetime_column), nil]}
   end
 
   defp encode(module, column, value, comparator) do

@@ -334,7 +334,7 @@ The following condition types and comparators are supported.
     * after, on or after, before, on or before, between, not between, equals, does not equal
     * options: format (default: `{YYYY}-{0M}-{0D}`)
 * [Filtrex.Condition.DateTime](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.DateTime.html)
-    * after, on or after, before, on or before, equals, does not equal
+    * after, on or after, before, on or before, equals, does not equal, is null, is not null
     * options: format (default: `{ISOz}`)
 * [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
     * equals, does not equal, greater than, less than or, greater than or, less than
