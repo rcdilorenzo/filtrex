@@ -2,7 +2,7 @@ defmodule Filtrex.Condition.Text do
   use Filtrex.Condition
   @comparators ["equals", "does not equal", "contains", "does not contain"]
 
-  @type t :: Filtrex.Condition.Text.t
+  @type t :: Filtrex.Condition.Text.t()
   @moduledoc """
   `Filtrex.Condition.Text` is a specific condition type for handling text filters with various comparisons. There are no configuration options for the date condition.
 
@@ -35,21 +35,24 @@ defmodule Filtrex.Condition.Text do
       comparator: validate_in(comparator, @comparators),
       value: validate_is_binary(value)
     }
+
     case condition do
       %Condition.Text{comparator: nil} ->
         {:error, parse_error(comparator, :comparator, :text)}
+
       %Condition.Text{value: nil} ->
         {:error, parse_value_type_error(column, :text)}
+
       _ ->
         {:ok, condition}
     end
   end
 
   defimpl Filtrex.Encoder do
-    encoder "equals", "does not equal", "column = ?"
-    encoder "does not equal", "equals", "column != ?"
+    encoder("equals", "does not equal", "column = ?")
+    encoder("does not equal", "equals", "column != ?")
 
-    encoder "contains", "does not contain", "lower(column) LIKE lower(?)", &(["%#{&1}%"])
-    encoder "does not contain", "contains", "lower(column) NOT LIKE lower(?)", &(["%#{&1}%"])
+    encoder("contains", "does not contain", "lower(column) LIKE lower(?)", &["%#{&1}%"])
+    encoder("does not contain", "contains", "lower(column) NOT LIKE lower(?)", &["%#{&1}%"])
   end
 end

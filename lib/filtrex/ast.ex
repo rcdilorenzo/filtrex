@@ -13,14 +13,16 @@ defmodule Filtrex.AST do
 
   defp build_fragments(filter) do
     join = logical_join(filter.type)
+
     Enum.map(filter.conditions, &Filtrex.Encoder.encode/1)
-      |> fragments(join)
-      |> build_sub_fragments(join, filter.sub_filters)
+    |> fragments(join)
+    |> build_sub_fragments(join, filter.sub_filters)
   end
 
   defp build_sub_fragments(fragments, _, []), do: fragments
+
   defp build_sub_fragments(fragments, join, sub_filters) do
-    Enum.reduce(sub_filters, fragments, fn (sub_filter, [expression | values]) ->
+    Enum.reduce(sub_filters, fragments, fn sub_filter, [expression | values] ->
       [sub_expression | sub_values] = build_fragments(sub_filter)
       [join(expression, sub_expression, join) | values ++ sub_values]
     end)
@@ -32,14 +34,15 @@ defmodule Filtrex.AST do
 
   defp fragments(fragments, join) do
     Enum.reduce(fragments, ["" | []], fn
-      (%{expression: new_expression, values: new_values}, ["" | values]) ->
+      %{expression: new_expression, values: new_values}, ["" | values] ->
         ["(#{new_expression})" | values ++ new_values]
-      (%{expression: new_expression, values: new_values}, [expression | values]) ->
+
+      %{expression: new_expression, values: new_values}, [expression | values] ->
         combined = "#{expression} #{join} (#{new_expression})"
         [combined | values ++ new_values]
     end)
   end
 
   defp logical_join("any"), do: "OR"
-  defp logical_join(_),     do: "AND"
+  defp logical_join(_), do: "AND"
 end

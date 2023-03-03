@@ -4,7 +4,7 @@ defmodule FiltrexTypeConfigTest do
   import Filtrex.Type.Config
   doctest Filtrex.Type.Config
 
-  @configs Filtrex.SampleModel.filtrex_config
+  @configs Filtrex.SampleModel.filtrex_config()
 
   test "finding whether key is allowed" do
     refute Config.allowed?(@configs, "blah")

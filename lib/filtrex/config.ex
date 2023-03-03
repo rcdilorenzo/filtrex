@@ -61,21 +61,29 @@ defmodule Filtrex.Type.Config do
     end
   end
 
-  for module <- Filtrex.Condition.condition_modules do
+  for module <- Filtrex.Condition.condition_modules() do
     @doc "Generate a config struct for `#{to_string(module) |> String.slice(7..-1)}`"
     defmacro unquote(module.type)(key_or_keys, opts \\ [])
+
     defmacro unquote(module.type)(keys, opts) when is_list(keys) do
       type = unquote(module.type)
+
       quote do
-        var!(configs) = var!(configs) ++
-          [%Filtrex.Type.Config{type: unquote(type),
-                                keys: Filtrex.Type.Config.to_strings(unquote(keys)),
-                                options: Enum.into(unquote(opts), %{})}]
+        var!(configs) =
+          var!(configs) ++
+            [
+              %Filtrex.Type.Config{
+                type: unquote(type),
+                keys: Filtrex.Type.Config.to_strings(unquote(keys)),
+                options: Enum.into(unquote(opts), %{})
+              }
+            ]
       end
     end
 
     defmacro unquote(module.type)(key, opts) do
       type = unquote(module.type)
+
       quote do
         unquote(type)([to_string(unquote(key))], unquote(opts))
       end
@@ -84,11 +92,14 @@ defmodule Filtrex.Type.Config do
 
   @doc "Convert a list of mixed atoms and/or strings to a list of strings"
   def to_strings(keys, strings \\ [])
+
   def to_strings([key | keys], strings) when is_atom(key) do
     to_strings(keys, strings ++ [to_string(key)])
   end
+
   def to_strings([key | keys], strings) when is_binary(key) do
     to_strings(keys, strings ++ [key])
   end
+
   def to_strings([], strings), do: strings
 end
