@@ -12,12 +12,20 @@ defmodule Filtrex.Condition do
     Filtrex.Condition.Date,
     Filtrex.Condition.DateTime,
     Filtrex.Condition.Boolean,
-    Filtrex.Condition.Number
+    Filtrex.Condition.Number,
+    Filtrex.Condition.UUID
   ]
 
-  @callback parse(Filtrex.Type.Config.t, %{inverse: boolean, column: String.t, value: any, comparator: String.t}) :: {:ok, any} | {:error, any}
-  @callback type :: Atom.t
-  @callback comparators :: [String.t]
+  @type t :: %__MODULE__{}
+
+  @callback parse(Filtrex.Type.Config.t(), %{
+              inverse: boolean,
+              column: String.t(),
+              value: any,
+              comparator: String.t()
+            }) :: {:ok, any} | {:error, any}
+  @callback type :: atom()
+  @callback comparators :: [String.t()]
 
   defstruct column: nil, comparator: nil, value: nil
 
@@ -54,10 +62,14 @@ defmodule Filtrex.Condition do
     case condition_module(type) do
       nil ->
         {:error, "Unknown filter condition '#{type}'"}
+
       module ->
         type_atom = String.to_existing_atom(type)
-        config = Filtrex.Type.Config.configs_for_type(configs, type_atom)
+
+        config =
+          Filtrex.Type.Config.configs_for_type(configs, type_atom)
           |> Filtrex.Type.Config.config(options[:column])
+
         if config do
           module.parse(config, Map.delete(options, :type))
         else
@@ -68,21 +80,24 @@ defmodule Filtrex.Condition do
 
   @doc "Parses a params key into the condition type, column, and comparator"
   def param_key_type(configs, key_with_comparator) do
-    result = Enum.find_value(condition_modules(), fn (module) ->
-      Enum.find_value(module.comparators, fn (comparator) ->
-        normalized = "_" <> String.replace(comparator, " ", "_")
-        key = String.replace_trailing(key_with_comparator, normalized, "")
-        config = Filtrex.Type.Config.config(configs, key)
-        if !is_nil(config) and key in config.keys and config.type == module.type do
-          {:ok, module, config, key, comparator}
-        end
+    result =
+      Enum.find_value(condition_modules(), fn module ->
+        Enum.find_value(module.comparators, fn comparator ->
+          normalized = "_" <> String.replace(comparator, " ", "_")
+          key = String.replace_trailing(key_with_comparator, normalized, "")
+          config = Filtrex.Type.Config.config(configs, key)
+
+          if !is_nil(config) and key in config.keys and config.type == module.type do
+            {:ok, module, config, key, comparator}
+          end
+        end)
       end)
-    end)
+
     if result, do: result, else: {:error, "Unknown filter key '#{key_with_comparator}'"}
   end
 
   @doc "Helper method to validate that a comparator is in list"
-  @spec validate_comparator(atom, binary, List.t) :: {:ok, binary} | {:error, binary}
+  @spec validate_comparator(atom, binary, list) :: {:ok, binary} | {:error, binary}
   def validate_comparator(type, comparator, comparators) do
     if comparator in comparators do
       {:ok, comparator}
@@ -92,9 +107,10 @@ defmodule Filtrex.Condition do
   end
 
   @doc "Helper method to validate whether a value is in a list"
-  @spec validate_in(any, List.t) :: nil | any
+  @spec validate_in(any, list) :: nil | any
   def validate_in(nil, _), do: nil
   def validate_in(_, nil), do: nil
+
   def validate_in(value, list) do
     cond do
       value in list -> value
@@ -103,32 +119,35 @@ defmodule Filtrex.Condition do
   end
 
   @doc "Helper method to validate whether a value is a binary"
-  @spec validate_is_binary(any) :: nil | String.t
+  @spec validate_is_binary(any) :: nil | String.t()
   def validate_is_binary(value) when is_binary(value), do: value
   def validate_is_binary(_), do: nil
 
   @doc "Generates an error description for a generic parse error"
-  @spec parse_error(any, Atom.t, Atom.t) :: String.t
+  @spec parse_error(any, atom, atom) :: String.t()
   def parse_error(value, type, filter_type) do
     "Invalid #{to_string(filter_type)} #{to_string(type)} '#{value}'"
   end
 
   @doc "Generates an error description for a parse error resulting from an invalid value type"
-  @spec parse_value_type_error(any, Atom.t) :: String.t
+  @spec parse_value_type_error(any, atom) :: String.t()
   def parse_value_type_error(column, filter_type) when is_binary(column) do
     "Invalid #{to_string(filter_type)} value for #{column}"
   end
+
   def parse_value_type_error(column, filter_type) do
-    opts   = struct(Inspect.Opts, [])
-    iodata = Inspect.Algebra.to_doc(column, opts)
+    opts = struct(Inspect.Opts, [])
+
+    iodata =
+      Inspect.Algebra.to_doc(column, opts)
       |> Inspect.Algebra.format(opts.width)
-      |> Enum.join
+      |> Enum.join()
 
     if String.length(iodata) <= 15 do
       parse_value_type_error("'#{iodata}'", filter_type)
     else
       "'#{String.slice(iodata, 0..12)}...#{String.slice(iodata, -3..-1)}'"
-        |> parse_value_type_error(filter_type)
+      |> parse_value_type_error(filter_type)
     end
   end
 
@@ -138,7 +157,7 @@ defmodule Filtrex.Condition do
   end
 
   defp condition_module(type) do
-    Enum.find(condition_modules(), fn (module) ->
+    Enum.find(condition_modules(), fn module ->
       type == to_string(module.type)
     end)
   end

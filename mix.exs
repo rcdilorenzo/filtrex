@@ -4,14 +4,14 @@ defmodule Filtrex.Mixfile do
   def project do
     [
       app: :filtrex,
-      version: "0.4.3",
-      elixir: "~> 1.6",
+      version: "0.5.0",
       description: description(),
       package: package(),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
+      dialyzer: dialyzer(),
       name: "Filtrex",
       docs: [main: "Filtrex", source_url: "https://github.com/rcdilorenzo/filtrex"]
     ]
@@ -44,7 +44,8 @@ defmodule Filtrex.Mixfile do
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
       {:plug, "~> 1.1.2", only: :test},
       {:ex_machina, "~> 0.6.1", only: :test},
-      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.2.0", only: [:dev], runtime: false}
     ]
   end
 
@@ -56,6 +57,14 @@ defmodule Filtrex.Mixfile do
         "GitHub" => "https://github.com/rcdilorenzo/filtrex",
         "Docs" => "http://rcdilorenzo.github.io/filtrex"
       }
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_deps: :app_tree,
+      plt_add_apps: [:ex_unit, :mix],
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 end

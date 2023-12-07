@@ -15,6 +15,6 @@ defprotocol Filtrex.Encoder do
   """
 
   @doc "The function that performs the encoding"
-  @spec encode(Filter.Condition.t) :: [String.t | [any]]
+  @spec encode(Filtrex.Condition.t()) :: %Filtrex.Fragment{}
   def encode(condition)
 end

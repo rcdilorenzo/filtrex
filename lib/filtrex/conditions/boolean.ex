@@ -24,8 +24,10 @@ defmodule Filtrex.Condition.Boolean do
     case condition do
       %Condition.Boolean{comparator: nil} ->
         {:error, parse_error(comparator, :comparator, :date)}
+
       %Condition.Boolean{value: nil} ->
         {:error, parse_value_type_error(value, :boolean)}
+
       _ ->
         {:ok, condition}
     end
@@ -38,7 +40,7 @@ defmodule Filtrex.Condition.Boolean do
   defp validate_value(_), do: nil
 
   defimpl Filtrex.Encoder do
-    encoder "equals", "does not equal", "column = ?"
-    encoder "does not equal", "equals", "column != ?"
+    encoder("equals", "does not equal", "column = ?")
+    encoder("does not equal", "equals", "column != ?")
   end
 end

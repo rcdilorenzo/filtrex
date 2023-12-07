@@ -18,7 +18,12 @@ defmodule Filtrex.Utils.Encoder do
   raw value being passed in and returns the transformed value to be
   injected as a value into the fragment expression.
   """
-  defmacro encoder(comparator, reverse_comparator, expression, values_function \\ {:&, [], [[{:&, [], [1]}]]}) do
+  defmacro encoder(
+             comparator,
+             reverse_comparator,
+             expression,
+             values_function \\ {:&, [], [[{:&, [], [1]}]]}
+           ) do
     quote do
       import Filtrex.Utils.Encoder
 
@@ -27,7 +32,7 @@ defmodule Filtrex.Utils.Encoder do
       end
 
       def encode(%{column: column, comparator: unquote(comparator), value: value}) do
-        values = 
+        values =
           unquote(values_function).(value)
           |> intersperse_column_refs(column)
 
@@ -52,7 +57,7 @@ defmodule Filtrex.Utils.Encoder do
       # => [s.title, "best", s.title, "post"]
 
   ## Background
-  
+
   Ecto queries support string query fragments, but fields referenced in
   these fragments need to specifically reference fields, or you will get 
   "Ambiguous column" errors for some queries.
@@ -73,11 +78,11 @@ defmodule Filtrex.Utils.Encoder do
   def intersperse_column_refs(values, column) do
     column = String.to_existing_atom(column)
 
-    [quote do: s.unquote(column)]
-    |> Stream.cycle
+    [quote(do: s.unquote(column))]
+    |> Stream.cycle()
     |> Enum.take(length(values))
     |> Enum.zip(values)
     |> Enum.map(&Tuple.to_list/1)
-    |> List.flatten
+    |> List.flatten()
   end
 end

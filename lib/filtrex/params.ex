@@ -13,34 +13,40 @@ defmodule Filtrex.Params do
   end
 
   defp sanitize_value(map, whitelist) when is_map(map) do
-    Enum.reduce_while(map, {:ok, %{}}, fn ({key, value}, {:ok, acc}) ->
+    Enum.reduce_while(map, {:ok, %{}}, fn {key, value}, {:ok, acc} ->
       cond do
         is_atom(key) ->
           case sanitize_value(value, whitelist) do
             {:ok, sanitized} -> {:cont, {:ok, Map.put(acc, key, sanitized)}}
-            error            -> {:halt, error}
+            error -> {:halt, error}
           end
+
         key in whitelist ->
           atom = String.to_existing_atom(key)
+
           case sanitize_value(value, whitelist) do
             {:ok, sanitized} -> {:cont, {:ok, Map.put(acc, atom, sanitized)}}
-            error            -> {:halt, error}
+            error -> {:halt, error}
           end
+
         not is_binary(key) ->
           {:halt, {:error, "Invalid key. Only string keys are supported."}}
+
         true ->
           {:halt, {:error, "Unknown key '#{key}'"}}
       end
     end)
   end
+
   defp sanitize_value(list, whitelist) when is_list(list) do
-    Enum.reduce_while(list, {:ok, []}, fn (value, {:ok, acc}) ->
+    Enum.reduce_while(list, {:ok, []}, fn value, {:ok, acc} ->
       case sanitize_value(value, whitelist) do
         {:ok, sanitized} -> {:cont, {:ok, acc ++ [sanitized]}}
-        error            -> {:halt, error}
+        error -> {:halt, error}
       end
     end)
   end
+
   defp sanitize_value(value, _), do: {:ok, value}
 
   @doc "Converts parameters to a list of conditions"
@@ -48,6 +54,7 @@ defmodule Filtrex.Params do
     Enum.reduce(params, {:ok, []}, fn
       {key, value}, {:ok, conditions} ->
         convert_and_add_condition(configs, key, value, conditions)
+
       _, {:error, reason} ->
         {:error, reason}
     end)
@@ -58,7 +65,9 @@ defmodule Filtrex.Params do
       {:ok, module, config, column, comparator} ->
         attrs = %{inverse: false, column: column, comparator: comparator, value: value}
         parse_and_add_condition(config, module, convert_value_in_attrs(attrs), conditions)
-      {:error, reason} -> {:error, reason}
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -77,8 +86,12 @@ defmodule Filtrex.Params do
     Enum.map(map, fn
       {key, value} when is_binary(key) ->
         {String.to_atom(key), value}
-      {key, value} -> {key, value}
-    end) |> Enum.into(%{})
+
+      {key, value} ->
+        {key, value}
+    end)
+    |> Enum.into(%{})
   end
+
   defp convert_value(value), do: value
 end

@@ -19,11 +19,18 @@ defmodule Filtrex do
   defstruct type: nil, conditions: [], sub_filters: [], empty: false
 
   @whitelist [
-    :filter, :type, :conditions, :sub_filters,
-    :column, :comparator, :value, :start, :end
+    :filter,
+    :type,
+    :conditions,
+    :sub_filters,
+    :column,
+    :comparator,
+    :value,
+    :start,
+    :end
   ]
 
-  @type t :: Filtrex.t
+  @type t :: Filtrex.t()
 
   @doc """
   Parses a filter expression and returns an error or the parsed filter with
@@ -35,18 +42,18 @@ defmodule Filtrex do
   [%Filtrex.Type.Config{type: :text, keys: ~w(title comments)}]
   ```
   """
-  @spec parse([Filtrex.Type.Config.t], Map.t) :: {:error, String.t} | {:ok, Filtrex.t}
+  @spec parse([Filtrex.Type.Config.t()], map) :: {:error, String.t()} | {:ok, Filtrex.t()}
   def parse(configs, map) do
     with {:ok, sanitized} <- Filtrex.Params.sanitize(map, @whitelist),
          {:ok, valid_structured_map} <- validate_structure(sanitized),
-      do: parse_validated_structure(configs, valid_structured_map)
+         do: parse_validated_structure(configs, valid_structured_map)
   end
 
   @doc """
   Parses a filter expression, like `parse/2`. If any exception is raised when
   parsing the map, a `%Filtrex{empty: true}` struct will be returned.
   """
-  @spec safe_parse([Filtrex.Type.Config.t], Map.t) :: Filtrex.t
+  @spec safe_parse([Filtrex.Type.Config.t()], map) :: Filtrex.t()
   def safe_parse(configs, map) do
     try do
       {:ok, filter} = parse(configs, map)
@@ -65,6 +72,7 @@ defmodule Filtrex do
   ```
   """
   def parse_params(_configs, params) when params == %{}, do: {:ok, %Filtrex{empty: true}}
+
   def parse_params(configs, params) do
     with {:ok, {type, params}} <- parse_params_filter_union(params),
          {:ok, conditions} <- Filtrex.Params.parse_conditions(configs, params),
@@ -77,6 +85,7 @@ defmodule Filtrex do
   will be returned.
   """
   def safe_parse_params(_configs, params) when params == %{}, do: %Filtrex{empty: true}
+
   def safe_parse_params(configs, params) do
     try do
       {:ok, filter} = parse_params(configs, params)
@@ -98,8 +107,9 @@ defmodule Filtrex do
   Filtrex.query(query, filter, allow_empty: true)
   ```
   """
-  @spec query(Ecto.Queryable.t, Filtrex.t, Keyword.t) :: Ecto.Query.t
+  @spec query(Ecto.Queryable.t(), Filtrex.t(), Keyword.t()) :: Ecto.Query.t()
   def query(queryable, filter, opts \\ [allow_empty: true])
+
   def query(queryable, %Filtrex{empty: true}, opts) do
     if opts[:allow_empty] do
       queryable
@@ -113,6 +123,7 @@ defmodule Filtrex do
       queryable
       |> Filtrex.AST.build_query(filter)
       |> Code.eval_quoted([], __ENV__)
+
     result
   end
 
@@ -123,42 +134,53 @@ defmodule Filtrex do
     case map do
       %{filter: %{type: type}} when type not in ~w(all any none) ->
         {:error, "Invalid filter type '#{type}'"}
+
       %{filter: %{conditions: conditions}} when conditions == [] or not is_list(conditions) ->
         {:error, "One or more conditions required to filter"}
+
       %{filter: %{sub_filters: sub_filters}} when not is_list(sub_filters) ->
         {:error, "Sub-filters must be a valid list of filters"}
+
       validated = %{filter: params} ->
         sub_filters = Map.get(params, :sub_filters, [])
-        result = Enum.reduce_while(sub_filters, {:ok, []}, fn (sub_map, {:ok, acc}) ->
-          case validate_structure(sub_map) do
-            {:ok, sub_validated} -> {:cont, {:ok, acc ++ [sub_validated]}}
-            {:error, error} -> {:halt, {:error, error}}
-          end
-        end)
+
+        result =
+          Enum.reduce_while(sub_filters, {:ok, []}, fn sub_map, {:ok, acc} ->
+            case validate_structure(sub_map) do
+              {:ok, sub_validated} -> {:cont, {:ok, acc ++ [sub_validated]}}
+              {:error, error} -> {:halt, {:error, error}}
+            end
+          end)
+
         with {:ok, validated_sub_filters} <- result,
-          do: {:ok, put_in(validated.filter[:sub_filters], validated_sub_filters)}
+             do: {:ok, put_in(validated.filter[:sub_filters], validated_sub_filters)}
+
       _ ->
         {:error, "Invalid filter structure"}
     end
   end
 
   defp parse_validated_structure(configs, %{filter: params}) do
-    parsed_filters = Enum.reduce_while(params[:sub_filters], {:ok, []}, fn (to_parse, {:ok, acc}) ->
-      case parse(configs, to_parse) do
-        {:ok, filter} -> {:cont, {:ok, acc ++ [filter]}}
-        {:error, error} -> {:halt, {:error, error}}
-      end
-    end)
+    parsed_filters =
+      Enum.reduce_while(params[:sub_filters], {:ok, []}, fn to_parse, {:ok, acc} ->
+        case parse(configs, to_parse) do
+          {:ok, filter} -> {:cont, {:ok, acc ++ [filter]}}
+          {:error, error} -> {:halt, {:error, error}}
+        end
+      end)
+
     with {:ok, filters} <- parsed_filters,
-      do: parse_conditions(configs, params[:type], params[:conditions])
-       |> parse_condition_results(params[:type], filters)
+         do:
+           parse_conditions(configs, params[:type], params[:conditions])
+           |> parse_condition_results(params[:type], filters)
   end
 
   defp parse_conditions(configs, type, conditions) do
-    Enum.reduce(conditions, %{errors: [], conditions: []}, fn (map, acc) ->
+    Enum.reduce(conditions, %{errors: [], conditions: []}, fn map, acc ->
       case Filtrex.Condition.parse(configs, Map.put(map, :inverse, inverse_for(type))) do
         {:error, error} ->
           update_list_in_map(acc, :errors, error)
+
         {:ok, condition} ->
           update_list_in_map(acc, :conditions, condition)
       end
@@ -168,6 +190,7 @@ defmodule Filtrex do
   defp parse_condition_results(%{errors: [], conditions: conditions}, type, parsed_filters) do
     {:ok, %Filtrex{type: type, conditions: conditions, sub_filters: parsed_filters}}
   end
+
   defp parse_condition_results(%{errors: errors}, _, _) do
     {:error, Enum.join(errors, ", ")}
   end
@@ -176,15 +199,17 @@ defmodule Filtrex do
     case Map.fetch(params, "filter_union") do
       {:ok, type} when type in ~w(all any none) ->
         {:ok, {type, Map.delete(params, "filter_union")}}
+
       :error ->
         {:ok, {"all", params}}
+
       _ ->
         {:error, "Invalid filter union"}
     end
   end
 
   defp inverse_for("none"), do: true
-  defp inverse_for(_),      do: false
+  defp inverse_for(_), do: false
 
   defp update_list_in_map(map, key, value) do
     values = Map.get(map, key)

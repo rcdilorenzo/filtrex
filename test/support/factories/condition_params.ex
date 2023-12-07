@@ -10,7 +10,12 @@ defmodule Factory.ConditionParams do
   end
 
   def factory(:datetime) do
-    %{type: "datetime", column: "datetime_column", comparator: "equals", value: "2016-04-02T13:00:00.000Z"}
+    %{
+      type: "datetime",
+      column: "datetime_column",
+      comparator: "equals",
+      value: "2016-04-02T13:00:00.000Z"
+    }
   end
 
   def factory(:number_rating) do
@@ -33,8 +38,8 @@ defmodule Factory.ConditionParams do
     Map.put(condition, :comparator, comparator)
   end
 
-  def equals(condition),         do: comparator(condition, "equals")
+  def equals(condition), do: comparator(condition, "equals")
   def does_not_equal(condition), do: comparator(condition, "does not equal")
-  def on_or_after(condition),    do: comparator(condition, "on or after")
-  def on_or_before(condition),   do: comparator(condition, "on or before")
+  def on_or_after(condition), do: comparator(condition, "on or after")
+  def on_or_before(condition), do: comparator(condition, "on or before")
 end
