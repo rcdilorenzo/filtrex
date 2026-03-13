@@ -54,9 +54,78 @@ defmodule FiltrexConditionNumberTest do
       {:error, "Provided number value not allowed"}
   end
 
+  test "validating list of allowed integer values" do
+    list_config = %{@config | options: %{allowed_values: [1, 5, 10], allow_decimal: false}}
+
+    assert Number.parse(list_config, params("equals", "5")) ==
+      {:ok, condition("equals", 5)}
+
+    assert Number.parse(list_config, params("equals", "7")) ==
+      {:error, "Provided number value not allowed"}
+  end
+
+  test "validating list of allowed float values" do
+    list_config = %{@config | options: %{allowed_values: [1.5, 3.5, 5.0], allow_decimal: true}}
+
+    assert Number.parse(list_config, params("equals", "3.5")) ==
+      {:ok, condition("equals", 3.5)}
+
+    assert Number.parse(list_config, params("equals", "2.0")) ==
+      {:error, "Provided number value not allowed"}
+  end
+
+  test "parsing without allowed_values option" do
+    no_limit_config = %{@config | options: %{allow_decimal: true}}
+
+    assert Number.parse(no_limit_config, params("equals", "999")) ==
+      {:ok, condition("equals", 999)}
+
+    assert Number.parse(no_limit_config, params("equals", "3.14")) ==
+      {:ok, condition("equals", 3.14)}
+  end
+
+  test "encoding 'equals'" do
+    assert encode("equals", 10) == {"? = ?", [column_ref(:age), 10]}
+  end
+
+  test "encoding 'does not equal'" do
+    assert encode("does not equal", 10) == {"? != ?", [column_ref(:age), 10]}
+  end
+
   test "encoding 'greater than'" do
-    assert Filtrex.Encoder.encode(condition("greater than", 10)) ==
-      %Filtrex.Fragment{expression: "? > ?", values: [column_ref(:age), 10]}
+    assert encode("greater than", 10) == {"? > ?", [column_ref(:age), 10]}
+  end
+
+  test "encoding 'less than or'" do
+    assert encode("less than or", 10) == {"? <= ?", [column_ref(:age), 10]}
+  end
+
+  test "encoding 'less than'" do
+    assert encode("less than", 10) == {"? < ?", [column_ref(:age), 10]}
+  end
+
+  test "encoding 'greater than or'" do
+    assert encode("greater than or", 10) == {"? >= ?", [column_ref(:age), 10]}
+  end
+
+  test "encoding with inverse reverses comparator" do
+    encoded = Filtrex.Encoder.encode(%Number{
+      type: :number, column: @column,
+      inverse: true, comparator: "equals", value: 10
+    })
+    assert {encoded.expression, encoded.values} == {"? != ?", [column_ref(:age), 10]}
+
+    encoded = Filtrex.Encoder.encode(%Number{
+      type: :number, column: @column,
+      inverse: true, comparator: "greater than", value: 10
+    })
+    assert {encoded.expression, encoded.values} == {"? <= ?", [column_ref(:age), 10]}
+
+    encoded = Filtrex.Encoder.encode(%Number{
+      type: :number, column: @column,
+      inverse: true, comparator: "less than", value: 10
+    })
+    assert {encoded.expression, encoded.values} == {"? >= ?", [column_ref(:age), 10]}
   end
 
   defp params(comparator, value) do
@@ -69,5 +138,10 @@ defmodule FiltrexConditionNumberTest do
   defp condition(comparator, value) do
     %Number{type: :number, column: @column,
       inverse: false, comparator: comparator, value: value}
+  end
+
+  defp encode(comparator, value) do
+    encoded = Filtrex.Encoder.encode(condition(comparator, value))
+    {encoded.expression, encoded.values}
   end
 end
