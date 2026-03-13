@@ -12,7 +12,7 @@ defmodule Filtrex.Mixfile do
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
-      test_coverage: [threshold: 85],
+      test_coverage: [summary: [threshold: 85]],
       name: "Filtrex",
       docs: [main: "Filtrex", source_url: "https://github.com/rcdilorenzo/filtrex"]
     ]
