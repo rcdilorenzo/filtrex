@@ -5,7 +5,7 @@ defmodule Filtrex.Mixfile do
     [
       app: :filtrex,
       version: "0.4.3",
-      elixir: "~> 1.13",
+      elixir: "~> 1.15",
       description: description(),
       package: package(),
       build_embedded: Mix.env() == :prod,
