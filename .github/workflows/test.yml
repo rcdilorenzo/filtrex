@@ -46,7 +46,7 @@ jobs:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-otp${{ matrix.otp-version }}-elixir${{ matrix.elixir-version }}-mix-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-otp${{ matrix.otp-version }}-elixir${{ matrix.elixir-version }}-mix-${{ hashFiles('mix.lock', 'mix.exs') }}
           restore-keys: ${{ runner.os }}-otp${{ matrix.otp-version }}-elixir${{ matrix.elixir-version }}-mix-
 
       - run: mix deps.get
