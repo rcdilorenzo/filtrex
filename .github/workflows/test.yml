@@ -10,14 +10,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          - otp-version: "25.3"
+            elixir-version: "1.14"
+          - otp-version: "27.3"
+            elixir-version: "1.17"
+
     services:
       postgres:
-        image: postgres:14
+        image: postgres:16
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST_AUTH_METHOD: md5
-          POSTGRES_INITDB_ARGS: --auth-host=md5
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -31,8 +37,8 @@ jobs:
 
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: "24.3"
-          elixir-version: "1.13"
+          otp-version: ${{ matrix.otp-version }}
+          elixir-version: ${{ matrix.elixir-version }}
 
       - name: Cache deps
         uses: actions/cache@v4
@@ -40,8 +46,8 @@ jobs:
           path: |
             deps
             _build
-          key: ${{ runner.os }}-mix-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-
+          key: ${{ runner.os }}-otp${{ matrix.otp-version }}-elixir${{ matrix.elixir-version }}-mix-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-otp${{ matrix.otp-version }}-elixir${{ matrix.elixir-version }}-mix-
 
       - run: mix deps.get
       - run: MIX_ENV=test mix do ecto.create, ecto.migrate

@@ -1,15 +1,15 @@
 defmodule Factory.FilterParams do
   use ExMachina
 
-  def factory(:all) do
+  def all_factory do
     %{filter: %{type: "all", conditions: []}}
   end
 
-  def factory(:any) do
+  def any_factory do
     %{filter: %{type: "any", conditions: []}}
   end
 
-  def factory(:none) do
+  def none_factory do
     %{filter: %{type: "none", conditions: []}}
   end
 
