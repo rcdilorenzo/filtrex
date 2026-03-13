@@ -119,15 +119,12 @@ defmodule Filtrex.Condition do
     "Invalid #{to_string(filter_type)} value for #{column}"
   end
   def parse_value_type_error(column, filter_type) do
-    opts   = struct(Inspect.Opts, [])
-    iodata = Inspect.Algebra.to_doc(column, opts)
-      |> Inspect.Algebra.format(opts.width)
-      |> Enum.join
+    inspected = inspect(column)
 
-    if String.length(iodata) <= 15 do
-      parse_value_type_error("'#{iodata}'", filter_type)
+    if String.length(inspected) <= 15 do
+      parse_value_type_error("'#{inspected}'", filter_type)
     else
-      "'#{String.slice(iodata, 0..12)}...#{String.slice(iodata, -3..-1)}'"
+      "'#{String.slice(inspected, 0..12)}...#{String.slice(inspected, -3..-1//1)}'"
         |> parse_value_type_error(filter_type)
     end
   end

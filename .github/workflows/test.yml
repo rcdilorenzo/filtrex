@@ -17,6 +17,8 @@ jobs:
             elixir-version: "1.15"
           - otp-version: "27.3"
             elixir-version: "1.17"
+          - otp-version: "27.3"
+            elixir-version: "1.19"
 
     services:
       postgres:
