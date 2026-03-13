@@ -4,7 +4,7 @@ defmodule Filtrex.Mixfile do
   def project do
     [
       app: :filtrex,
-      version: "0.4.3",
+      version: "0.5.0",
       elixir: "~> 1.15",
       description: description(),
       package: package(),
@@ -42,7 +42,6 @@ defmodule Filtrex.Mixfile do
       {:timex, "~> 3.7"},
       {:earmark, "~> 1.4", only: :dev},
       {:ex_doc, "~> 0.35", only: :dev},
-      {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
       {:plug, "~> 1.16", only: :test},
       {:ex_machina, "~> 2.8", only: :test},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
@@ -55,7 +54,7 @@ defmodule Filtrex.Mixfile do
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/rcdilorenzo/filtrex",
-        "Docs" => "http://rcdilorenzo.github.io/filtrex"
+        "Docs" => "https://hexdocs.pm/filtrex"
       }
     ]
   end
