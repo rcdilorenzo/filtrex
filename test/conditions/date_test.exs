@@ -38,7 +38,7 @@ defmodule FiltrexConditionDateTest do
       column: @column,
       value: %{start: "2015-03-01", end: "2015-13-21"},
       comparator: "between"
-    }) == {:error, "Invalid date value format: Expected `1-2 digit month` at line 1, column 6."}
+    }) == {:error, "Invalid date value format: Expected `2 digit month` at line 1, column 6."}
   end
 
   test "specifying different date formats" do

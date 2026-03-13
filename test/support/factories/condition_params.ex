@@ -1,23 +1,23 @@
 defmodule Factory.ConditionParams do
   use ExMachina
 
-  def factory(:text) do
+  def text_factory do
     %{type: "text", column: "title", comparator: "equals", value: "earth"}
   end
 
-  def factory(:date) do
+  def date_factory do
     %{type: "date", column: "date_column", comparator: "equals", value: "2015-03-01"}
   end
 
-  def factory(:datetime) do
+  def datetime_factory do
     %{type: "datetime", column: "datetime_column", comparator: "equals", value: "2016-04-02T13:00:00.000Z"}
   end
 
-  def factory(:number_rating) do
+  def number_rating_factory do
     %{type: "number", column: "rating", comparator: "equals", value: 0}
   end
 
-  def factory(:number_upvotes) do
+  def number_upvotes_factory do
     %{type: "number", column: "upvotes", comparator: "equals", value: 0}
   end
 

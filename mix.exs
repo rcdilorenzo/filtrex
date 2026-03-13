@@ -5,13 +5,14 @@ defmodule Filtrex.Mixfile do
     [
       app: :filtrex,
       version: "0.4.3",
-      elixir: "~> 1.6",
+      elixir: "~> 1.15",
       description: description(),
       package: package(),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
+      test_coverage: [summary: [threshold: 85]],
       name: "Filtrex",
       docs: [main: "Filtrex", source_url: "https://github.com/rcdilorenzo/filtrex"]
     ]
@@ -36,14 +37,14 @@ defmodule Filtrex.Mixfile do
   defp deps do
     [
       {:postgrex, ">= 0.0.0", only: :test},
-      {:ecto, "~> 3.0"},
-      {:ecto_sql, "~> 3.0"},
-      {:timex, "~> 3.1"},
-      {:earmark, "~> 0.1", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev},
+      {:ecto, "~> 3.12"},
+      {:ecto_sql, "~> 3.12"},
+      {:timex, "~> 3.7"},
+      {:earmark, "~> 1.4", only: :dev},
+      {:ex_doc, "~> 0.35", only: :dev},
       {:inch_ex, ">= 0.0.0", only: [:dev, :docs]},
-      {:plug, "~> 1.1.2", only: :test},
-      {:ex_machina, "~> 0.6.1", only: :test},
+      {:plug, "~> 1.16", only: :test},
+      {:ex_machina, "~> 2.8", only: :test},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
     ]
   end

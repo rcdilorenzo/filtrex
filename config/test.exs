@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :filtrex, Filtrex.Repo,
   adapter: Ecto.Adapters.Postgres,
