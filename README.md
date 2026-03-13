@@ -1,10 +1,8 @@
 ![Banner](resources/filtrex-banner.png)
 
 # Filtrex
-[![Join the chat at https://gitter.im/filtrex-elixir/Lobby](https://badges.gitter.im/filtrex-elixir/Lobby.svg)](https://gitter.im/filtrex-elixir/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Hex.pm](https://img.shields.io/hexpm/v/filtrex.svg)](https://hex.pm/packages/filtrex)
-[![Build Status](https://travis-ci.org/rcdilorenzo/filtrex.svg?branch=master)](https://travis-ci.org/rcdilorenzo/filtrex)
-[![Docs Status](http://inch-ci.org/github/rcdilorenzo/filtrex.svg?branch=master)](http://inch-ci.org/github/rcdilorenzo/filtrex)
+[![CI](https://github.com/rcdilorenzo/filtrex/actions/workflows/test.yml/badge.svg)](https://github.com/rcdilorenzo/filtrex/actions/workflows/test.yml)
 
 Filtrex aims to make filtering database results with [Ecto](https://hex.pm/packages/ecto) a breeze. This library attempts to help you solve problems such as...
 
@@ -23,7 +21,7 @@ The package is available on [Hex](https://hex.pm) and can be installed by adding
 
 ```elixir
 def deps do
-  [{:filtrex, "~> 0.4.3"}]
+  [{:filtrex, "~> 0.5.0"}]
 end
 ```
 
@@ -326,23 +324,23 @@ The options passed to each type gives the individual condition types more inform
 
 The following condition types and comparators are supported.
 
-* [Filtrex.Condition.Boolean](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Boolean.html)
+* [Filtrex.Condition.Boolean](https://hexdocs.pm/filtrex/Filtrex.Condition.Boolean.html)
     * equals, does not equal
-* [Filtrex.Condition.Text](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Text.html)
+* [Filtrex.Condition.Text](https://hexdocs.pm/filtrex/Filtrex.Condition.Text.html)
     * equals, does not equal, contains, does not contain
-* [Filtrex.Condition.Date](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Date.html)
+* [Filtrex.Condition.Date](https://hexdocs.pm/filtrex/Filtrex.Condition.Date.html)
     * after, on or after, before, on or before, between, not between, equals, does not equal
     * options: format (default: `{YYYY}-{0M}-{0D}`)
-* [Filtrex.Condition.DateTime](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.DateTime.html)
+* [Filtrex.Condition.DateTime](https://hexdocs.pm/filtrex/Filtrex.Condition.DateTime.html)
     * after, on or after, before, on or before, equals, does not equal
     * options: format (default: `{ISOz}`)
-* [Filtrex.Condition.Number](http://rcdilorenzo.github.io/filtrex/Filtrex.Condition.Number.html)
+* [Filtrex.Condition.Number](https://hexdocs.pm/filtrex/Filtrex.Condition.Number.html)
     * equals, does not equal, greater than, less than or, greater than or, less than
     * options: allow_decimal (default: false), allowed_values (default: nil)
 
 ## License
 
-Copyright (c) 2015-2019 Christian Di Lorenzo
+Copyright (c) 2015-2026 Christian Di Lorenzo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
